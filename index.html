@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Niaba Voyage — vols, séjours et assistance visa à Lomé, Togo.">
+  <meta name="theme-color" content="#0b5cff">
+  <title>Niaba Voyage | Vols, séjours & assistance visa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container nav">
+      <a class="brand" href="#accueil"><span class="logo">N</span><span>NIABA <b>VOYAGE</b></span></a>
+      <button id="menuBtn" class="menu" aria-label="Menu">☰</button>
+      <nav id="nav">
+        <a href="#services">Services</a><a href="#vols">Vols</a><a href="#visa">Visa</a><a href="#devis">Devis</a><a href="#contact">Contact</a>
+      </nav>
+      <a class="btn small desktop" href="https://wa.me/22891813448" target="_blank" rel="noopener">WhatsApp</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="accueil">
+      <div class="container hero-grid">
+        <div>
+          <span class="eyebrow">Agence de voyage • Lomé, Togo</span>
+          <h1>Voyagez plus simplement avec Niaba Voyage.</h1>
+          <p class="lead">Vols, séjours, assistance visa et accompagnement personnalisé, du premier devis jusqu’au départ.</p>
+          <div class="actions"><a class="btn" href="#devis">Demander un devis</a><a class="btn ghost" href="#vols">Rechercher un vol</a></div>
+          <div class="trust"><span>✓ Réponse rapide</span><span>✓ Assistance personnalisée</span><span>✓ Accompagnement de bout en bout</span></div>
+        </div>
+        <div class="visual">
+          <div class="badge">Lomé ✈ Monde</div>
+          <div class="sky"><div class="sun"></div><div class="plane">✈</div><div class="caption"><span>Explorez.</span><strong>Voyagez mieux.</strong><small>Avec Niaba Voyage</small></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="services">
+      <div class="container">
+        <div class="title"><span>Nos services</span><h2>Tout pour préparer votre voyage</h2></div>
+        <div class="grid4">
+          <article class="card"><div class="ico">✈️</div><h3>Billets d’avion</h3><p>Recherche d’itinéraires et accompagnement pour votre réservation.</p><a href="#vols">Rechercher →</a></article>
+          <article class="card"><div class="ico">🛂</div><h3>Assistance visa</h3><p>Orientation sur les démarches, documents et étapes de votre demande.</p><a href="#visa">En savoir plus →</a></article>
+          <article class="card"><div class="ico">🏨</div><h3>Séjours</h3><p>Hôtel et organisation de séjour selon votre destination et votre budget.</p><a href="#devis">Obtenir un devis →</a></article>
+          <article class="card"><div class="ico">💬</div><h3>Conseil voyage</h3><p>Un interlocuteur pour répondre à vos questions avant votre départ.</p><a href="#contact">Nous contacter →</a></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" id="vols">
+      <div class="container searchbox">
+        <div class="title"><span>Recherche de vols</span><h2>Préparez votre prochain trajet</h2><p>Renseignez votre itinéraire. La recherche s’ouvrira dans Google Flights, puis vous pourrez revenir vers Niaba Voyage pour l’accompagnement.</p></div>
+        <form id="flightForm" class="flight">
+          <label>Départ<input id="from" required placeholder="Lomé (LFW)"></label>
+          <label>Destination<input id="to" required placeholder="Paris, Montréal…"></label>
+          <label>Aller<input id="depart" type="date" required></label>
+          <label>Retour<input id="return" type="date"></label>
+          <label>Voyageurs<select id="pax"><option>1</option><option>2</option><option>3</option><option>4</option><option>5+</option></select></label>
+          <button class="btn" type="submit">Rechercher</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="section dark" id="visa">
+      <div class="container split">
+        <div><span class="eyebrow">Assistance visa</span><h2>Préparez votre dossier avec plus de clarté.</h2><p>Nous vous aidons à comprendre les étapes et à organiser votre dossier. La décision d’octroi du visa appartient exclusivement à l’autorité consulaire compétente.</p></div>
+        <div class="steps">
+          <div><b>01</b><span>Analyse de votre projet de voyage</span></div>
+          <div><b>02</b><span>Liste indicative des documents</span></div>
+          <div><b>03</b><span>Orientation sur les étapes</span></div>
+          <div><b>04</b><span>Suivi et assistance</span></div>
+          <a class="btn" href="https://wa.me/22891813448?text=Bonjour%20Niaba%20Voyage%2C%20je%20souhaite%20une%20assistance%20visa." target="_blank" rel="noopener">Parler à un conseiller</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" id="devis">
+      <div class="container quote">
+        <div><span class="eyebrow">Devis personnalisé</span><h2>Parlez-nous de votre voyage</h2><p>Votre demande sera préparée automatiquement pour WhatsApp.</p></div>
+        <form id="quoteForm" class="quoteform">
+          <label>Nom<input id="qName" required placeholder="Votre nom"></label>
+          <label>Destination<input id="qDestination" required placeholder="Votre destination"></label>
+          <label>Date souhaitée<input id="qDate" type="date"></label>
+          <label>Voyageurs<input id="qPeople" type="number" min="1" value="1"></label>
+          <label class="wide">Besoin<select id="qNeed"><option>Billet d’avion</option><option>Séjour</option><option>Assistance visa</option><option>Voyage complet</option><option>Autre</option></select></label>
+          <button class="btn wide" type="submit">Envoyer sur WhatsApp</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="title"><span>Contact</span><h2>Nous sommes à votre écoute</h2></div>
+        <div class="contacts">
+          <a href="https://wa.me/22891813448" target="_blank" rel="noopener"><b>WhatsApp</b><span>+228 91 81 34 48</span></a>
+          <a href="mailto:niaba.voyage@gmail.com"><b>Email</b><span>niaba.voyage@gmail.com</span></a>
+          <div><b>Adresse</b><span>12 BP 203 Baguida, Lomé – Togo</span></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer><div class="container foot"><div class="brand light"><span class="logo">N</span><span>NIABA <b>VOYAGE</b></span></div><p>© <span id="year"></span> Niaba Voyage</p></div></footer>
+  <a class="wa" href="https://wa.me/22891813448" target="_blank" rel="noopener" aria-label="WhatsApp">💬</a>
+  <script src="script.js"></script>
+</body>
+</html>
