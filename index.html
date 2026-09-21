@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Niaba Voyage — vols, séjours et assistance visa à Lomé, Togo.">
+  <meta name="description" content="Niaba Voyage — vols, séjours, assistance visa et accompagnement personnalisé depuis Lomé, Togo.">
   <meta name="theme-color" content="#061d49">
-  <title>Niaba Voyage | Vols, séjours & assistance visa</title>
+  <title>Niaba Voyage | Votre prochaine histoire commence ici</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
@@ -14,99 +14,272 @@
 <body>
   <header class="header">
     <div class="container nav">
-      <a class="brand" href="#accueil"><span class="logo">N</span><span>NIABA <b>VOYAGE</b></span></a>
-      <button id="menuBtn" class="menu" aria-label="Menu">☰</button>
+      <a class="brand" href="#accueil" aria-label="Niaba Voyage">
+        <span class="brand-mark">➤</span>
+        <span>NIABA <b>VOYAGE</b></span>
+      </a>
+
+      <button id="menuBtn" class="menu" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
+
       <nav id="nav">
-        <a href="#services">Services</a><a href="#vols">Vols</a><a href="#visa">Visa</a><a href="#devis">Devis</a><a href="#contact">Contact</a>
+        <a href="#accueil">Accueil</a>
+        <a href="#offres">Offres</a>
+        <a href="#services">Services</a>
+        <a href="#visa">Visa</a>
+        <a href="#contact">Contact</a>
       </nav>
-      <a class="btn small desktop" href="https://wa.me/22891813448" target="_blank" rel="noopener">WhatsApp</a>
+
+      <a class="whatsapp-top desktop" href="https://wa.me/22891813448" target="_blank" rel="noopener">WhatsApp</a>
     </div>
   </header>
 
   <main>
     <section class="hero" id="accueil">
-      <div class="container hero-grid">
+      <div class="hero-overlay"></div>
+      <div class="container hero-content">
+        <div class="hero-copy">
+          <span class="eyebrow">NIABA VOYAGE</span>
+          <h1>VOTRE PROCHAINE HISTOIRE COMMENCE ICI</h1>
+          <p class="hero-subtitle">Le monde vous attend. On s'occupe du reste.</p>
+          <p class="hero-text">Vols, séjours, formalités visa et accompagnement personnalisé, de la première idée jusqu'au retour.</p>
+        </div>
+
+        <form id="flightForm" class="flight-panel">
+          <div class="trip-type" role="group" aria-label="Type de voyage">
+            <label><input type="radio" name="tripType" value="roundtrip" checked> Aller-retour</label>
+            <label><input type="radio" name="tripType" value="oneway"> Aller simple</label>
+          </div>
+
+          <div class="flight-grid">
+            <label class="field">
+              <span>Départ</span>
+              <input id="from" required placeholder="Lomé (LFW)" autocomplete="off">
+            </label>
+
+            <button id="swapBtn" class="swap" type="button" aria-label="Inverser départ et destination">⇄</button>
+
+            <label class="field">
+              <span>Destination</span>
+              <input id="to" required placeholder="Paris, Montréal…" autocomplete="off">
+            </label>
+
+            <label class="field">
+              <span>Aller</span>
+              <input id="depart" type="date" required>
+            </label>
+
+            <label id="returnField" class="field">
+              <span>Retour</span>
+              <input id="return" type="date">
+            </label>
+
+            <label class="field">
+              <span>Voyageurs</span>
+              <select id="pax">
+                <option value="1">1 voyageur</option>
+                <option value="2">2 voyageurs</option>
+                <option value="3">3 voyageurs</option>
+                <option value="4+">4+ voyageurs</option>
+              </select>
+            </label>
+
+            <button class="btn primary search-btn" type="submit">Rechercher</button>
+          </div>
+        </form>
+
+        <div class="trust-strip">
+          <div><b>24/7</b><span>Assistance voyage</span></div>
+          <div><b>100%</b><span>Accompagnement humain</span></div>
+          <div><b>Flexible</b><span>Solutions sur mesure</span></div>
+          <div><b>Sécurisé</b><span>Paiement protégé</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section offers" id="offres">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <span class="kicker">INSPIRATIONS DU MOMENT</span>
+            <h2>Des offres qui donnent envie de partir</h2>
+          </div>
+          <a class="text-link" href="#contact">Créer mon voyage →</a>
+        </div>
+
+        <div class="offer-grid">
+          <article class="offer-card dakar">
+            <div class="offer-shade"></div>
+            <div class="offer-body">
+              <span>Dakar</span>
+              <h3>ESCAPADE URBAINE</h3>
+              <p>Culture, océan et énergie</p>
+              <small>Vol + hôtel · 4 nuits</small>
+              <strong>Sur devis</strong>
+            </div>
+          </article>
+
+          <article class="offer-card dubai">
+            <div class="offer-shade"></div>
+            <div class="offer-body">
+              <span>Dubaï</span>
+              <h3>CITY BREAK</h3>
+              <p>Évasion solaire et grandiose</p>
+              <small>Vol + hôtel · 6 nuits</small>
+              <strong>Sur devis</strong>
+            </div>
+          </article>
+
+          <article class="offer-card zanzibar">
+            <div class="offer-shade"></div>
+            <div class="offer-body">
+              <span>Zanzibar</span>
+              <h3>PLAGE & DÉTENTE</h3>
+              <p>Un paradis à votre rythme</p>
+              <small>Vol + hôtel · 7 nuits</small>
+              <strong>Sur devis</strong>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section services" id="services">
+      <div class="container services-grid">
+        <div class="services-intro">
+          <span class="kicker">BIEN PLUS QU'UN BILLET</span>
+          <h2>Un seul interlocuteur. Toutes les solutions.</h2>
+          <p>Nous construisons un voyage clair, adapté à votre budget et accompagné à chaque étape.</p>
+        </div>
+
+        <div class="service-list">
+          <article>
+            <span>01</span>
+            <div><h3>Billetterie aérienne</h3><p>Recherche d'itinéraires, comparaison et accompagnement pour la réservation de vols.</p></div>
+          </article>
+          <article>
+            <span>02</span>
+            <div><h3>Séjours & circuits</h3><p>Hôtels, transferts, excursions et programmes personnalisés.</p></div>
+          </article>
+          <article>
+            <span>03</span>
+            <div><h3>Assistance visa</h3><p>Checklist, constitution du dossier et orientation sur les démarches.</p></div>
+          </article>
+          <article>
+            <span>04</span>
+            <div><h3>Voyages professionnels</h3><p>Déplacements, salons, missions et groupes d'entreprise.</p></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="visa-band" id="visa">
+      <div class="container visa-inner">
+        <div class="visa-icon">✓</div>
         <div>
-          <span class="eyebrow">Agence de voyage • Lomé, Togo</span>
-          <h1>Voyagez plus simplement avec Niaba Voyage.</h1>
-          <p class="lead">Vols, séjours, assistance visa et accompagnement personnalisé, du premier devis jusqu’au départ.</p>
-          <div class="actions"><a class="btn" href="#devis">Demander un devis</a><a class="btn ghost" href="#vols">Rechercher un vol</a></div>
-          <div class="trust"><span>✓ Réponse rapide</span><span>✓ Assistance personnalisée</span><span>✓ Accompagnement de bout en bout</span></div>
+          <span class="kicker light-kicker">DOSSIER VISA</span>
+          <h2>Vous préparez un départ ? Préparons vos documents ensemble.</h2>
+          <p>Nous vous aidons à organiser votre dossier et à comprendre les étapes. La décision finale appartient à l'autorité consulaire compétente.</p>
         </div>
-        <div class="visual">
-          <div class="badge">Lomé ✈ Monde</div>
-          <div class="sky"><div class="sun"></div><div class="plane">✈</div><div class="caption"><span>Explorez.</span><strong>Voyagez mieux.</strong><small>Avec Niaba Voyage</small></div></div>
-        </div>
+        <a class="btn light-btn" href="https://wa.me/22891813448?text=Bonjour%20Niaba%20Voyage%2C%20je%20souhaite%20commencer%20mon%20dossier%20visa." target="_blank" rel="noopener">Commencer mon dossier</a>
       </div>
     </section>
 
-    <section class="section" id="services">
-      <div class="container">
-        <div class="title"><span>Nos services</span><h2>Tout pour préparer votre voyage</h2></div>
-        <div class="grid4">
-          <article class="card"><div class="ico">✈️</div><h3>Billets d’avion</h3><p>Recherche d’itinéraires et accompagnement pour votre réservation.</p><a href="#vols">Rechercher →</a></article>
-          <article class="card"><div class="ico">🛂</div><h3>Assistance visa</h3><p>Orientation sur les démarches, documents et étapes de votre demande.</p><a href="#visa">En savoir plus →</a></article>
-          <article class="card"><div class="ico">🏨</div><h3>Séjours</h3><p>Hôtel et organisation de séjour selon votre destination et votre budget.</p><a href="#devis">Obtenir un devis →</a></article>
-          <article class="card"><div class="ico">💬</div><h3>Conseil voyage</h3><p>Un interlocuteur pour répondre à vos questions avant votre départ.</p><a href="#contact">Nous contacter →</a></article>
-        </div>
-      </div>
-    </section>
+    <section class="section contact-section" id="contact">
+      <div class="container contact-grid">
+        <div class="contact-copy">
+          <span class="kicker">VOTRE VOYAGE, VOTRE RYTHME</span>
+          <h2>Parlez-nous de votre projet.</h2>
+          <p>Remplissez ce formulaire. Un conseiller vous répondra avec une proposition adaptée, sans engagement.</p>
 
-    <section class="section soft" id="vols">
-      <div class="container searchbox">
-        <div class="title"><span>Recherche de vols</span><h2>Préparez votre prochain trajet</h2><p>Renseignez votre itinéraire. La recherche s’ouvrira dans Google Flights, puis vous pourrez revenir vers Niaba Voyage pour l’accompagnement.</p></div>
-        <form id="flightForm" class="flight">
-          <label>Départ<input id="from" required placeholder="Lomé (LFW)"></label>
-          <label>Destination<input id="to" required placeholder="Paris, Montréal…"></label>
-          <label>Aller<input id="depart" type="date" required></label>
-          <label>Retour<input id="return" type="date"></label>
-          <label>Voyageurs<select id="pax"><option>1</option><option>2</option><option>3</option><option>4</option><option>5+</option></select></label>
-          <button class="btn" type="submit">Rechercher</button>
+          <div class="quick-contact">
+            <span>Besoin d'une réponse rapide ?</span>
+            <b>WhatsApp & téléphone</b>
+            <a href="https://wa.me/22891813448" target="_blank" rel="noopener">+228 91 81 34 48</a>
+          </div>
+
+          <div class="agency-details">
+            <div><b>Email</b><a href="mailto:niaba.voyage@gmail.com">niaba.voyage@gmail.com</a></div>
+            <div><b>Adresse</b><span>12 BP 203 Baguida, Lomé – Togo</span></div>
+          </div>
+        </div>
+
+        <form id="quoteForm" class="quote-form">
+          <div class="form-grid">
+            <label class="field">
+              <span>Nom complet</span>
+              <input id="qName" required placeholder="Votre nom complet">
+            </label>
+
+            <label class="field">
+              <span>Téléphone</span>
+              <input id="qPhone" required placeholder="+228 ...">
+            </label>
+
+            <label class="field">
+              <span>Votre besoin</span>
+              <select id="qNeed">
+                <option>Voyage sur mesure</option>
+                <option>Réservation de vol</option>
+                <option>Séjour / package</option>
+                <option>Assistance visa</option>
+                <option>Voyage professionnel</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Destination</span>
+              <input id="qDestination" required placeholder="Destination">
+            </label>
+
+            <label class="field">
+              <span>Date souhaitée</span>
+              <input id="qDate" type="date">
+            </label>
+
+            <label class="field">
+              <span>Voyageurs</span>
+              <input id="qPeople" type="number" min="1" value="1">
+            </label>
+
+            <label class="field">
+              <span>Budget estimatif</span>
+              <input id="qBudget" placeholder="Ex. 800 000 FCFA">
+            </label>
+
+            <label class="field">
+              <span>Moyen de paiement souhaité</span>
+              <select id="qPayment">
+                <option>Carte bancaire Visa / Mastercard</option>
+                <option>TMoney</option>
+                <option>Flooz</option>
+                <option>Virement / accord agence</option>
+                <option>Autre</option>
+              </select>
+            </label>
+
+            <label class="field full">
+              <span>Quelques précisions</span>
+              <textarea id="qNotes" rows="5" placeholder="Décrivez brièvement votre projet de voyage"></textarea>
+            </label>
+          </div>
+
+          <p class="payment-note">Le paiement est demandé uniquement après validation du devis. Aucun débit n'est effectué par ce formulaire.</p>
+          <button class="btn primary full-button" type="submit">Envoyer sur WhatsApp →</button>
         </form>
-      </div>
-    </section>
-
-    <section class="section dark" id="visa">
-      <div class="container split">
-        <div><span class="eyebrow">Assistance visa</span><h2>Préparez votre dossier avec plus de clarté.</h2><p>Nous vous aidons à comprendre les étapes et à organiser votre dossier. La décision d’octroi du visa appartient exclusivement à l’autorité consulaire compétente.</p></div>
-        <div class="steps">
-          <div><b>01</b><span>Analyse de votre projet de voyage</span></div>
-          <div><b>02</b><span>Liste indicative des documents</span></div>
-          <div><b>03</b><span>Orientation sur les étapes</span></div>
-          <div><b>04</b><span>Suivi et assistance</span></div>
-          <a class="btn" href="https://wa.me/22891813448?text=Bonjour%20Niaba%20Voyage%2C%20je%20souhaite%20une%20assistance%20visa." target="_blank" rel="noopener">Parler à un conseiller</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="section soft" id="devis">
-      <div class="container quote">
-        <div><span class="eyebrow">Devis personnalisé</span><h2>Parlez-nous de votre voyage</h2><p>Votre demande sera préparée automatiquement pour WhatsApp.</p></div>
-        <form id="quoteForm" class="quoteform">
-          <label>Nom<input id="qName" required placeholder="Votre nom"></label>
-          <label>Destination<input id="qDestination" required placeholder="Votre destination"></label>
-          <label>Date souhaitée<input id="qDate" type="date"></label>
-          <label>Voyageurs<input id="qPeople" type="number" min="1" value="1"></label>
-          <label class="wide">Besoin<select id="qNeed"><option>Billet d’avion</option><option>Séjour</option><option>Assistance visa</option><option>Voyage complet</option><option>Autre</option></select></label>
-          <button class="btn wide" type="submit">Envoyer sur WhatsApp</button>
-        </form>
-      </div>
-    </section>
-
-    <section class="section" id="contact">
-      <div class="container">
-        <div class="title"><span>Contact</span><h2>Nous sommes à votre écoute</h2></div>
-        <div class="contacts">
-          <a href="https://wa.me/22891813448" target="_blank" rel="noopener"><b>WhatsApp</b><span>+228 91 81 34 48</span></a>
-          <a href="mailto:niaba.voyage@gmail.com"><b>Email</b><span>niaba.voyage@gmail.com</span></a>
-          <div><b>Adresse</b><span>12 BP 203 Baguida, Lomé – Togo</span></div>
-        </div>
       </div>
     </section>
   </main>
 
-  <footer><div class="container foot"><div class="brand light"><span class="logo">N</span><span>NIABA <b>VOYAGE</b></span></div><p>© <span id="year"></span> Niaba Voyage</p></div></footer>
-  <a class="wa" href="https://wa.me/22891813448" target="_blank" rel="noopener" aria-label="WhatsApp">💬</a>
+  <footer>
+    <div class="container footer-inner">
+      <div class="brand footer-brand"><span class="brand-mark">➤</span><span>NIABA <b>VOYAGE</b></span></div>
+      <p>Voyagez plus loin. Voyagez mieux.</p>
+      <p>© <span id="year"></span> NIABA VOYAGE. Tous droits réservés.</p>
+    </div>
+  </footer>
+
+  <a class="wa-float" href="https://wa.me/22891813448" target="_blank" rel="noopener" aria-label="Contacter Niaba Voyage sur WhatsApp">WA</a>
+
   <script src="script.js"></script>
 </body>
 </html>
