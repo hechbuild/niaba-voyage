@@ -31,18 +31,8 @@ document.querySelectorAll('input[name="tripType"]').forEach((radio) => {
 
 $("flightForm").addEventListener("submit", (e) => {
   e.preventDefault();
-  const tripType = document.querySelector('input[name="tripType"]:checked').value;
-  const parts = [
-    "vol",
-    $("from").value,
-    $("to").value,
-    $("depart").value,
-    tripType === "roundtrip" && $("return").value ? "retour " + $("return").value : "",
-    $("pax").value + " voyageur(s)"
-  ].filter(Boolean);
-
   window.open(
-    "https://www.google.com/travel/flights?q=" + encodeURIComponent(parts.join(" ")),
+    "https://www.govoyages.com/vols/",
     "_blank",
     "noopener"
   );
