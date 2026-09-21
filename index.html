@@ -83,7 +83,7 @@
               </select>
             </label>
 
-            <button class="btn primary search-btn" type="submit">Rechercher sur GO Voyages</button>
+            <button class="btn primary search-btn" type="submit">Rechercher les vols</button>
           </div>
         </form>
 
@@ -93,6 +93,19 @@
           <div><b>Flexible</b><span>Solutions sur mesure</span></div>
           <div><b>Sécurisé</b><span>Paiement protégé</span></div>
         </div>
+      </div>
+    </section>
+
+    <section id="flightResultsSection" class="flight-results-section" hidden>
+      <div class="container">
+        <div class="flight-results-heading">
+          <div>
+            <span class="kicker">RÉSULTATS DE RECHERCHE</span>
+            <h2>Choisissez votre vol</h2>
+          </div>
+          <p id="flightResultsNotice" class="results-notice"></p>
+        </div>
+        <div id="flightResults" class="flight-results" aria-live="polite"></div>
       </div>
     </section>
 

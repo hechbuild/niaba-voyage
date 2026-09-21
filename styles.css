@@ -246,3 +246,160 @@ footer{background:#04132f;color:#b8c3d5;padding:40px 0;border-top:4px solid var(
   .full{grid-column:auto}
   .quote-form{padding:22px}
 }
+
+
+.flight-results-section{
+  padding:64px 0 78px;
+  background:#f5f7fb;
+  scroll-margin-top:20px;
+}
+.flight-results-heading{
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  gap:30px;
+  margin-bottom:24px;
+}
+.flight-results-heading h2{
+  margin:7px 0 0;
+  font-family:Manrope,sans-serif;
+  font-size:clamp(32px,4vw,48px);
+  line-height:1.05;
+  letter-spacing:-.04em;
+}
+.results-notice{
+  max-width:520px;
+  margin:0;
+  padding:11px 14px;
+  border-radius:12px;
+  background:#eaf2ff;
+  color:#264267;
+  font-size:12px;
+  font-weight:600;
+}
+.results-notice.warning{
+  background:#fff6d8;
+  color:#735b00;
+}
+.flight-results{
+  display:grid;
+  gap:14px;
+}
+.flight-result-card{
+  display:grid;
+  grid-template-columns:1fr 245px;
+  gap:24px;
+  padding:24px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:20px;
+  box-shadow:0 14px 38px rgba(17,36,78,.07);
+}
+.flight-result-main{
+  display:grid;
+  grid-template-columns:190px 1fr;
+  gap:24px;
+  align-items:start;
+}
+.airline-name{
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+.airline-code{
+  min-width:52px;
+  height:52px;
+  border-radius:15px;
+  display:grid;
+  place-items:center;
+  background:var(--navy);
+  color:var(--yellow);
+  font-size:12px;
+  font-weight:900;
+}
+.airline-name strong,.seat-note{display:block}
+.airline-name strong{font-size:14px}
+.seat-note{margin-top:4px;color:var(--muted);font-size:11px}
+.itineraries{display:grid;gap:10px}
+.route-line{
+  display:grid;
+  grid-template-columns:140px 1fr auto;
+  gap:18px;
+  align-items:center;
+  padding:12px 0;
+  border-bottom:1px solid #edf0f5;
+}
+.route-line:last-child{border-bottom:0}
+.route-line small,.route-line strong,.route-line span{display:block}
+.route-line small{font-size:10px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+.route-line strong{font-size:17px}
+.route-line>div:nth-child(2){
+  display:flex;
+  gap:10px;
+  justify-content:space-between;
+  color:#344054;
+  font-size:12px;
+}
+.route-meta{
+  text-align:right;
+  color:var(--muted);
+  font-size:11px;
+  white-space:nowrap;
+}
+.flight-result-price{
+  border-left:1px solid var(--line);
+  padding-left:24px;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  justify-content:center;
+}
+.flight-result-price small{color:var(--muted);font-weight:700}
+.flight-result-price strong{
+  margin:4px 0 12px;
+  color:var(--navy);
+  font-family:Manrope,sans-serif;
+  font-size:28px;
+  letter-spacing:-.03em;
+}
+.reserve-btn{width:100%}
+.results-loading,.results-empty,.results-error{
+  padding:30px;
+  border:1px dashed #cfd6e2;
+  border-radius:18px;
+  background:#fff;
+  color:var(--muted);
+  text-align:center;
+}
+.results-error{
+  display:grid;
+  gap:6px;
+  color:#7a2e2e;
+  border-color:#efc9c9;
+  background:#fffafa;
+}
+.results-error a{color:var(--blue);font-weight:800;text-decoration:none}
+.search-btn:disabled{opacity:.65;cursor:wait;transform:none}
+
+@media(max-width:980px){
+  .flight-result-card{grid-template-columns:1fr}
+  .flight-result-price{
+    border-left:0;
+    border-top:1px solid var(--line);
+    padding:18px 0 0;
+    align-items:flex-start;
+  }
+  .reserve-btn{width:auto}
+}
+
+@media(max-width:680px){
+  .flight-results-section{padding:46px 0 58px}
+  .flight-results-heading{align-items:flex-start;flex-direction:column;gap:14px}
+  .flight-result-card{padding:18px}
+  .flight-result-main{grid-template-columns:1fr;gap:16px}
+  .route-line{grid-template-columns:1fr;gap:7px}
+  .route-line>div:nth-child(2){justify-content:flex-start;flex-wrap:wrap}
+  .route-meta{text-align:left;display:flex;gap:12px}
+  .flight-result-price strong{font-size:25px}
+  .reserve-btn{width:100%}
+}
