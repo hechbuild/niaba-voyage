@@ -512,3 +512,39 @@ footer{background:#04132f;color:#b8c3d5;padding:40px 0;border-top:4px solid var(
 
 /* Platform positioning */
 .platform-vision{padding:72px 0;background:#eef4fb}.platform-vision-grid{display:grid;grid-template-columns:1fr 1.25fr;gap:54px;align-items:center}.platform-vision h2{font-family:Manrope,sans-serif;font-size:clamp(2rem,4vw,3.25rem);line-height:1.08;margin:12px 0 18px;color:#071a36}.platform-vision p{color:#536176;line-height:1.7}.platform-pillars{display:grid;grid-template-columns:1fr 1fr;gap:14px}.platform-pillars article{background:#fff;border:1px solid #dfe7f2;border-radius:16px;padding:22px;box-shadow:0 10px 30px rgba(6,29,73,.05)}.platform-pillars b{display:block;color:#071a36;margin-bottom:7px;font-size:1.04rem}.platform-pillars span{color:#667389;font-size:.91rem;line-height:1.5}@media(max-width:760px){.platform-vision{padding:52px 0}.platform-vision-grid{grid-template-columns:1fr;gap:28px}.platform-pillars{grid-template-columns:1fr 1fr}}@media(max-width:460px){.platform-pillars{grid-template-columns:1fr}}
+
+/* Mobile-first flight search: compact, booking-led experience */
+@media (max-width: 760px){
+  .header{position:sticky;top:0;z-index:120;background:#fff}
+  .nav{min-height:68px}
+  .brand{font-size:1.05rem}
+  .brand-mark{width:42px;height:42px}
+  .hero{min-height:auto;padding:0;background:#f3f6fb}
+  .hero-overlay{display:none}
+  .hero-content{padding-top:22px;padding-bottom:26px}
+  .hero-copy{color:#071a36;margin-bottom:18px}
+  .hero-copy .eyebrow,.hero-copy .hero-text,.hero-copy .hero-actions{display:none}
+  .hero-copy h1{font-family:Inter,sans-serif;font-size:1.65rem;line-height:1.16;letter-spacing:-.025em;margin:0 0 8px;color:#071a36}
+  .hero-copy h1::after{content:"Réservez votre prochain voyage simplement.";display:block}
+  .hero-copy h1{font-size:0}
+  .hero-copy h1::after{font-size:1.65rem}
+  .hero-subtitle{font-size:1rem;color:#526176;margin:0}
+  .flight-panel{margin:0;padding:14px;border-radius:18px;background:#fff;box-shadow:0 8px 28px rgba(6,29,73,.10)}
+  .trip-type{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;background:#eef2f7;border-radius:12px;padding:5px;margin-bottom:12px}
+  .trip-type label{min-height:44px;display:flex;align-items:center;justify-content:center;text-align:center;padding:7px 4px;border-radius:9px;font-size:.82rem;font-weight:800;color:#334155}
+  .trip-type label:has(input:checked){background:#fff;color:#071a36;box-shadow:0 2px 8px rgba(6,29,73,.10)}
+  .trip-type input{display:none}
+  .flight-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .flight-grid>.field:nth-of-type(1),.flight-grid>.field:nth-of-type(2){grid-column:1/-1}
+  .flight-grid>.field:nth-of-type(3),#returnField{grid-column:auto}
+  .traveler-field{grid-column:1/-1}
+  .field{background:#fff;border:1px solid #dfe5ee;border-radius:12px;padding:10px 12px}
+  .field span{font-size:.72rem;color:#758196;text-transform:uppercase;letter-spacing:.04em}
+  .field input,.field select,.traveler-btn{font-size:1rem;min-height:38px;padding:5px 0;border:0;background:transparent}
+  .swap{position:absolute;right:27px;margin-top:108px;z-index:3;width:38px;height:38px;border-radius:50%;box-shadow:0 3px 10px rgba(6,29,73,.14)}
+  .search-btn{grid-column:1/-1;min-height:54px;border-radius:12px;font-size:1rem}
+  .trust-strip{display:grid;grid-template-columns:1fr 1fr;margin-top:14px;gap:8px}
+  .trust-strip div{padding:10px;background:#fff;border-radius:10px;color:#071a36}
+  .trust-strip div b{font-size:.82rem}.trust-strip div span{font-size:.7rem;color:#667085}
+  .conversion-strip{display:none}
+}
