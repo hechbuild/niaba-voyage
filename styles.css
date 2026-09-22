@@ -716,3 +716,17 @@ footer{background:#04132f;color:#b8c3d5;padding:40px 0;border-top:4px solid var(
  .swap{top:202px!important;right:20px!important;width:34px!important;height:34px!important;font-size:0!important}
  .swap::after{font-size:18px!important}
 }
+
+/* Mobile: departure/destination side by side + smaller search CTA */
+@media(max-width:760px){
+ .flight-grid{grid-template-columns:1fr 1fr!important}
+ .cabin-field,.traveler-field,.search-btn{grid-column:1/-1!important}
+ .flight-grid>label.field:has(#from){grid-column:1!important}
+ .flight-grid>label.field:has(#to){grid-column:2!important}
+ .flight-grid>label.field:has(#depart){grid-column:1!important}
+ #returnField{grid-column:2!important}
+ .flight-grid>label.field:has(#from),.flight-grid>label.field:has(#to){min-width:0!important;padding:8px 10px!important}
+ #from,#to{font-size:.82rem!important;min-width:0!important;width:100%!important}
+ .swap{top:166px!important;right:calc(50% - 17px)!important;width:34px!important;height:34px!important;z-index:20!important}
+ .search-btn{width:76%!important;justify-self:center!important;min-height:44px!important;padding:8px 12px!important;font-size:.86rem!important;border-radius:12px!important;margin-top:2px!important}
+}
