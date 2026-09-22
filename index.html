@@ -67,6 +67,7 @@
           <div class="trip-type" role="group" aria-label="Type de voyage">
             <label><input type="radio" name="tripType" value="roundtrip" checked> Aller-retour</label>
             <label><input type="radio" name="tripType" value="oneway"> Aller simple</label>
+            <label><input type="radio" name="tripType" value="multicity"> Multi-destinations</label>
           </div>
 
           <div class="flight-grid">
@@ -92,17 +93,25 @@
               <input id="return" type="date">
             </label>
 
-            <label class="field">
-              <span>Voyageurs</span>
-              <select id="pax">
-                <option value="1">1 voyageur</option>
-                <option value="2">2 voyageurs</option>
-                <option value="3">3 voyageurs</option>
-                <option value="4+">4+ voyageurs</option>
-              </select>
-            </label>
+            <div class="field traveler-field">
+              <span>Voyageurs & classe</span>
+              <button id="travelerBtn" class="traveler-btn" type="button">1 adulte · Économique</button>
+              <div id="travelerPanel" class="traveler-panel" hidden>
+                <div class="traveler-row"><span><b>Adultes</b><small>12 ans et +</small></span><input id="adults" type="number" min="1" max="9" value="1"></div>
+                <div class="traveler-row"><span><b>Enfants</b><small>2–11 ans</small></span><input id="children" type="number" min="0" max="8" value="0"></div>
+                <div class="traveler-row"><span><b>Bébés</b><small>Moins de 2 ans</small></span><input id="infants" type="number" min="0" max="4" value="0"></div>
+                <label class="cabin-select"><span>Classe</span><select id="cabin"><option value="ECONOMY">Économique</option><option value="PREMIUM_ECONOMY">Premium Economy</option><option value="BUSINESS">Affaires</option><option value="FIRST">Première</option></select></label>
+                <button id="travelerDone" class="btn primary" type="button">Terminé</button>
+              </div>
+              <input id="pax" type="hidden" value="1">
+            </div>
 
             <button class="btn primary search-btn" type="submit">Rechercher les vols</button>
+          </div>
+          <div id="multiCityPanel" class="multi-city-panel" hidden>
+            <div class="multi-city-head"><b>Itinéraire multi-destinations</b><small>Ajoutez jusqu’à 4 trajets</small></div>
+            <div id="multiCityLegs"></div>
+            <button id="addLegBtn" class="add-leg-btn" type="button">+ Ajouter un trajet</button>
           </div>
         </form>
 
