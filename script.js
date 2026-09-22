@@ -308,6 +308,7 @@ function updateTravelerSummary(){
   if(travelerBtn) travelerBtn.textContent=[a+" adulte"+(a>1?"s":""),c?c+" enfant"+(c>1?"s":""):"",i?i+" bébé"+(i>1?"s":""):""].filter(Boolean).join(" · ");
 }
 travelerBtn?.addEventListener("click",(e)=>{e.preventDefault();e.stopPropagation();if(travelerPanel){travelerPanel.hidden=!travelerPanel.hidden;travelerBtn.setAttribute("aria-expanded",String(!travelerPanel.hidden));}});
+document.querySelectorAll("[data-count]").forEach(btn=>btn.addEventListener("click",(e)=>{e.preventDefault();e.stopPropagation();const id=btn.dataset.count,input=document.getElementById(id),display=document.getElementById(id+"Value");if(!input)return;const min=id==="adults"?1:0,max=id==="adults"?9:id==="children"?8:4;let value=Number(input.value||0)+Number(btn.dataset.step||0);value=Math.max(min,Math.min(max,value));input.value=String(value);if(display)display.textContent=String(value);updateTravelerSummary();}));
 document.getElementById("travelerDone")?.addEventListener("click",()=>{updateTravelerSummary();travelerPanel.hidden=true});
 ["adults","children","infants","cabin"].forEach(id=>document.getElementById(id)?.addEventListener("change",updateTravelerSummary));
 function addMultiLeg(){
