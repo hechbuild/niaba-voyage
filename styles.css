@@ -598,3 +598,11 @@ footer{background:#04132f;color:#b8c3d5;padding:40px 0;border-top:4px solid var(
 .compact-footer-links a{color:#cbd5e3;text-decoration:none;font-size:.82rem}
 .compact-footer-row p{margin:0;color:#aebbd0;font-size:.75rem;white-space:nowrap}
 @media(max-width:760px){.compact-home-footer{padding:16px 0!important}.compact-footer-row{display:block!important}.compact-footer-row .footer-brand{margin-bottom:12px}.compact-footer-links{justify-content:flex-start!important;gap:8px 14px!important}.compact-footer-links a{font-size:.76rem!important}.compact-footer-row p{margin-top:12px!important;font-size:.7rem!important}}
+
+/* Smaller typography for the minimal home footer */
+@media(max-width:760px){
+ .compact-home-footer .footer-brand{font-size:.88rem!important}
+ .compact-home-footer .brand-mark{width:32px!important;height:32px!important;font-size:15px!important;border-radius:9px!important}
+ .compact-footer-links a{font-size:.68rem!important;line-height:1.25!important}
+ .compact-footer-row p{font-size:.62rem!important}
+}
