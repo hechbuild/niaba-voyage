@@ -423,3 +423,17 @@ footer{background:#04132f;color:#b8c3d5;padding:40px 0;border-top:4px solid var(
 .conversion-grid b{display:grid;place-items:center;min-width:34px;height:34px;border-radius:50%;background:var(--yellow);color:var(--navy);font-size:12px}
 .conversion-grid span{font-size:13px;font-weight:700}
 @media(max-width:680px){.hero-actions{flex-direction:column}.hero-actions .btn{width:100%}.conversion-grid{grid-template-columns:1fr 1fr}.conversion-grid div{padding:16px 10px;border-bottom:1px solid rgba(255,255,255,.12)}}
+
+/* Booking-first commercial upgrade */
+.section-lead{margin:10px 0 0;color:var(--muted);max-width:620px}
+.travelstart-offers .offer-card{text-decoration:none;transition:transform .22s ease,box-shadow .22s ease}
+.travelstart-offers .offer-card:hover{transform:translateY(-6px);box-shadow:0 26px 58px rgba(12,30,67,.2)}
+.booking-benefits{padding:26px 0;background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.booking-benefits-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+.booking-benefits article{display:flex;align-items:center;gap:14px;padding:12px 28px;border-right:1px solid var(--line)}
+.booking-benefits article:last-child{border-right:0}
+.booking-benefits article>span{display:grid;place-items:center;min-width:44px;height:44px;border-radius:13px;background:#edf3ff;color:var(--blue);font-size:20px;font-weight:900}
+.booking-benefits b,.booking-benefits small{display:block}
+.booking-benefits b{color:var(--navy);font-size:14px}
+.booking-benefits small{margin-top:3px;color:var(--muted);line-height:1.35}
+@media(max-width:760px){.booking-benefits-grid{grid-template-columns:1fr}.booking-benefits article{border-right:0;border-bottom:1px solid var(--line);padding:15px 4px}.booking-benefits article:last-child{border-bottom:0}}
