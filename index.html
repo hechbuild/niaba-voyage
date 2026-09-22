@@ -133,6 +133,23 @@
           </div>
           <p id="flightResultsNotice" class="results-notice"></p>
         </div>
+        <div class="results-toolbar" aria-label="Filtres des résultats">
+          <div class="filter-group">
+            <button class="filter-chip active" type="button" data-flight-filter="all">Tous</button>
+            <button class="filter-chip" type="button" data-flight-filter="direct">Vol direct</button>
+            <button class="filter-chip" type="button" data-flight-filter="one-stop">1 escale max.</button>
+          </div>
+          <label class="sort-control">Trier par
+            <select id="flightSort">
+              <option value="recommended">Recommandé</option>
+              <option value="price">Prix le plus bas</option>
+              <option value="duration">Durée la plus courte</option>
+            </select>
+          </label>
+        </div>
+        <div class="results-reassurance">
+          <span>✓ Assistance Niaba Voyage</span><span>✓ Tarif vérifié avant paiement</span><span>✓ Conseiller disponible</span>
+        </div>
         <div id="flightResults" class="flight-results" aria-live="polite"></div>
       </div>
     </section>
