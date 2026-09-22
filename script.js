@@ -163,11 +163,12 @@ function renderOffers(data) {
         <div class="flight-result-price">
           <small>Prix Niaba Voyage</small>
           <strong>${escapeHtml(formatPrice(offer.price.amount, offer.price.currency))}</strong>
-          <a class="btn primary reserve-btn" href="${bookingLink(offer)}" target="_blank" rel="noopener">Réserver ce vol</a>
+          <button class="btn primary reserve-btn" type="button" data-offer-id="${escapeHtml(offer.id)}">Choisir ce vol</button>
         </div>
       </article>
     `;
   }).join("");
+  container.querySelectorAll("[data-offer-id]").forEach(btn=>btn.addEventListener("click",()=>openBooking(offers.find(o=>String(o.id)===btn.dataset.offerId))));
 }
 
 $("flightForm").addEventListener("submit", async (e) => {
@@ -322,3 +323,23 @@ document.querySelectorAll('input[name="tripType"]').forEach(r=>r.addEventListene
   if(multi && document.getElementById("multiCityLegs")?.children.length===0){addMultiLeg();addMultiLeg();}
 }));
 updateTravelerSummary();
+
+
+// Guided booking flow: ready to connect to Amadeus production/payment later
+let selectedBookingOffer=null;
+function openBooking(offer){
+  if(!offer)return; selectedBookingOffer=offer;
+  const modal=document.getElementById("bookingModal"), summary=document.getElementById("bookingSummary");
+  const out=offer.itineraries?.[0], first=out?.segments?.[0], last=out?.segments?.[out.segments.length-1];
+  summary.innerHTML="<strong>"+escapeHtml((first?.from||offer.origin||"")+" → "+(last?.to||offer.destination||""))+"</strong><br>"+escapeHtml(offer.airline?.name||offer.airline?.code||"Compagnie aérienne")+" · "+escapeHtml(formatDateTime(first?.departureAt))+"<br><strong>"+escapeHtml(formatPrice(offer.price.amount,offer.price.currency))+"</strong> <small>— tarif à confirmer avant paiement</small>";
+  modal.hidden=false; document.body.style.overflow="hidden";
+}
+function closeBooking(){const m=document.getElementById("bookingModal");if(m)m.hidden=true;document.body.style.overflow=""}
+document.querySelectorAll("[data-booking-close]").forEach(x=>x.addEventListener("click",closeBooking));
+document.getElementById("bookingForm")?.addEventListener("submit",e=>{
+  e.preventDefault(); if(!selectedBookingOffer)return;
+  const opts=[["optBaggage","Bagage supplémentaire"],["optSeat","Choix du siège"],["optMeal","Repas spécial"],["optAssistance","Assistance spéciale"]].filter(([id])=>document.getElementById(id)?.checked).map(([,v])=>v);
+  const out=selectedBookingOffer.itineraries?.[0], first=out?.segments?.[0], last=out?.segments?.[out.segments.length-1];
+  const msg=["Bonjour Niaba Voyage, je souhaite finaliser cette réservation.","","Passager : "+document.getElementById("bookFirstName").value+" "+document.getElementById("bookLastName").value,"Email : "+document.getElementById("bookEmail").value,"Téléphone : "+document.getElementById("bookPhone").value,"Trajet : "+(first?.from||"")+" → "+(last?.to||""),"Départ : "+formatDateTime(first?.departureAt),"Prix affiché : "+formatPrice(selectedBookingOffer.price.amount,selectedBookingOffer.price.currency),"Options : "+(opts.join(", ")||"Aucune"),"Référence offre : "+selectedBookingOffer.id,"","Merci de confirmer le tarif et la disponibilité avant paiement."].join("\n");
+  window.open("https://wa.me/22891813448?text="+encodeURIComponent(msg),"_blank","noopener");
+});
