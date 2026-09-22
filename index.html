@@ -393,6 +393,33 @@
   <a class="wa-float" href="https://wa.me/22891813448" target="_blank" rel="noopener" aria-label="Contacter Niaba Voyage sur WhatsApp">WA</a>
 
 
+
+  <div id="bookingModal" class="booking-modal" hidden>
+    <div class="booking-backdrop" data-booking-close></div>
+    <section class="booking-dialog" role="dialog" aria-modal="true" aria-labelledby="bookingTitle">
+      <button class="account-close" type="button" data-booking-close aria-label="Fermer">×</button>
+      <div class="booking-steps"><span class="active">1 Vol</span><span>2 Passagers</span><span>3 Options</span><span>4 Paiement</span></div>
+      <h2 id="bookingTitle">Finaliser votre réservation</h2>
+      <div id="bookingSummary" class="booking-summary"></div>
+      <form id="bookingForm">
+        <div class="booking-section"><h3>Informations du passager principal</h3><div class="booking-grid">
+          <label class="field"><span>Prénom</span><input id="bookFirstName" required autocomplete="given-name"></label>
+          <label class="field"><span>Nom</span><input id="bookLastName" required autocomplete="family-name"></label>
+          <label class="field"><span>Email</span><input id="bookEmail" type="email" required autocomplete="email"></label>
+          <label class="field"><span>Téléphone</span><input id="bookPhone" required autocomplete="tel" placeholder="+228 ..."></label>
+        </div></div>
+        <div class="booking-section"><h3>Options de voyage</h3><div class="booking-options">
+          <label><input id="optBaggage" type="checkbox"> Bagage supplémentaire</label>
+          <label><input id="optSeat" type="checkbox"> Choix du siège</label>
+          <label><input id="optMeal" type="checkbox"> Repas spécial</label>
+          <label><input id="optAssistance" type="checkbox"> Assistance spéciale</label>
+        </div></div>
+        <div class="booking-section"><h3>Paiement</h3><p class="booking-info">Le paiement en ligne sera activé après connexion du système de réservation et de paiement sécurisé. Pour le moment, votre demande est transmise à un conseiller Niaba Voyage pour validation du tarif et de la disponibilité.</p></div>
+        <button class="btn primary full-button" type="submit">Continuer avec un conseiller →</button>
+      </form>
+    </section>
+  </div>
+
   <div id="accountModal" class="account-modal" hidden>
     <div class="account-backdrop" data-account-close></div>
     <section class="account-dialog" role="dialog" aria-modal="true" aria-labelledby="accountTitle">
