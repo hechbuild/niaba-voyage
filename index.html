@@ -30,7 +30,10 @@
         <a href="#contact">Contact</a>
       </nav>
 
-      <a class="whatsapp-top desktop" href="https://wa.me/22891813448" target="_blank" rel="noopener">WhatsApp</a>
+      <div class="account-actions desktop">
+        <button class="login-link" type="button" data-account-open="login">Se connecter</button>
+        <button class="account-btn" type="button" data-account-open="signup">Créer un compte</button>
+      </div>
     </div>
   </header>
 
@@ -333,6 +336,28 @@
   </footer>
 
   <a class="wa-float" href="https://wa.me/22891813448" target="_blank" rel="noopener" aria-label="Contacter Niaba Voyage sur WhatsApp">WA</a>
+
+
+  <div id="accountModal" class="account-modal" hidden>
+    <div class="account-backdrop" data-account-close></div>
+    <section class="account-dialog" role="dialog" aria-modal="true" aria-labelledby="accountTitle">
+      <button class="account-close" type="button" data-account-close aria-label="Fermer">×</button>
+      <div class="account-brand"><span class="brand-mark">➤</span><span>NIABA <b>VOYAGE</b></span></div>
+      <h2 id="accountTitle">Se connecter</h2>
+      <p id="accountSubtitle">Retrouvez vos demandes et préparez vos prochains voyages.</p>
+      <div class="account-tabs">
+        <button id="loginTab" class="active" type="button">Connexion</button>
+        <button id="signupTab" type="button">Créer un compte</button>
+      </div>
+      <form id="accountForm">
+        <label class="field signup-only" hidden><span>Nom complet</span><input id="accountName" autocomplete="name" placeholder="Votre nom"></label>
+        <label class="field"><span>Email</span><input id="accountEmail" type="email" autocomplete="email" required placeholder="vous@exemple.com"></label>
+        <label class="field"><span>Mot de passe</span><input id="accountPassword" type="password" autocomplete="current-password" required minlength="6" placeholder="••••••••"></label>
+        <button class="btn primary full-button" type="submit">Se connecter</button>
+        <small class="account-note">L’espace client sécurisé est en cours d’activation. Aucune donnée n’est enregistrée pour le moment.</small>
+      </form>
+    </section>
+  </div>
 
   <script src="script.js"></script>
 </body>
