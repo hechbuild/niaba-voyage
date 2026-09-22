@@ -403,3 +403,13 @@ footer{background:#04132f;color:#b8c3d5;padding:40px 0;border-top:4px solid var(
   .flight-result-price strong{font-size:25px}
   .reserve-btn{width:100%}
 }
+
+.corporate{background:#fff}
+.corporate-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.corporate h2{margin:8px 0 14px;font-family:Manrope,sans-serif;font-size:clamp(34px,4.6vw,56px);line-height:1.04;letter-spacing:-.045em}
+.corporate-grid>div:first-child p{color:var(--muted);font-size:17px;max-width:560px}
+.corporate-card{padding:34px;border:1px solid var(--line);border-radius:24px;background:var(--soft);box-shadow:0 20px 54px rgba(17,36,78,.08)}
+.corporate-card strong{display:block;font-family:Manrope,sans-serif;font-size:24px;color:var(--navy)}
+.corporate-card p{color:var(--muted)}
+.corporate-actions{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:22px}
+@media(max-width:800px){.corporate-grid{grid-template-columns:1fr;gap:28px}.corporate-card{padding:24px}.corporate-actions .btn{width:100%}}
