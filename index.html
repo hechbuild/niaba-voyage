@@ -69,6 +69,10 @@
           </div>
 
           <div class="flight-grid">
+            <div class="field cabin-field">
+              <span>Classe</span>
+              <select id="cabin" aria-label="Classe de voyage"><option value="ECONOMY">Économique</option><option value="PREMIUM_ECONOMY">Premium Economy</option><option value="BUSINESS">Affaires</option><option value="FIRST">Première</option></select>
+            </div>
             <label class="field">
               <span>Départ</span>
               <input id="from" required placeholder="Lomé (LFW)" autocomplete="off">
@@ -102,10 +106,7 @@
               </div>
               <input id="pax" type="hidden" value="1">
             </div>
-            <div class="field cabin-field">
-              <span>Classe</span>
-              <select id="cabin" aria-label="Classe de voyage"><option value="ECONOMY">Économique</option><option value="PREMIUM_ECONOMY">Premium Economy</option><option value="BUSINESS">Affaires</option><option value="FIRST">Première</option></select>
-            </div>
+
 
             <button class="btn primary search-btn" type="submit">Rechercher les vols</button>
           </div>
