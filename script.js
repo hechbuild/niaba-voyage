@@ -303,9 +303,9 @@ if(flightResultsNode) new MutationObserver(()=>applyFlightControls()).observe(fl
 const travelerBtn=document.getElementById("travelerBtn"), travelerPanel=document.getElementById("travelerPanel");
 function updateTravelerSummary(){
   const a=Number(document.getElementById("adults")?.value||1),c=Number(document.getElementById("children")?.value||0),i=Number(document.getElementById("infants")?.value||0);
-  const cabin=document.getElementById("cabin"), label=cabin?.options[cabin.selectedIndex]?.text||"Économique";
+  const cabin=document.getElementById("cabin");
   if(document.getElementById("pax")) document.getElementById("pax").value=String(a+c+i);
-  if(travelerBtn) travelerBtn.textContent=[a+" adulte"+(a>1?"s":""),c?c+" enfant"+(c>1?"s":""):"",i?i+" bébé"+(i>1?"s":""):"",label].filter(Boolean).join(" · ");
+  if(travelerBtn) travelerBtn.textContent=[a+" adulte"+(a>1?"s":""),c?c+" enfant"+(c>1?"s":""):"",i?i+" bébé"+(i>1?"s":""):""].filter(Boolean).join(" · ");
 }
 travelerBtn?.addEventListener("click",(e)=>{e.preventDefault();e.stopPropagation();if(travelerPanel){travelerPanel.hidden=!travelerPanel.hidden;travelerBtn.setAttribute("aria-expanded",String(!travelerPanel.hidden));}});
 document.getElementById("travelerDone")?.addEventListener("click",()=>{updateTravelerSummary();travelerPanel.hidden=true});
