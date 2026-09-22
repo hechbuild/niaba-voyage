@@ -489,3 +489,14 @@ footer{background:#04132f;color:#b8c3d5;padding:40px 0;border-top:4px solid var(
 .flight-result-price small:first-child{text-transform:uppercase;letter-spacing:.05em;font-size:10px}
 .reserve-btn{min-height:46px}
 @media(max-width:680px){.results-toolbar{align-items:stretch;flex-direction:column}.sort-control{justify-content:space-between}.sort-control select{flex:1}.results-reassurance{gap:8px;flex-direction:column}}
+
+
+/* Advanced booking search */
+.traveler-field{position:relative}.traveler-btn{height:46px;width:100%;padding:0 12px;text-align:left;border:1px solid #dfe4ec;border-radius:12px;background:#fff;color:var(--ink);font-weight:700;cursor:pointer}
+.traveler-panel{position:absolute;z-index:30;top:66px;right:0;width:310px;padding:18px;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 20px 55px rgba(4,19,47,.2)}
+.traveler-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #edf0f5}.traveler-row span,.traveler-row b,.traveler-row small{display:block}.traveler-row small{color:var(--muted);font-size:10px;margin-top:2px}.traveler-row input{width:70px;padding:9px}
+.cabin-select{display:grid;gap:6px;margin:13px 0}.cabin-select>span{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase}.cabin-select select{padding:11px;border:1px solid #dfe4ec;border-radius:10px;background:#fff}
+.traveler-panel .btn{width:100%;padding:11px}
+.multi-city-panel{margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}.multi-city-head{display:flex;justify-content:space-between;gap:15px;margin-bottom:10px}.multi-city-head small{color:var(--muted)}
+.multi-city-leg{display:grid;grid-template-columns:1fr 1fr .65fr auto;gap:9px;margin-bottom:9px}.multi-city-leg input{width:100%;padding:11px;border:1px solid #dfe4ec;border-radius:10px}.remove-leg{border:0;background:#fff0ee;color:#a43d31;border-radius:10px;padding:0 13px;cursor:pointer;font-weight:900}.add-leg-btn{border:1px dashed #aab5c6;background:#f8faff;color:var(--blue);padding:10px 14px;border-radius:10px;font-weight:800;cursor:pointer}
+@media(max-width:680px){.traveler-panel{position:fixed;left:14px;right:14px;top:auto;bottom:18px;width:auto;z-index:210}.multi-city-leg{grid-template-columns:1fr}.remove-leg{height:40px}}
