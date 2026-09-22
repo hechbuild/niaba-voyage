@@ -688,3 +688,14 @@ footer{background:#04132f;color:#b8c3d5;padding:40px 0;border-top:4px solid var(
  .traveler-panel:not([hidden]){display:block!important}
  .traveler-panel .traveler-row,.traveler-panel #travelerDone{visibility:visible!important;opacity:1!important}
 }
+
+/* Final mobile passenger layout: expand in normal flow, never overlap class/search */
+@media(max-width:760px){
+ .traveler-field{height:auto!important;min-height:66px!important;z-index:auto!important;overflow:visible!important}
+ .traveler-panel,.traveler-panel:not([hidden]){position:static!important;left:auto!important;right:auto!important;top:auto!important;width:100%!important;min-width:0!important;margin-top:10px!important;z-index:auto!important;max-height:none!important;overflow:visible!important;background:#fff!important;border:1px solid #e0e5ec!important;border-radius:14px!important;padding:10px 12px!important;box-shadow:none!important}
+ .traveler-panel[hidden]{display:none!important}
+ .traveler-row{display:flex!important;min-height:52px!important;align-items:center!important;justify-content:space-between!important;padding:7px 0!important}
+ .counter{flex-shrink:0!important}
+ .cabin-field{z-index:auto!important}
+ .search-btn{z-index:auto!important}
+}
