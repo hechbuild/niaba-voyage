@@ -678,3 +678,13 @@ footer{background:#04132f;color:#b8c3d5;padding:40px 0;border-top:4px solid var(
 
 /* Touch-friendly passenger counters */
 .counter{display:flex;align-items:center;gap:12px}.counter button{width:34px;height:34px;border:0;border-radius:50%;background:#eef2f7;color:#071c45;font-size:1.25rem;font-weight:700}.counter strong{min-width:18px;text-align:center}.traveler-row>input[type=hidden]{display:none!important}
+
+/* Fix passenger dropdown being clipped between Travelers and Class */
+@media(max-width:760px){
+ .flight-grid{overflow:visible!important}
+ .traveler-field{position:relative!important;z-index:500!important}
+ .traveler-panel{top:calc(100% + 8px)!important;left:0!important;right:0!important;width:auto!important;min-width:100%!important;max-height:none!important;overflow:visible!important;z-index:1000!important;background:#fff!important}
+ .cabin-field{position:relative!important;z-index:1!important}
+ .traveler-panel:not([hidden]){display:block!important}
+ .traveler-panel .traveler-row,.traveler-panel #travelerDone{visibility:visible!important;opacity:1!important}
+}
