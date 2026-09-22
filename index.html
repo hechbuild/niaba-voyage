@@ -5,6 +5,17 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Niaba Voyage — vols, séjours, assistance visa et accompagnement personnalisé depuis Lomé, Togo.">
   <meta name="theme-color" content="#061d49">
+  <meta name="robots" content="index,follow">
+  <meta name="author" content="Niaba Voyage">
+  <link rel="canonical" href="https://www.niabavoyage.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:site_name" content="Niaba Voyage">
+  <meta property="og:title" content="Niaba Voyage | Vols, voyages et assistance visa au Togo">
+  <meta property="og:description" content="Recherchez vos vols depuis Lomé, préparez vos voyages et bénéficiez d’un accompagnement personnalisé avec Niaba Voyage.">
+  <meta property="og:url" content="https://www.niabavoyage.com/">
+  <meta property="og:image" content="https://www.niabavoyage.com/hero-travel.png">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TravelAgency","name":"Niaba Voyage","url":"https://www.niabavoyage.com/","email":"niaba.voyage@gmail.com","telephone":"+22891813448","address":{"@type":"PostalAddress","streetAddress":"12 BP 203 Baguida","addressLocality":"Lomé","addressCountry":"TG"},"areaServed":"Togo"}</script>
   <title>Niaba Voyage | Votre prochaine histoire commence ici</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -170,6 +181,24 @@
               <strong>Voir le tarif →</strong>
             </div>
           </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section popular-routes" aria-labelledby="popularRoutesTitle">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <span class="kicker">VOLS AU DÉPART DE LOMÉ</span>
+            <h2 id="popularRoutesTitle">Les itinéraires les plus recherchés</h2>
+            <p class="section-lead">Préparez votre voyage depuis Lomé et demandez le tarif disponible pour vos dates.</p>
+          </div>
+        </div>
+        <div class="route-seo-grid">
+          <a href="#flightForm" data-route-to="Paris (PAR)"><strong>Lomé → Paris</strong><span>Rechercher un vol</span></a>
+          <a href="#flightForm" data-route-to="Bruxelles (BRU)"><strong>Lomé → Bruxelles</strong><span>Rechercher un vol</span></a>
+          <a href="#flightForm" data-route-to="Montréal (YUL)"><strong>Lomé → Montréal</strong><span>Rechercher un vol</span></a>
+          <a href="#flightForm" data-route-to="Dubaï (DXB)"><strong>Lomé → Dubaï</strong><span>Rechercher un vol</span></a>
         </div>
       </div>
     </section>
@@ -359,6 +388,15 @@
     </section>
   </div>
 
+  <script>
+    document.querySelectorAll('[data-route-to]').forEach(function(link){
+      link.addEventListener('click',function(){
+        var from=document.getElementById('from'),to=document.getElementById('to');
+        if(from) from.value='Lomé (LFW)';
+        if(to) to.value=this.getAttribute('data-route-to');
+      });
+    });
+  </script>
   <script src="script.js"></script>
 </body>
 </html>
