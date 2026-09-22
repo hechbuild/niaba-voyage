@@ -95,9 +95,9 @@
               <span>Voyageurs</span>
               <button id="travelerBtn" class="traveler-btn" type="button">1 adulte</button>
               <div id="travelerPanel" class="traveler-panel" hidden>
-                <div class="traveler-row"><span><b>Adultes</b><small>12 ans et +</small></span><input id="adults" type="number" min="1" max="9" value="1"></div>
-                <div class="traveler-row"><span><b>Enfants</b><small>2–11 ans</small></span><input id="children" type="number" min="0" max="8" value="0"></div>
-                <div class="traveler-row"><span><b>Bébés</b><small>Moins de 2 ans</small></span><input id="infants" type="number" min="0" max="4" value="0"></div>
+                <div class="traveler-row"><span><b>Adultes</b><small>12 ans et +</small></span><div class="counter"><button type="button" data-count="adults" data-step="-1">−</button><strong id="adultsValue">1</strong><button type="button" data-count="adults" data-step="1">+</button></div><input id="adults" type="hidden" value="1"></div>
+                <div class="traveler-row"><span><b>Enfants</b><small>2–11 ans</small></span><div class="counter"><button type="button" data-count="children" data-step="-1">−</button><strong id="childrenValue">0</strong><button type="button" data-count="children" data-step="1">+</button></div><input id="children" type="hidden" value="0"></div>
+                <div class="traveler-row"><span><b>Bébés</b><small>Moins de 2 ans</small></span><div class="counter"><button type="button" data-count="infants" data-step="-1">−</button><strong id="infantsValue">0</strong><button type="button" data-count="infants" data-step="1">+</button></div><input id="infants" type="hidden" value="0"></div>
                 <button id="travelerDone" class="btn primary" type="button">Valider</button>
               </div>
               <input id="pax" type="hidden" value="1">
