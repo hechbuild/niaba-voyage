@@ -548,3 +548,20 @@ footer{background:#04132f;color:#b8c3d5;padding:40px 0;border-top:4px solid var(
   .trust-strip div b{font-size:.82rem}.trust-strip div span{font-size:.7rem;color:#667085}
   .conversion-strip{display:none}
 }
+
+/* Compact mobile footer */
+@media(max-width:600px){
+  .site-footer{padding-top:0}
+  .footer-columns{display:block;padding-top:30px;padding-bottom:22px}
+  .footer-company{padding-bottom:20px;margin-bottom:8px;border-bottom:1px solid rgba(255,255,255,.12)}
+  .footer-company .footer-brand{display:flex!important;align-items:center;gap:10px;font-size:1.05rem;white-space:nowrap}
+  .footer-company .footer-brand span:last-child{display:inline!important}
+  .footer-company p{font-size:.88rem;line-height:1.5;margin:8px 0;max-width:100%}
+  .footer-columns>div:not(.footer-company){padding:15px 0;border-bottom:1px solid rgba(255,255,255,.1)}
+  .footer-columns h3{margin:0 0 10px;font-size:.95rem}
+  .footer-columns a{display:inline-block;margin:0 16px 8px 0;font-size:.84rem;line-height:1.35}
+  .footer-bottom{padding-top:16px;padding-bottom:18px}
+  .footer-bottom p{font-size:.78rem}
+  .site-footer .legal-links{gap:6px;font-size:.76rem}
+  .wa-float{width:54px;height:54px;font-size:.9rem;right:16px;bottom:16px}
+}
