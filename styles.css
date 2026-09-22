@@ -606,3 +606,18 @@ footer{background:#04132f;color:#b8c3d5;padding:40px 0;border-top:4px solid var(
  .compact-footer-links a{font-size:.68rem!important;line-height:1.25!important}
  .compact-footer-row p{font-size:.62rem!important}
 }
+
+
+/* Mobile homepage final compacting */
+@media(max-width:760px){
+  .compact-home-footer{padding:8px 0 9px!important;border-top-width:2px!important}
+  .compact-footer-row{display:flex!important;flex-wrap:wrap!important;align-items:center!important;gap:5px 12px!important}
+  .compact-footer-row .footer-brand{margin:0!important;font-size:.78rem!important}
+  .compact-home-footer .brand-mark{width:28px!important;height:28px!important;font-size:13px!important;border-radius:8px!important}
+  .compact-footer-links{display:flex!important;flex:1 1 100%;gap:4px 10px!important;justify-content:flex-start!important;margin:0!important}
+  .compact-footer-links a{font-size:.62rem!important;line-height:1.15!important}
+  .compact-footer-row p{margin:2px 0 0!important;font-size:.58rem!important;line-height:1.1!important}
+  .wa-float{width:46px!important;height:46px!important;font-size:.78rem!important;right:12px!important;bottom:12px!important}
+  main{padding-bottom:0!important}
+  main>section:last-child{margin-bottom:0!important}
+}
