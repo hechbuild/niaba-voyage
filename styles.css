@@ -568,3 +568,24 @@ footer{background:#04132f;color:#b8c3d5;padding:40px 0;border-top:4px solid var(
 
 /* Simplified homepage */
 .home-secondary{display:none!important}
+
+/* Mobile navigation + compact footer v2 */
+@media(max-width:760px){
+  .header{background:#fff!important;border-bottom:1px solid #e7ebf1!important;backdrop-filter:none!important}
+  .header .brand{color:#071c45!important}
+  .header .brand b{color:#d9ad00!important}
+  .menu{display:block!important;color:#071c45!important;order:3;margin-left:6px}
+  .account-actions.desktop{display:flex!important;margin-left:auto;order:2}
+  .account-actions.desktop .account-btn{display:none!important}
+  .account-actions.desktop .login-link{display:block!important;border:0;background:transparent;color:#071c45;font-weight:800;font-size:.82rem;padding:8px}
+  .nav nav{display:none!important;position:absolute;top:68px;left:0;right:0;margin:0!important;padding:12px 20px 18px;background:#fff;border-bottom:1px solid #e7ebf1;box-shadow:0 12px 28px rgba(6,29,73,.12);flex-direction:column;gap:0!important}
+  .nav nav.open{display:flex!important}
+  .nav nav a{color:#071c45!important;padding:12px 4px;border-bottom:1px solid #eef1f5;font-size:.92rem}
+  .site-footer .footer-columns{display:block!important;padding-top:22px!important;padding-bottom:12px!important}
+  .site-footer .footer-company{padding-bottom:12px!important;margin-bottom:0!important}
+  .site-footer .footer-company p:last-child{display:none}
+  .site-footer .footer-columns>div:not(.footer-company){padding:10px 0!important}
+  .site-footer .footer-columns h3{margin:0 0 6px!important;font-size:.86rem!important}
+  .site-footer .footer-columns a{font-size:.78rem!important;margin:0 12px 5px 0!important}
+  .site-footer .footer-bottom{padding:12px 0 14px!important}
+}
