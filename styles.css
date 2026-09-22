@@ -589,3 +589,12 @@ footer{background:#04132f;color:#b8c3d5;padding:40px 0;border-top:4px solid var(
   .site-footer .footer-columns a{font-size:.78rem!important;margin:0 12px 5px 0!important}
   .site-footer .footer-bottom{padding:12px 0 14px!important}
 }
+
+/* Minimal homepage footer */
+.compact-home-footer{padding:22px 0!important;border-top:3px solid var(--yellow)}
+.compact-footer-row{display:flex;align-items:center;gap:24px;justify-content:space-between}
+.compact-footer-row .footer-brand{flex-shrink:0}
+.compact-footer-links{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.compact-footer-links a{color:#cbd5e3;text-decoration:none;font-size:.82rem}
+.compact-footer-row p{margin:0;color:#aebbd0;font-size:.75rem;white-space:nowrap}
+@media(max-width:760px){.compact-home-footer{padding:16px 0!important}.compact-footer-row{display:block!important}.compact-footer-row .footer-brand{margin-bottom:12px}.compact-footer-links{justify-content:flex-start!important;gap:8px 14px!important}.compact-footer-links a{font-size:.76rem!important}.compact-footer-row p{margin-top:12px!important;font-size:.7rem!important}}
