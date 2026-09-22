@@ -296,3 +296,29 @@ document.querySelectorAll(".filter-chip").forEach(btn=>btn.addEventListener("cli
 document.getElementById("flightSort")?.addEventListener("change",applyFlightControls);
 const flightResultsNode=document.getElementById("flightResults");
 if(flightResultsNode) new MutationObserver(()=>applyFlightControls()).observe(flightResultsNode,{childList:true});
+
+
+// Advanced passenger, cabin and multi-city UI
+const travelerBtn=document.getElementById("travelerBtn"), travelerPanel=document.getElementById("travelerPanel");
+function updateTravelerSummary(){
+  const a=Number(document.getElementById("adults")?.value||1),c=Number(document.getElementById("children")?.value||0),i=Number(document.getElementById("infants")?.value||0);
+  const cabin=document.getElementById("cabin"), label=cabin?.options[cabin.selectedIndex]?.text||"Économique";
+  if(document.getElementById("pax")) document.getElementById("pax").value=String(a+c+i);
+  if(travelerBtn) travelerBtn.textContent=[a+" adulte"+(a>1?"s":""),c?c+" enfant"+(c>1?"s":""):"",i?i+" bébé"+(i>1?"s":""):"",label].filter(Boolean).join(" · ");
+}
+travelerBtn?.addEventListener("click",()=>{travelerPanel.hidden=!travelerPanel.hidden});
+document.getElementById("travelerDone")?.addEventListener("click",()=>{updateTravelerSummary();travelerPanel.hidden=true});
+["adults","children","infants","cabin"].forEach(id=>document.getElementById(id)?.addEventListener("change",updateTravelerSummary));
+function addMultiLeg(){
+  const wrap=document.getElementById("multiCityLegs"); if(!wrap||wrap.children.length>=4)return;
+  const row=document.createElement("div"); row.className="multi-city-leg";
+  row.innerHTML='<input aria-label="Départ du trajet" placeholder="Départ (ex. LFW)"><input aria-label="Destination du trajet" placeholder="Destination"><input aria-label="Date du trajet" type="date" min="'+today+'"><button class="remove-leg" type="button" aria-label="Supprimer ce trajet">×</button>';
+  row.querySelector(".remove-leg").addEventListener("click",()=>row.remove()); wrap.appendChild(row);
+}
+document.getElementById("addLegBtn")?.addEventListener("click",addMultiLeg);
+document.querySelectorAll('input[name="tripType"]').forEach(r=>r.addEventListener("change",()=>{
+  const multi=document.querySelector('input[name="tripType"]:checked')?.value==="multicity", panel=document.getElementById("multiCityPanel");
+  if(panel) panel.hidden=!multi;
+  if(multi && document.getElementById("multiCityLegs")?.children.length===0){addMultiLeg();addMultiLeg();}
+}));
+updateTravelerSummary();
