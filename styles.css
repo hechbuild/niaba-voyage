@@ -671,3 +671,7 @@ footer{background:#04132f;color:#b8c3d5;padding:40px 0;border-top:4px solid var(
  .search-btn{position:relative!important;z-index:1!important}
  .trust-strip{position:relative!important;z-index:0!important}
 }
+
+/* Separate travelers and cabin class */
+.cabin-field select{width:100%;border:0;background:transparent;font:inherit;font-weight:700;color:var(--navy);outline:0}
+@media(max-width:760px){.traveler-field,.cabin-field{min-height:66px!important}.cabin-field select{font-size:.92rem!important;min-height:32px!important;padding:0!important}.traveler-btn{font-size:.88rem!important}}
