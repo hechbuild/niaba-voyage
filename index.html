@@ -386,7 +386,7 @@
     <div class="container footer-inner">
       <div class="brand footer-brand"><span class="brand-mark">➤</span><span>NIABA <b>VOYAGE</b></span></div>
       <p>Voyagez plus loin. Voyagez mieux.</p>
-      <p>© <span id="year"></span> NIABA VOYAGE. Tous droits réservés.</p>
+      <p>© <span id="year"></span> NIABA VOYAGE. Tous droits réservés.</p><div class="legal-links"><a href="/confidentialite.html">Politique de confidentialité</a><span>·</span><a href="/cookies.html">Cookies</a><span>·</span><button id="cookieSettings" type="button">Gérer les cookies</button></div>
     </div>
   </footer>
 
@@ -449,6 +449,10 @@
         if(to) to.value=this.getAttribute('data-route-to');
       });
     });
+  </script>
+  <div id="cookieBanner" class="cookie-banner" hidden><div><b>Votre confidentialité</b><p>Niaba Voyage utilise le stockage nécessaire au fonctionnement du site. Vous pouvez accepter ou refuser les cookies non essentiels.</p><a href="/cookies.html">En savoir plus</a></div><div class="cookie-actions"><button id="cookieReject" class="btn cookie-secondary" type="button">Refuser</button><button id="cookieAccept" class="btn primary" type="button">Accepter</button></div></div>
+  <script>
+    (function(){var b=document.getElementById('cookieBanner'),a=document.getElementById('cookieAccept'),r=document.getElementById('cookieReject'),g=document.getElementById('cookieSettings');function show(){b.hidden=false}function save(v){localStorage.setItem('niabaCookieConsent',v);b.hidden=true}if(!localStorage.getItem('niabaCookieConsent'))show();a.addEventListener('click',function(){save('accepted')});r.addEventListener('click',function(){save('rejected')});if(g)g.addEventListener('click',function(){localStorage.removeItem('niabaCookieConsent');show()});})();
   </script>
   <script src="script.js"></script>
 </body>
