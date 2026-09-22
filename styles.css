@@ -474,3 +474,18 @@ footer{background:#04132f;color:#b8c3d5;padding:40px 0;border-top:4px solid var(
 .route-seo-grid span{color:var(--blue);font-size:13px;font-weight:800}
 @media(max-width:900px){.route-seo-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:520px){.route-seo-grid{grid-template-columns:1fr}.popular-routes{padding-top:52px;padding-bottom:52px}}
+
+
+/* OTA-style results controls */
+.results-toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 12px;padding:14px 16px;background:#fff;border:1px solid var(--line);border-radius:16px}
+.filter-group{display:flex;gap:8px;flex-wrap:wrap}
+.filter-chip{border:1px solid #dce2ec;background:#fff;color:#344054;border-radius:999px;padding:9px 14px;font-weight:800;font-size:12px;cursor:pointer}
+.filter-chip.active,.filter-chip:hover{border-color:var(--navy);background:var(--navy);color:#fff}
+.sort-control{display:flex;align-items:center;gap:9px;color:var(--muted);font-size:12px;font-weight:800}
+.sort-control select{border:1px solid #dce2ec;border-radius:10px;padding:9px 30px 9px 10px;background:#fff;color:var(--ink);font-weight:700}
+.results-reassurance{display:flex;gap:18px;flex-wrap:wrap;margin:0 0 16px;padding:0 4px;color:#526078;font-size:11px;font-weight:700}
+.flight-result-card{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.flight-result-card:hover{transform:translateY(-2px);border-color:#c7d3e8;box-shadow:0 18px 44px rgba(17,36,78,.11)}
+.flight-result-price small:first-child{text-transform:uppercase;letter-spacing:.05em;font-size:10px}
+.reserve-btn{min-height:46px}
+@media(max-width:680px){.results-toolbar{align-items:stretch;flex-direction:column}.sort-control{justify-content:space-between}.sort-control select{flex:1}.results-reassurance{gap:8px;flex-direction:column}}
