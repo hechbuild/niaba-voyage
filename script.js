@@ -246,3 +246,18 @@ $("quoteForm").addEventListener("submit", (e) => {
     "noopener"
   );
 });
+
+const accountModal = $("accountModal");
+function setAccountMode(mode){
+  const signup=mode==="signup";
+  $("accountTitle").textContent=signup?"Créer votre compte":"Se connecter";
+  $("accountSubtitle").textContent=signup?"Créez votre espace Niaba Voyage pour préparer et suivre vos voyages.":"Retrouvez vos demandes et préparez vos prochains voyages.";
+  $("loginTab").classList.toggle("active",!signup); $("signupTab").classList.toggle("active",signup);
+  document.querySelectorAll(".signup-only").forEach(el=>el.hidden=!signup);
+  $("accountForm").querySelector('button[type="submit"]').textContent=signup?"Créer mon compte":"Se connecter";
+  $("accountPassword").autocomplete=signup?"new-password":"current-password";
+}
+document.querySelectorAll("[data-account-open]").forEach(btn=>btn.addEventListener("click",()=>{setAccountMode(btn.dataset.accountOpen);accountModal.hidden=false;}));
+document.querySelectorAll("[data-account-close]").forEach(btn=>btn.addEventListener("click",()=>accountModal.hidden=true));
+$("loginTab").addEventListener("click",()=>setAccountMode("login")); $("signupTab").addEventListener("click",()=>setAccountMode("signup"));
+$("accountForm").addEventListener("submit",(e)=>{e.preventDefault(); alert("L’espace client sera activé dès que le système de comptes sécurisé sera connecté.");});
