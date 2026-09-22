@@ -224,7 +224,7 @@ $("flightForm").addEventListener("submit", async (e) => {
   }
 });
 
-$("quoteForm").addEventListener("submit", (e) => {
+$("quoteForm")?.addEventListener("submit", (e) => {
   e.preventDefault();
 
   const msg = [
@@ -307,7 +307,7 @@ function updateTravelerSummary(){
   if(document.getElementById("pax")) document.getElementById("pax").value=String(a+c+i);
   if(travelerBtn) travelerBtn.textContent=[a+" adulte"+(a>1?"s":""),c?c+" enfant"+(c>1?"s":""):"",i?i+" bébé"+(i>1?"s":""):"",label].filter(Boolean).join(" · ");
 }
-travelerBtn?.addEventListener("click",()=>{travelerPanel.hidden=!travelerPanel.hidden});
+travelerBtn?.addEventListener("click",(e)=>{e.preventDefault();e.stopPropagation();if(travelerPanel){travelerPanel.hidden=!travelerPanel.hidden;travelerBtn.setAttribute("aria-expanded",String(!travelerPanel.hidden));}});
 document.getElementById("travelerDone")?.addEventListener("click",()=>{updateTravelerSummary();travelerPanel.hidden=true});
 ["adults","children","infants","cabin"].forEach(id=>document.getElementById(id)?.addEventListener("change",updateTravelerSummary));
 function addMultiLeg(){
