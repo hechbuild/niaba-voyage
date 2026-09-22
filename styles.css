@@ -565,3 +565,6 @@ footer{background:#04132f;color:#b8c3d5;padding:40px 0;border-top:4px solid var(
   .site-footer .legal-links{gap:6px;font-size:.76rem}
   .wa-float{width:54px;height:54px;font-size:.9rem;right:16px;bottom:16px}
 }
+
+/* Simplified homepage */
+.home-secondary{display:none!important}
