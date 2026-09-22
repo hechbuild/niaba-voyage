@@ -261,3 +261,38 @@ document.querySelectorAll("[data-account-open]").forEach(btn=>btn.addEventListen
 document.querySelectorAll("[data-account-close]").forEach(btn=>btn.addEventListener("click",()=>accountModal.hidden=true));
 $("loginTab").addEventListener("click",()=>setAccountMode("login")); $("signupTab").addEventListener("click",()=>setAccountMode("signup"));
 $("accountForm").addEventListener("submit",(e)=>{e.preventDefault(); alert("L’espace client sera activé dès que le système de comptes sécurisé sera connecté.");});
+
+
+// Professional result controls (compatible with live Amadeus cards)
+function getCardStops(card){
+  const text=(card.textContent||"").toLowerCase();
+  if(text.includes("direct")||text.includes("0 escale")) return 0;
+  const m=text.match(/(\d+)\s*escale/);
+  return m ? Number(m[1]) : 99;
+}
+function getCardPrice(card){
+  const el=card.querySelector(".flight-result-price strong");
+  if(!el) return Number.MAX_SAFE_INTEGER;
+  const n=(el.textContent||"").replace(/[^0-9,\.]/g,"").replace(/\s/g,"").replace(",",".");
+  return Number.parseFloat(n)||Number.MAX_SAFE_INTEGER;
+}
+function applyFlightControls(){
+  const results=document.getElementById("flightResults");
+  if(!results) return;
+  const filter=document.querySelector(".filter-chip.active")?.dataset.flightFilter||"all";
+  const cards=[...results.querySelectorAll(".flight-result-card")];
+  cards.forEach(card=>{
+    const stops=getCardStops(card);
+    card.hidden=filter==="direct" ? stops!==0 : filter==="one-stop" ? stops>1 : false;
+  });
+  if(document.getElementById("flightSort")?.value==="price"){
+    cards.sort((a,b)=>getCardPrice(a)-getCardPrice(b)).forEach(c=>results.appendChild(c));
+  }
+}
+document.querySelectorAll(".filter-chip").forEach(btn=>btn.addEventListener("click",()=>{
+  document.querySelectorAll(".filter-chip").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active"); applyFlightControls();
+}));
+document.getElementById("flightSort")?.addEventListener("change",applyFlightControls);
+const flightResultsNode=document.getElementById("flightResults");
+if(flightResultsNode) new MutationObserver(()=>applyFlightControls()).observe(flightResultsNode,{childList:true});
