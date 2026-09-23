@@ -370,7 +370,10 @@
         <button id="signupTab" type="button">Créer un compte</button>
       </div>
       <form id="accountForm">
-        <label class="field signup-only" hidden><span>Nom complet</span><input id="accountName" autocomplete="name" placeholder="Votre nom"></label>
+        <div class="signup-only account-name-grid" hidden>
+  <label class="field"><span>Prénom</span><input id="accountFirstName" autocomplete="given-name" placeholder="Votre prénom"></label>
+  <label class="field"><span>Nom</span><input id="accountName" autocomplete="family-name" placeholder="Votre nom"></label>
+</div>
         <label class="field"><span>Email</span><input id="accountEmail" type="email" autocomplete="email" required placeholder="vous@exemple.com"></label>
         <label class="field"><span>Mot de passe</span><input id="accountPassword" type="password" autocomplete="current-password" required minlength="6" placeholder="••••••••"></label>
         <button class="btn primary full-button" type="submit">Se connecter</button>
