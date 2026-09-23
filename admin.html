@@ -33,9 +33,46 @@
 <article class="admin-card wide"><div class="admin-card-head"><h2>Réservations récentes</h2><select id="bookingFilter"><option>Toutes</option><option>En attente</option><option>Confirmées</option><option>Annulées</option></select></div><div class="admin-table-wrap"><table><thead><tr><th>Référence</th><th>Client</th><th>Service</th><th>Destination</th><th>Montant</th><th>Statut</th></tr></thead><tbody id="adminBookings"><tr><td colspan="6">Aucune réservation réelle enregistrée pour le moment.</td></tr></tbody></table></div></article>
 <article class="admin-card"><h2>Services</h2><div class="admin-links"><a href="/#flightForm">✈️ Vols</a><a href="/hotels.html">🏨 Hôtels</a><a href="/location-voiture.html">🚗 Location de voiture</a></div></article>
 <article class="admin-card"><h2>Affiliation</h2><p><b>0 FCFA</b> de commissions à payer</p><a class="admin-link" href="/espace-affilie.html">Voir l’espace affilié →</a></article>
-<article class="admin-card wide"><h2>Gestion</h2><div class="admin-actions"><button data-admin="clients">Clients</button><button data-admin="bookings">Réservations</button><button data-admin="payments">Paiements</button><button data-admin="affiliates">Affiliés</button><button data-admin="requests">Demandes</button><button data-admin="reports">Statistiques</button></div><p class="admin-note">Ces modules sont prêts à recevoir les données du backend. Les chiffres réels apparaîtront lorsque comptes, réservation et paiement seront connectés à la base de données.</p></article>
+<article class="admin-card wide"><h2>Gestion</h2><div class="admin-actions"><button data-admin="clients">Clients</button><button data-admin="bookings">Réservations</button><button data-admin="payments">Paiements</button><button data-admin="affiliates">Affiliés</button><button data-admin="requests">Demandes</button><button data-admin="reports">Statistiques</button></div><p class="admin-note">Les données affichées ici proviennent désormais de la base Supabase. Les paiements et réservations apparaîtront automatiquement dès leur enregistrement.</p></article>
 </section></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase-auth.js"></script>
 <script>
-try{const p=JSON.parse(localStorage.getItem("niabaClientProfile")||"{}");if(p.email)document.getElementById("statClients").textContent="1";if(localStorage.getItem("niabaAffiliateCode"))document.getElementById("statAffiliates").textContent="1"}catch(e){}
-document.querySelectorAll("[data-admin]").forEach(b=>b.onclick=()=>alert("Module "+b.textContent+" : connexion au backend en préparation."));
+(async()=>{
+  const user=await niabaRequireUser(); if(!user)return;
+  const {data:profile,error:profileError}=await niabaSupabase.from("profiles").select("role").eq("id",user.id).single();
+  if(profileError||profile?.role!=="admin"){document.body.innerHTML='<main style="font-family:Inter,sans-serif;padding:40px"><h1>Accès refusé</h1><p>Cet espace est réservé à l’administration Niaba Voyage.</p><a href="/">Retour au site</a></main>';return;}
+
+  const [profilesRes,bookingsRes,paymentsRes,affiliatesRes,commissionsRes]=await Promise.all([
+    niabaSupabase.from("profiles").select("id,full_name,role"),
+    niabaSupabase.from("bookings").select("*").order("created_at",{ascending:false}),
+    niabaSupabase.from("payments").select("*").eq("status","paid"),
+    niabaSupabase.from("affiliates").select("*"),
+    niabaSupabase.from("commissions").select("*")
+  ]);
+
+  const profiles=profilesRes.data||[], bookings=bookingsRes.data||[], payments=paymentsRes.data||[], affiliates=affiliatesRes.data||[], commissions=commissionsRes.data||[];
+  statClients.textContent=profiles.filter(x=>x.role==="client").length;
+  statBookings.textContent=bookings.length;
+  statAffiliates.textContent=affiliates.length;
+  const paymentTotal=payments.reduce((s,x)=>s+Number(x.amount||0),0);
+  document.querySelector(".admin-stats article:nth-child(4) strong").textContent=new Intl.NumberFormat("fr-FR").format(paymentTotal)+" FCFA";
+  const due=commissions.filter(x=>x.status==="approved").reduce((s,x)=>s+Number(x.amount||0),0);
+  document.querySelector(".admin-card:not(.wide) p b").textContent=new Intl.NumberFormat("fr-FR").format(due)+" FCFA";
+
+  function renderBookings(list){
+    adminBookings.innerHTML=list.length?list.map(b=>`<tr><td>${b.reference}</td><td>${b.user_id?b.user_id.slice(0,8)+"…":"—"}</td><td>${b.service_type}</td><td>${b.destination||"—"}</td><td>${new Intl.NumberFormat("fr-FR").format(Number(b.amount||0))} ${b.currency||""}</td><td>${b.status}</td></tr>`).join(""):'<tr><td colspan="6">Aucune réservation enregistrée.</td></tr>';
+  }
+  renderBookings(bookings);
+  bookingFilter.onchange=()=>{const v=bookingFilter.value.toLowerCase();const map={"en attente":"pending","confirmées":"confirmed","annulées":"cancelled"};renderBookings(v==="toutes"?bookings:bookings.filter(b=>b.status===map[v]));};
+
+  document.querySelectorAll("[data-admin]").forEach(b=>b.onclick=()=>{
+    const key=b.dataset.admin;
+    if(key==="clients") alert(profiles.length+" profils enregistrés.");
+    else if(key==="bookings") alert(bookings.length+" réservations enregistrées.");
+    else if(key==="payments") alert(payments.length+" paiements confirmés.");
+    else if(key==="affiliates") alert(affiliates.length+" affiliés enregistrés.");
+    else if(key==="reports") alert("Statistiques chargées depuis Supabase.");
+    else alert("Aucune demande distincte enregistrée pour le moment.");
+  });
+})();
 </script></body></html>
