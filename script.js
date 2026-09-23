@@ -258,13 +258,22 @@ function setAccountMode(mode){
   $("accountForm").querySelector('button[type="submit"]').textContent=signup?"Créer mon compte":"Se connecter";
   $("accountPassword").autocomplete=signup?"new-password":"current-password";
 }
-document.querySelectorAll("[data-account-open]").forEach(btn=>btn.addEventListener("click",()=>{setAccountMode(btn.dataset.accountOpen);accountModal.hidden=false;}));
-document.querySelectorAll("[data-account-close]").forEach(btn=>btn.addEventListener("click",()=>accountModal.hidden=true));
+function openAccountModal(mode){
+  setAccountMode(mode);
+  accountModal.hidden=false;
+  document.body.classList.add("modal-open");
+}
+function closeAccountModal(){
+  accountModal.hidden=true;
+  document.body.classList.remove("modal-open");
+}
+document.querySelectorAll("[data-account-open]").forEach(btn=>btn.addEventListener("click",()=>openAccountModal(btn.dataset.accountOpen)));
+document.querySelectorAll("[data-account-close]").forEach(btn=>btn.addEventListener("click",closeAccountModal));
 $("loginTab").addEventListener("click",()=>setAccountMode("login")); $("signupTab").addEventListener("click",()=>setAccountMode("signup"));
 document.getElementById("googleAuthBtn")?.addEventListener("click",async()=>{
   const note=document.querySelector("#accountForm .account-note");
   try{
-    const {error}=await window.niabaSupabase.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.origin+"/espace-client.html"}});
+    const {error}=await window.niabaSupabase.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.origin+"/espace-client.html",skipBrowserRedirect:false}});
     if(error) throw error;
   }catch(err){if(note){note.textContent=err.message||"Connexion Google indisponible.";note.style.color="#b42318";}}
 });
@@ -287,10 +296,9 @@ $("accountForm").addEventListener("submit",async(e)=>{
       note.textContent="Compte créé. Consultez votre e-mail pour confirmer votre inscription.";
       note.style.color="#067647";
       setTimeout(()=>{
-        $("accountModal")?.classList.remove("open");
-        document.body.classList.remove("modal-open");
+        closeAccountModal();
         $("accountForm")?.reset();
-        setAccountMode?.("login");
+        setAccountMode("login");
       },1200);
     }else location.href="/espace-client.html";
   }catch(err){
