@@ -786,3 +786,14 @@ footer{background:#04132f;color:#b8c3d5;padding:40px 0;border-top:4px solid var(
  .compact-home-footer .footer-brand{font-size:.9rem!important}
  .compact-home-footer p{font-size:.76rem!important;margin-top:3px!important}
 }
+
+/* Ajustement WhatsApp et pied de page */
+@media(max-width:760px){
+ .wa-float{bottom:96px!important;right:18px!important;width:52px!important;height:52px!important;z-index:100!important}
+ .compact-home-footer{padding:22px 0 18px!important}
+ .compact-footer-row{display:flex!important;flex-direction:column!important;align-items:center!important;text-align:center!important;gap:12px!important}
+ .compact-footer-links{display:flex!important;flex-wrap:wrap!important;justify-content:center!important;align-items:center!important;gap:8px 16px!important;max-width:340px!important;margin:0 auto!important}
+ .compact-footer-links a{font-size:.84rem!important;line-height:1.35!important;white-space:normal!important}
+ .compact-home-footer .footer-brand{margin:0 auto!important}
+ .compact-home-footer p{margin:2px 0 0!important}
+}
