@@ -776,3 +776,13 @@ footer{background:#04132f;color:#b8c3d5;padding:40px 0;border-top:4px solid var(
 
 .nav-logout{border:0;background:transparent;color:inherit;font:inherit;font-weight:700;cursor:pointer;padding:0}
 @media(max-width:760px){#nav .nav-logout{display:block;width:100%;text-align:left;padding:12px 14px;color:#071c45;border-top:1px solid #edf0f4}}
+
+/* Footer légèrement plus généreux */
+@media(max-width:760px){
+ .compact-home-footer{padding:18px 0 16px!important}
+ .compact-footer-row{gap:10px!important}
+ .compact-footer-links{gap:7px 14px!important}
+ .compact-footer-links a{font-size:.82rem!important;line-height:1.35!important}
+ .compact-home-footer .footer-brand{font-size:.9rem!important}
+ .compact-home-footer p{font-size:.76rem!important;margin-top:3px!important}
+}
