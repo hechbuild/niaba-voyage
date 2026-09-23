@@ -252,7 +252,7 @@ const accountModal = $("accountModal");
 function setAccountMode(mode){
   const signup=mode==="signup";
   $("accountTitle").textContent=signup?"Créer votre compte":"Se connecter";
-  $("accountSubtitle").textContent=signup?"Créez votre espace Niaba Voyage pour préparer et suivre vos voyages.":"Retrouvez vos demandes et préparez vos prochains voyages.";
+  $("accountSubtitle").textContent=signup?"Gérez vos voyages simplement.":"Retrouvez vos demandes et préparez vos prochains voyages.";
   $("loginTab").classList.toggle("active",!signup); $("signupTab").classList.toggle("active",signup);
   document.querySelectorAll(".signup-only").forEach(el=>el.hidden=!signup);
   $("accountForm").querySelector('button[type="submit"]').textContent=signup?"Créer mon compte":"Se connecter";
