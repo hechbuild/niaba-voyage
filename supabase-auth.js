@@ -1,15 +1,19 @@
 const NIABA_SUPABASE_URL="https://bzfvfpfbusfmfvtohrph.supabase.co";
 const NIABA_SUPABASE_KEY="sb_publishable_9YJkPMzoEfhu25VosgPzDw_hwP1_ygR";
-const niabaSupabase=window.supabase.createClient(NIABA_SUPABASE_URL,NIABA_SUPABASE_KEY);
+const niabaSupabase=window.supabase.createClient(NIABA_SUPABASE_URL,NIABA_SUPABASE_KEY,{
+  auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:"pkce"}
+});
 window.niabaSupabase=niabaSupabase;
 
 window.niabaRequireUser=async function(redirect=true){
-  const {data:{user}}=await niabaSupabase.auth.getUser();
-  if(!user&&redirect) location.href="/?login=1";
+  const {data:{session},error}=await niabaSupabase.auth.getSession();
+  if(error) console.error("Niaba auth session:",error.message);
+  const user=session?.user||null;
+  if(!user&&redirect) location.replace("/?login=1");
   return user;
 };
 window.niabaLogout=async function(){
-  try{await niabaSupabase.auth.signOut({scope:"local"});}finally{location.replace("/");}
+  try{await niabaSupabase.auth.signOut();}finally{location.replace("/");}
 };
 
 function niabaRenderAuthState(user){
