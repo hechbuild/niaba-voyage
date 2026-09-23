@@ -736,3 +736,6 @@ footer{background:#04132f;color:#b8c3d5;padding:40px 0;border-top:4px solid var(
  .flight-grid>label.field:has(#depart):has(+ #returnField[hidden]){grid-column:1/-1!important}
  #returnField[hidden]{display:none!important}
 }
+
+/* Horizontal swap icon for side-by-side departure/destination */
+@media(max-width:760px){.swap::after{content:"⇄"!important;font-size:18px!important;line-height:1!important}}
