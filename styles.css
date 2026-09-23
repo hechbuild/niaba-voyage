@@ -915,3 +915,6 @@ body{background:#f7f9fc;color:#172033}.header{background:#fff}.service-search,.d
 .password-rules small{font-size:.72rem;line-height:1.25}
 .password-rules small.valid{color:#067647;font-weight:700}
 @media(max-width:480px){.password-rules{grid-template-columns:1fr 1fr;padding:6px 8px;gap:3px 6px}.password-rules small{font-size:.64rem}}
+
+/* Auth mode visibility: prevent signup fields leaking into login mode */
+.signup-only[hidden]{display:none!important}
