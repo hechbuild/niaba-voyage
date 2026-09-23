@@ -813,3 +813,15 @@ body{background:#f7f9fc;color:#172033}.header{background:#fff}.service-search,.d
 .account-divider{margin:4px 0 16px!important;text-align:center!important}
 .account-divider span{font-size:13px!important;color:#667085!important;background:#fff!important;padding:0 8px!important}
 @media(max-width:760px){.google-auth-btn{min-height:52px!important;font-size:14px!important}.account-dialog{overflow-y:auto!important}}
+
+/* Compacter la fenêtre de compte sur mobile */
+@media(max-width:760px){
+ .account-dialog{top:16px!important;max-height:calc(100dvh - 32px)!important;padding:26px 22px 22px!important}
+ .account-brand{margin-bottom:18px!important}
+ .account-dialog h2{margin:10px 0 8px!important;font-size:2rem!important}
+ #accountSubtitle{margin:0 0 18px!important;line-height:1.4!important}
+ .account-tabs{margin-bottom:16px!important}
+ .google-auth-btn{margin-bottom:10px!important}
+ .account-divider{margin:0 0 10px!important}
+ #accountForm .field{margin-bottom:10px!important}
+}
