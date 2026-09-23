@@ -6,11 +6,11 @@ const niabaSupabase=window.supabase.createClient(NIABA_SUPABASE_URL,NIABA_SUPABA
 window.niabaSupabase=niabaSupabase;
 
 window.niabaRequireUser=async function(redirect=true){
-  const {data:{session},error}=await niabaSupabase.auth.getSession();
-  if(error) console.error("Niaba auth session:",error.message);
-  const user=session?.user||null;
-  if(!user&&redirect) location.replace("/?login=1");
-  return user;
+  const {data:{user},error}=await niabaSupabase.auth.getUser();
+  if(error) console.error("Niaba auth user:",error.message);
+  const verifiedUser=user||null;
+  if(!verifiedUser&&redirect) location.replace("/?login=1");
+  return verifiedUser;
 };
 window.niabaLogout=async function(){
   try{await niabaSupabase.auth.signOut();}finally{location.replace("/");}
