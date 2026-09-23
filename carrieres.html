@@ -12,7 +12,30 @@
 </style>
 </head>
 <body>
-<header class="header"><div class="container nav"><a class="brand" href="/"><span class="brand-mark">➤</span><span>NIABA <b>VOYAGE</b></span></a><nav><a href="/">Accueil</a><a href="/#offres">Offres</a><a href="/#services">Services</a><a href="/#entreprises">Entreprises</a><a href="/carrieres.html">Carrières</a><a href="/#contact">Contact</a></nav></div></header>
+<header class="header">
+    <div class="container nav">
+      <a class="brand" href="#accueil" aria-label="Niaba Voyage">
+        <span class="brand-mark">➤</span>
+        <span>NIABA <b>VOYAGE</b></span>
+      </a>
+
+      <button id="menuBtn" class="menu" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
+
+      <nav id="nav">
+        <a href="#flightForm">Vols</a>
+        <a href="/hotels.html">Hôtels</a>
+        <a href="/location-voiture.html">Location de voiture</a>
+        <a href="/faq.html">Aide</a>
+        <a href="/espace-client.html">Mon espace</a>
+        <button class="nav-logout" id="logoutBtn" type="button">Déconnexion</button>
+      </nav>
+
+      <div class="account-actions desktop">
+        <button class="login-link" type="button" data-account-open="login">Se connecter</button>
+        <button class="account-btn" type="button" data-account-open="signup">Créer un compte</button>
+      </div>
+    </div>
+  </header>
 <main>
 <section class="career-hero"><div class="container"><span class="kicker light-kicker">CARRIÈRES CHEZ NIABA VOYAGE</span><h1>Construisons ensemble une nouvelle façon de voyager dans le monde.</h1><p>Niaba Voyage développe des solutions de voyage simples et accessibles pour les particuliers, les entreprises et les organisations. Notre ambition est de réunir technologie, expertise du voyage et qualité de service pour connecter les voyageurs aux destinations du monde entier et rendre chaque déplacement plus simple.</p><a class="career-back" href="#opportunites">Découvrir les opportunités ↓</a></div></section>
 <section class="career-wrap" id="opportunites"><div class="container">
@@ -42,4 +65,17 @@
 document.querySelectorAll('[data-job]').forEach(function(a){a.addEventListener('click',function(){setTimeout(function(){document.getElementById('careerJob').value=a.dataset.job},0)})});
 document.getElementById('careerForm').addEventListener('submit',function(e){e.preventDefault();var s='Candidature Niaba Voyage — '+document.getElementById('careerJob').value;var b='Nom : '+document.getElementById('careerName').value+'\nEmail : '+document.getElementById('careerEmail').value+'\nTéléphone : '+document.getElementById('careerPhone').value+'\nPays / Ville : '+document.getElementById('careerLocation').value+'\nPoste : '+document.getElementById('careerJob').value+'\n\nPrésentation :\n'+document.getElementById('careerMessage').value+'\n\nCV : à joindre en PDF à cet e-mail.';window.location.href='mailto:niaba.voyage@gmail.com?subject='+encodeURIComponent(s)+'&body='+encodeURIComponent(b)});
 </script>
-</body></html>
+<footer class="site-footer compact-home-footer">
+    <div class="container compact-footer-row">
+      <div class="brand footer-brand"><span class="brand-mark">➤</span><span>NIABA <b>VOYAGE</b></span></div>
+      <nav class="compact-footer-links" aria-label="Liens de pied de page">
+        <a href="/a-propos.html">À propos de nous</a>
+        <a href="mailto:niaba.voyage@gmail.com">Contactez-nous</a>
+        <a href="/carrieres.html">Carrières</a>
+        <a href="/affiliation.html">Programme d’affiliation</a>
+        <a href="/conditions.html">Conditions générales</a>
+        <a href="/confidentialite.html">Confidentialité</a>
+      </nav>
+      <p>© <span id="year"></span> NIABA VOYAGE</p>
+    </div>
+  </footer><script src="script.js"></script></body></html>
