@@ -872,3 +872,19 @@ body{background:#f7f9fc;color:#172033}.header{background:#fff}.service-search,.d
  #accountForm .field input{font-size:.82rem!important;min-height:25px!important}
  #accountForm .field span{font-size:.58rem!important}
 }
+
+/* Réduction forte des espaces du formulaire compte mobile */
+@media(max-width:760px){
+ .account-dialog{padding:10px 16px 12px!important}
+ .account-brand{margin:0!important;height:30px!important}
+ .account-dialog h2{margin:0 0 2px!important}
+ #accountSubtitle{margin:0 0 5px!important}
+ .account-tabs{margin:0 0 5px!important}
+ .google-auth-btn{margin:0 0 2px!important}
+ .account-divider{margin:0 0 2px!important;height:16px!important}
+ .account-name-grid{gap:3px!important;margin:0!important}
+ #accountForm{gap:0!important}
+ #accountForm .field{margin:0 0 3px!important;min-height:50px!important}
+ #accountForm .full-button{margin:2px 0 0!important}
+ #accountForm .account-note{margin:3px 0 0!important}
+}
