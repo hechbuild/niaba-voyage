@@ -408,6 +408,29 @@
   <script>
     (function(){var b=document.getElementById('cookieBanner'),a=document.getElementById('cookieAccept'),r=document.getElementById('cookieReject'),g=document.getElementById('cookieSettings');function show(){b.hidden=false}function save(v){localStorage.setItem('niabaCookieConsent',v);b.hidden=true}if(!localStorage.getItem('niabaCookieConsent'))show();a.addEventListener('click',function(){save('accepted')});r.addEventListener('click',function(){save('rejected')});if(g)g.addEventListener('click',function(){localStorage.removeItem('niabaCookieConsent');show()});})();
   </script>
+  <script>
+    // Critical auth launcher kept inline so login works even if another bundle fails.
+    (function(){
+      function setMode(mode){
+        var signup=mode==="signup", modal=document.getElementById("accountModal");
+        if(!modal)return;
+        document.getElementById("accountTitle").textContent=signup?"Créer votre compte":"Se connecter";
+        document.getElementById("accountSubtitle").textContent=signup?"Gérez vos voyages simplement.":"Retrouvez vos demandes et préparez vos prochains voyages.";
+        document.querySelectorAll(".signup-only").forEach(function(el){el.hidden=!signup;});
+        var login=document.getElementById("loginTab"), reg=document.getElementById("signupTab");
+        if(login)login.classList.toggle("active",!signup);
+        if(reg)reg.classList.toggle("active",signup);
+        var submit=document.querySelector('#accountForm button[type="submit"]');
+        if(submit)submit.textContent=signup?"Créer mon compte":"Se connecter";
+        var confirm=document.getElementById("accountPasswordConfirm");
+        if(confirm){confirm.required=signup;confirm.disabled=!signup;}
+      }
+      function open(mode){var modal=document.getElementById("accountModal");if(!modal)return;setMode(mode||"login");modal.hidden=false;document.body.classList.add("modal-open");}
+      window.niabaOpenAccount=open;
+      document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-account-open]");if(b){e.preventDefault();open(b.getAttribute("data-account-open"));}});
+      if(new URLSearchParams(location.search).get("login")==="1"){open("login");}
+    })();
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-auth.js?v=20260923-4"></script>
   <script src="script.js?v=20260923-18"></script>
