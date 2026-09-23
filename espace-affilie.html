@@ -42,7 +42,26 @@
         <button class="account-btn" type="button" data-account-open="signup">Créer un compte</button>
       </div>
     </div>
-  </header><main class="dash"><div class="dash-head"><div><span class="eyebrow">NIABA VOYAGE PARTNERS</span><h1>Espace affilié</h1><p class="dash-note">Partagez Niaba Voyage et suivez votre activité partenaire.</p></div><a class="dash-action dash-secondary" href="/affiliation.html">Programme d’affiliation</a></div><section class="dash-grid"><article class="dash-card"><span>Clics</span><strong id="clicks">0</strong></article><article class="dash-card"><span>Réservations attribuées</span><strong>0</strong></article><article class="dash-card"><span>Commissions</span><strong>0 FCFA</strong></article><article class="dash-card dash-wide"><h2>Mon lien d’affiliation</h2><div class="dash-form"><input id="affiliateLink" readonly><button class="dash-action" id="copyLink" type="button">Copier le lien</button></div><p class="dash-note">Le suivi serveur des clics, réservations et commissions sera activé avec le backend de réservation. Le lien partenaire est déjà généré.</p></article><article class="dash-card dash-wide"><h2>Mes performances</h2><table class="dash-table"><thead><tr><th>Date</th><th>Référence</th><th>Service</th><th>Montant</th><th>Commission</th><th>Statut</th></tr></thead><tbody><tr><td colspan="6">Aucune commission enregistrée pour le moment.</td></tr></tbody></table></article></section></main><script>let code=localStorage.getItem("niabaAffiliateCode");if(!code){code="NV-"+Math.random().toString(36).slice(2,8).toUpperCase();localStorage.setItem("niabaAffiliateCode",code)}affiliateLink.value=location.origin+"/?ref="+code;copyLink.onclick=async()=>{await navigator.clipboard.writeText(affiliateLink.value);copyLink.textContent="Lien copié ✓"};</script><footer class="site-footer compact-home-footer">
+  </header><main class="dash"><div class="dash-head"><div><span class="eyebrow">NIABA VOYAGE PARTNERS</span><h1>Espace affilié</h1><p class="dash-note">Partagez Niaba Voyage et suivez votre activité partenaire.</p></div><a class="dash-action dash-secondary" href="/affiliation.html">Programme d’affiliation</a></div><section class="dash-grid"><article class="dash-card"><span>Clics</span><strong id="clicks">0</strong></article><article class="dash-card"><span>Réservations attribuées</span><strong>0</strong></article><article class="dash-card"><span>Commissions</span><strong>0 FCFA</strong></article><article class="dash-card dash-wide"><h2>Mon lien d’affiliation</h2><div class="dash-form"><input id="affiliateLink" readonly><button class="dash-action" id="copyLink" type="button">Copier le lien</button></div><p class="dash-note">Le suivi serveur des clics, réservations et commissions sera activé avec le backend de réservation. Le lien partenaire est déjà généré.</p></article><article class="dash-card dash-wide"><h2>Mes performances</h2><table class="dash-table"><thead><tr><th>Date</th><th>Référence</th><th>Service</th><th>Montant</th><th>Commission</th><th>Statut</th></tr></thead><tbody><tr><td colspan="6">Aucune commission enregistrée pour le moment.</td></tr></tbody></table></article></section></main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase-auth.js"></script><script>
+(async()=>{
+ const user=await niabaRequireUser(); if(!user)return;
+ let {data:aff}=await niabaSupabase.from("affiliates").select("*").eq("user_id",user.id).maybeSingle();
+ if(!aff){
+   const code="NV-"+user.id.replaceAll("-","").slice(0,8).toUpperCase();
+   const res=await niabaSupabase.from("affiliates").insert({user_id:user.id,code}).select().single();
+   aff=res.data;
+ }
+ if(!aff)return;
+ affiliateLink.value=location.origin+"/?ref="+aff.code;
+ copyLink.onclick=async()=>{await navigator.clipboard.writeText(affiliateLink.value);copyLink.textContent="Lien copié ✓"};
+ const {data:refs}=await niabaSupabase.from("referrals").select("*").eq("affiliate_id",aff.id);
+ const {data:comms}=await niabaSupabase.from("commissions").select("*").eq("affiliate_id",aff.id);
+ clicks.textContent=(refs||[]).length;
+ const cards=document.querySelectorAll(".dash-card strong");
+ if(cards[1])cards[1].textContent=(refs||[]).filter(r=>r.status==="converted").length;
+ if(cards[2])cards[2].textContent=new Intl.NumberFormat("fr-FR").format((comms||[]).reduce((s,x)=>s+Number(x.amount||0),0))+" FCFA";
+})();
+</script><footer class="site-footer compact-home-footer">
     <div class="container compact-footer-row">
       <div class="brand footer-brand"><span class="brand-mark">➤</span><span>NIABA <b>VOYAGE</b></span></div>
       <nav class="compact-footer-links" aria-label="Liens de pied de page">
