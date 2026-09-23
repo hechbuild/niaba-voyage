@@ -1,0 +1,41 @@
+<!doctype html><html lang="fr"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Niaba Voyage — vols, séjours, assistance visa et accompagnement personnalisé depuis Lomé, Togo.">
+  <meta name="theme-color" content="#061d49">
+  <meta name="robots" content="index,follow">
+  <meta name="author" content="Niaba Voyage">
+  <link rel="canonical" href="https://www.niabavoyage.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:site_name" content="Niaba Voyage">
+  <meta property="og:title" content="Niaba Voyage | Vols, voyages et assistance visa au Togo">
+  <meta property="og:description" content="Recherchez vos vols depuis Lomé, préparez vos voyages et bénéficiez d’un accompagnement personnalisé avec Niaba Voyage.">
+  <meta property="og:url" content="https://www.niabavoyage.com/">
+  <meta property="og:image" content="https://www.niabavoyage.com/hero-travel.png">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TravelAgency","name":"Niaba Voyage","url":"https://www.niabavoyage.com/","email":"niaba.voyage@gmail.com","telephone":"+22891813448","address":{"@type":"PostalAddress","streetAddress":"12 BP 203 Baguida","addressLocality":"Lomé","addressCountry":"TG"},"areaServed":"Togo"}</script>
+  <title>Administration | Niaba Voyage</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head><body>
+<header class="header"><div class="container nav"><a class="brand" href="/"><span class="brand-mark">➤</span><span>NIABA <b>VOYAGE</b></span></a><span style="font-weight:800;color:#071c45">Administration</span></div></header>
+<main class="admin-shell">
+<section class="admin-top"><div><span class="eyebrow">BACK-OFFICE PRIVÉ</span><h1>Tableau de bord</h1><p>Vue centrale de l’activité Niaba Voyage.</p></div><a class="admin-btn secondary" href="/">Voir le site</a></section>
+<section class="admin-stats">
+<article><span>Réservations</span><strong id="statBookings">0</strong><small>Enregistrées</small></article>
+<article><span>Clients</span><strong id="statClients">0</strong><small>Comptes connus</small></article>
+<article><span>Affiliés</span><strong id="statAffiliates">0</strong><small>Partenaires</small></article>
+<article><span>Paiements</span><strong>0 FCFA</strong><small>Confirmés</small></article>
+</section>
+<section class="admin-grid">
+<article class="admin-card wide"><div class="admin-card-head"><h2>Réservations récentes</h2><select id="bookingFilter"><option>Toutes</option><option>En attente</option><option>Confirmées</option><option>Annulées</option></select></div><div class="admin-table-wrap"><table><thead><tr><th>Référence</th><th>Client</th><th>Service</th><th>Destination</th><th>Montant</th><th>Statut</th></tr></thead><tbody id="adminBookings"><tr><td colspan="6">Aucune réservation réelle enregistrée pour le moment.</td></tr></tbody></table></div></article>
+<article class="admin-card"><h2>Services</h2><div class="admin-links"><a href="/#flightForm">✈️ Vols</a><a href="/hotels.html">🏨 Hôtels</a><a href="/location-voiture.html">🚗 Location de voiture</a></div></article>
+<article class="admin-card"><h2>Affiliation</h2><p><b>0 FCFA</b> de commissions à payer</p><a class="admin-link" href="/espace-affilie.html">Voir l’espace affilié →</a></article>
+<article class="admin-card wide"><h2>Gestion</h2><div class="admin-actions"><button data-admin="clients">Clients</button><button data-admin="bookings">Réservations</button><button data-admin="payments">Paiements</button><button data-admin="affiliates">Affiliés</button><button data-admin="requests">Demandes</button><button data-admin="reports">Statistiques</button></div><p class="admin-note">Ces modules sont prêts à recevoir les données du backend. Les chiffres réels apparaîtront lorsque comptes, réservation et paiement seront connectés à la base de données.</p></article>
+</section></main>
+<script>
+try{const p=JSON.parse(localStorage.getItem("niabaClientProfile")||"{}");if(p.email)document.getElementById("statClients").textContent="1";if(localStorage.getItem("niabaAffiliateCode"))document.getElementById("statAffiliates").textContent="1"}catch(e){}
+document.querySelectorAll("[data-admin]").forEach(b=>b.onclick=()=>alert("Module "+b.textContent+" : connexion au backend en préparation."));
+</script></body></html>
