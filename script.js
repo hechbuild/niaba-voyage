@@ -268,14 +268,31 @@ function closeAccountModal(){
   document.body.classList.remove("modal-open");
 }
 document.querySelectorAll("[data-account-open]").forEach(btn=>btn.addEventListener("click",()=>openAccountModal(btn.dataset.accountOpen)));
+const accountParams=new URLSearchParams(location.search);
+if(accountParams.get("login")==="1"){
+  openAccountModal("login");
+  history.replaceState({},document.title,location.pathname+location.hash);
+}
 document.querySelectorAll("[data-account-close]").forEach(btn=>btn.addEventListener("click",closeAccountModal));
 $("loginTab").addEventListener("click",()=>setAccountMode("login")); $("signupTab").addEventListener("click",()=>setAccountMode("signup"));
 document.getElementById("googleAuthBtn")?.addEventListener("click",async()=>{
   const note=document.querySelector("#accountForm .account-note");
+  const button=document.getElementById("googleAuthBtn");
   try{
-    const {error}=await window.niabaSupabase.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.origin+"/espace-client.html",skipBrowserRedirect:false}});
+    if(!window.niabaSupabase) throw new Error("Service de connexion indisponible. Rechargez la page.");
+    if(button) button.disabled=true;
+    if(note){note.textContent="Ouverture de Google…";note.style.color="#667085";}
+    const redirectTo=window.location.origin+"/espace-client.html";
+    const {data,error}=await window.niabaSupabase.auth.signInWithOAuth({
+      provider:"google",
+      options:{redirectTo,skipBrowserRedirect:false}
+    });
     if(error) throw error;
-  }catch(err){if(note){note.textContent=err.message||"Connexion Google indisponible.";note.style.color="#b42318";}}
+    if(data?.url) window.location.assign(data.url);
+  }catch(err){
+    if(note){note.textContent=err.message||"Connexion Google indisponible.";note.style.color="#b42318";}
+    if(button) button.disabled=false;
+  }
 });
 
 $("accountForm").addEventListener("submit",async(e)=>{
