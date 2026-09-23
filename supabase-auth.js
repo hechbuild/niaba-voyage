@@ -5,7 +5,7 @@ window.niabaSupabase=niabaSupabase;
 
 window.niabaRequireUser=async function(redirect=true){
   const {data:{user}}=await niabaSupabase.auth.getUser();
-  if(!user&&redirect) location.href="/";
+  if(!user&&redirect) location.href="/?login=1";
   return user;
 };
 window.niabaLogout=async function(){await niabaSupabase.auth.signOut();location.href="/";};
