@@ -48,9 +48,9 @@
  const {data:profile}=await niabaSupabase.from("profiles").select("*").eq("id",user.id).single();
  profileName.value=profile?.full_name||""; profileEmail.value=user.email||""; profileEmail.readOnly=true;
  profilePhone.value=profile?.phone||""; profileCountry.value=profile?.country||"";
- const {data:bookings}=await niabaSupabase.from("booking_requests").select("*").order("created_at",{ascending:false});
+ const {data:bookings}=await niabaSupabase.from("bookings").select("*").order("created_at",{ascending:false});
  bookingCount.textContent=(bookings||[]).length;
- if(bookings?.length) clientBookings.innerHTML=bookings.map(b=>`<tr><td>${b.id.slice(0,8).toUpperCase()}</td><td>${b.service_type}</td><td>${b.details?.route||b.details?.destination||"—"}</td><td>${new Date(b.created_at).toLocaleDateString("fr-FR")}</td><td>${b.status}</td></tr>`).join("");
+ if(bookings?.length) clientBookings.innerHTML=bookings.map(b=>`<tr><td>${b.reference||b.id.slice(0,8).toUpperCase()}</td><td>${b.service_type}</td><td>${[b.origin,b.destination].filter(Boolean).join(" → ")||"—"}</td><td>${new Date(b.created_at).toLocaleDateString("fr-FR")}</td><td>${b.status}</td></tr>`).join("");
  profileForm.onsubmit=async e=>{e.preventDefault();const {error}=await niabaSupabase.from("profiles").update({full_name:profileName.value,phone:profilePhone.value,country:profileCountry.value,updated_at:new Date().toISOString()}).eq("id",user.id);alert(error?error.message:"Profil enregistré.")};
  clientLogout.onclick=niabaLogout;
 })();
