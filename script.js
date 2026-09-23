@@ -270,7 +270,7 @@ $("accountForm").addEventListener("submit",async(e)=>{
   try{
     let result;
     if(signup){
-      result=await window.niabaSupabase.auth.signUp({email,password,options:{data:{full_name:$("accountName").value.trim()}}});
+      result=await window.niabaSupabase.auth.signUp({email,password,options:{data:{first_name:$("accountFirstName")?.value.trim()||"",last_name:$("accountName").value.trim(),full_name:[$("accountFirstName")?.value.trim(),$("accountName").value.trim()].filter(Boolean).join(" ")}}});
     }else{
       result=await window.niabaSupabase.auth.signInWithPassword({email,password});
     }
