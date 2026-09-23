@@ -261,7 +261,29 @@ function setAccountMode(mode){
 document.querySelectorAll("[data-account-open]").forEach(btn=>btn.addEventListener("click",()=>{setAccountMode(btn.dataset.accountOpen);accountModal.hidden=false;}));
 document.querySelectorAll("[data-account-close]").forEach(btn=>btn.addEventListener("click",()=>accountModal.hidden=true));
 $("loginTab").addEventListener("click",()=>setAccountMode("login")); $("signupTab").addEventListener("click",()=>setAccountMode("signup"));
-$("accountForm").addEventListener("submit",(e)=>{e.preventDefault(); alert("L’espace client sera activé dès que le système de comptes sécurisé sera connecté.");});
+$("accountForm").addEventListener("submit",async(e)=>{
+  e.preventDefault();
+  const signup=$("signupTab").classList.contains("active");
+  const email=$("accountEmail").value.trim(), password=$("accountPassword").value;
+  const button=e.currentTarget.querySelector('button[type="submit"]'), note=e.currentTarget.querySelector(".account-note");
+  button.disabled=true; button.textContent=signup?"Création…":"Connexion…";
+  try{
+    let result;
+    if(signup){
+      result=await window.niabaSupabase.auth.signUp({email,password,options:{data:{full_name:$("accountName").value.trim()}}});
+    }else{
+      result=await window.niabaSupabase.auth.signInWithPassword({email,password});
+    }
+    if(result.error) throw result.error;
+    if(signup && !result.data.session){
+      note.textContent="Compte créé. Consultez votre e-mail pour confirmer votre inscription.";
+      note.style.color="#067647";
+    }else location.href="/espace-client.html";
+  }catch(err){
+    note.textContent=err.message||"Impossible de poursuivre. Vérifiez vos informations.";
+    note.style.color="#b42318";
+  }finally{button.disabled=false;button.textContent=signup?"Créer mon compte":"Se connecter";}
+});
 
 
 // Professional result controls (compatible with live Amadeus cards)
@@ -356,4 +378,4 @@ if(airportList){airportList.innerHTML=airportCatalog.map(([code,city,country,air
 
 // Menu logout
 const logoutBtn=document.getElementById("logoutBtn");
-logoutBtn?.addEventListener("click",()=>{try{localStorage.removeItem("niabaUser");sessionStorage.removeItem("niabaUser");}catch(e){} window.location.href="/";});
+logoutBtn?.addEventListener("click",()=>window.niabaLogout ? window.niabaLogout() : (window.location.href="/"));
