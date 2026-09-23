@@ -33,9 +33,9 @@ document.addEventListener("click",(event)=>{
 });
 window.niabaOpenAccount=niabaOpenAccount;
 
-$("year").textContent = new Date().getFullYear();
+if ($("year")) $("year").textContent = new Date().getFullYear();
 
-$("menuBtn").addEventListener("click", () => {
+$("menuBtn")?.addEventListener("click", () => {
   const nav = $("nav");
   const open = nav.classList.toggle("open");
   $("menuBtn").setAttribute("aria-expanded", String(open));
@@ -48,7 +48,7 @@ document.querySelectorAll("#nav a").forEach((a) => {
   });
 });
 
-$("swapBtn").addEventListener("click", () => {
+$("swapBtn")?.addEventListener("click", () => {
   const from = $("from").value;
   $("from").value = $("to").value;
   $("to").value = from;
@@ -64,10 +64,10 @@ document.querySelectorAll('input[name="tripType"]').forEach((radio) => {
 });
 
 const today = new Date().toISOString().slice(0, 10);
-$("depart").min = today;
-$("return").min = today;
+if ($("depart")) $("depart").min = today;
+if ($("return")) $("return").min = today;
 
-$("depart").addEventListener("change", () => {
+$("depart")?.addEventListener("change", () => {
   $("return").min = $("depart").value || today;
   if ($("return").value && $("return").value < $("depart").value) {
     $("return").value = "";
@@ -307,7 +307,7 @@ if(accountParams.get("login")==="1"){
   history.replaceState({},document.title,location.pathname+location.hash);
 }
 document.querySelectorAll("[data-account-close]").forEach(btn=>btn.addEventListener("click",closeAccountModal));
-$("loginTab").addEventListener("click",()=>setAccountMode("login")); $("signupTab").addEventListener("click",()=>setAccountMode("signup"));
+$("loginTab")?.addEventListener("click",()=>setAccountMode("login")); $("signupTab")?.addEventListener("click",()=>setAccountMode("signup"));
 function passwordChecks(value){
   return {length:value.length>=8,upper:/[A-Z]/.test(value),lower:/[a-z]/.test(value),number:/\d/.test(value)};
 }
@@ -343,7 +343,7 @@ document.getElementById("googleAuthBtn")?.addEventListener("click",async()=>{
   }
 });
 
-$("accountForm").addEventListener("submit",async(e)=>{
+$("accountForm")?.addEventListener("submit",async(e)=>{
   e.preventDefault();
   const signup=$("signupTab").classList.contains("active");
   const email=$("accountEmail").value.trim(), password=$("accountPassword").value;
