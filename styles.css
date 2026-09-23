@@ -918,3 +918,34 @@ body{background:#f7f9fc;color:#172033}.header{background:#fff}.service-search,.d
 
 /* Auth mode visibility: prevent signup fields leaking into login mode */
 .signup-only[hidden]{display:none!important}
+
+/* Stable mobile authentication layout */
+@media(max-width:760px){
+  .account-modal{padding:12px!important;overflow:auto!important}
+  .account-dialog{
+    top:auto!important;
+    transform:none!important;
+    transform-origin:center!important;
+    width:min(430px,100%)!important;
+    max-height:calc(100dvh - 24px)!important;
+    overflow-y:auto!important;
+    padding:18px 16px!important;
+    border-radius:20px!important;
+  }
+  .account-brand{height:auto!important;transform:none!important;margin:0 0 12px!important}
+  .account-dialog h2{font-size:1.45rem!important;line-height:1.15!important;margin:0 0 5px!important}
+  #accountSubtitle{font-size:.82rem!important;line-height:1.35!important;margin:0 0 12px!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important}
+  .account-tabs{min-height:42px!important;margin:0 0 12px!important}
+  .account-tabs button{font-size:.78rem!important;padding:8px 6px!important}
+  #accountForm{display:grid!important;gap:9px!important}
+  .google-auth-btn{min-height:42px!important;font-size:.8rem!important;margin:0!important}
+  .account-divider{height:auto!important;margin:0!important}
+  #accountForm .field{min-height:56px!important;padding:6px 10px!important;margin:0!important}
+  #accountForm .field span{font-size:.64rem!important;line-height:1.1!important;margin-bottom:2px!important}
+  #accountForm .field input{min-height:30px!important;font-size:.88rem!important;padding:0!important}
+  #accountForm .full-button{min-height:42px!important;font-size:.84rem!important;margin:2px 0 0!important}
+  #accountForm .account-note{font-size:.69rem!important;line-height:1.3!important;margin:2px 0 0!important}
+  .account-name-grid{gap:8px!important;margin:0!important}
+  .password-signup-fields{gap:8px!important}
+}
+.signup-only[hidden]{display:none!important}
