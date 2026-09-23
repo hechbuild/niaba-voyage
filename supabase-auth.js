@@ -8,9 +8,13 @@ window.niabaRequireUser=async function(redirect=true){
   if(!user&&redirect) location.href="/?login=1";
   return user;
 };
-window.niabaLogout=async function(){await niabaSupabase.auth.signOut();location.href="/";};
+window.niabaLogout=async function(){
+  try{await niabaSupabase.auth.signOut({scope:"local"});}finally{location.replace("/");}
+};
 
 function niabaRenderAuthState(user){
+  document.documentElement.dataset.authReady="true";
+  document.body?.classList.toggle("is-authenticated",!!user);
   document.querySelectorAll(".account-actions").forEach(el=>{
     el.hidden=!!user;
     el.style.display=user?"none":"";
@@ -20,6 +24,10 @@ function niabaRenderAuthState(user){
     el.style.display=user?"":"none";
   });
 }
+document.addEventListener("click",(event)=>{
+  const logout=event.target.closest(".nav-logout");
+  if(logout){event.preventDefault();window.niabaLogout();}
+});
 
 (async()=>{
   const {data:{session}}=await niabaSupabase.auth.getSession();
