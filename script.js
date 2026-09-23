@@ -257,6 +257,10 @@ function setAccountMode(mode){
   document.querySelectorAll(".signup-only").forEach(el=>el.hidden=!signup);
   $("accountForm").querySelector('button[type="submit"]').textContent=signup?"Créer mon compte":"Se connecter";
   $("accountPassword").autocomplete=signup?"new-password":"current-password";
+  const confirm=$("accountPasswordConfirm");
+  if(confirm){confirm.required=signup;confirm.disabled=!signup;}
+  const note=document.querySelector("#accountForm .account-note");
+  if(note){note.textContent=signup?"Utilisez au moins 8 caractères avec majuscule, minuscule et chiffre.":"Compte sécurisé par Supabase. Vos informations de connexion sont protégées.";note.style.color="#667085";}
 }
 function openAccountModal(mode){
   setAccountMode(mode);
@@ -275,6 +279,21 @@ if(accountParams.get("login")==="1"){
 }
 document.querySelectorAll("[data-account-close]").forEach(btn=>btn.addEventListener("click",closeAccountModal));
 $("loginTab").addEventListener("click",()=>setAccountMode("login")); $("signupTab").addEventListener("click",()=>setAccountMode("signup"));
+function passwordChecks(value){
+  return {length:value.length>=8,upper:/[A-Z]/.test(value),lower:/[a-z]/.test(value),number:/\d/.test(value)};
+}
+function updatePasswordRules(){
+  const checks=passwordChecks($("accountPassword")?.value||"");
+  document.querySelectorAll("#passwordRules [data-rule]").forEach(el=>{
+    const ok=checks[el.dataset.rule];
+    el.classList.toggle("valid",!!ok);
+    el.textContent=(ok?"✓ ":"○ ")+el.textContent.replace(/^[✓○]\s*/,"");
+  });
+}
+$("accountPassword")?.addEventListener("input",updatePasswordRules);
+$("accountPasswordConfirm")?.addEventListener("input",function(){
+  this.setCustomValidity(this.value===$("accountPassword").value?"":"Les mots de passe ne correspondent pas.");
+});
 document.getElementById("googleAuthBtn")?.addEventListener("click",async()=>{
   const note=document.querySelector("#accountForm .account-note");
   const button=document.getElementById("googleAuthBtn");
@@ -300,23 +319,25 @@ $("accountForm").addEventListener("submit",async(e)=>{
   const signup=$("signupTab").classList.contains("active");
   const email=$("accountEmail").value.trim(), password=$("accountPassword").value;
   const button=e.currentTarget.querySelector('button[type="submit"]'), note=e.currentTarget.querySelector(".account-note");
+  if(signup){
+    const confirm=$("accountPasswordConfirm")?.value||"";
+    const checks=passwordChecks(password);
+    if(!Object.values(checks).every(Boolean)){note.textContent="Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule et un chiffre.";note.style.color="#b42318";updatePasswordRules();return;}
+    if(password!==confirm){note.textContent="Les deux mots de passe ne correspondent pas.";note.style.color="#b42318";$("accountPasswordConfirm")?.focus();return;}
+  }
   button.disabled=true; button.textContent=signup?"Création…":"Connexion…";
   try{
     let result;
     if(signup){
-      result=await window.niabaSupabase.auth.signUp({email,password,options:{data:{first_name:$("accountFirstName")?.value.trim()||"",last_name:$("accountName").value.trim(),full_name:[$("accountFirstName")?.value.trim(),$("accountName").value.trim()].filter(Boolean).join(" ")}}});
+      result=await window.niabaSupabase.auth.signUp({email,password,options:{emailRedirectTo:window.location.origin+"/espace-client.html",data:{first_name:$("accountFirstName")?.value.trim()||"",last_name:$("accountName").value.trim(),full_name:[$("accountFirstName")?.value.trim(),$("accountName").value.trim()].filter(Boolean).join(" ")}}});
     }else{
       result=await window.niabaSupabase.auth.signInWithPassword({email,password});
     }
     if(result.error) throw result.error;
     if(signup && !result.data.session){
-      note.textContent="Compte créé. Consultez votre e-mail pour confirmer votre inscription.";
+      note.textContent="Compte créé. Un e-mail de confirmation vient de vous être envoyé. Ouvrez-le puis cliquez sur le lien pour activer votre compte.";
       note.style.color="#067647";
-      setTimeout(()=>{
-        closeAccountModal();
-        $("accountForm")?.reset();
-        setAccountMode("login");
-      },1200);
+      button.textContent="E-mail envoyé ✓";
     }else location.href="/espace-client.html";
   }catch(err){
     note.textContent=err.message||"Impossible de poursuivre. Vérifiez vos informations.";
