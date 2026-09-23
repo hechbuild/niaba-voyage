@@ -20,7 +20,30 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head><body>
-<header class="header"><div class="container nav"><a class="brand" href="/"><span class="brand-mark">➤</span><span>NIABA <b>VOYAGE</b></span></a></div></header>
+<header class="header">
+    <div class="container nav">
+      <a class="brand" href="#accueil" aria-label="Niaba Voyage">
+        <span class="brand-mark">➤</span>
+        <span>NIABA <b>VOYAGE</b></span>
+      </a>
+
+      <button id="menuBtn" class="menu" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
+
+      <nav id="nav">
+        <a href="#flightForm">Vols</a>
+        <a href="/hotels.html">Hôtels</a>
+        <a href="/location-voiture.html">Location de voiture</a>
+        <a href="/faq.html">Aide</a>
+        <a href="/espace-client.html">Mon espace</a>
+        <button class="nav-logout" id="logoutBtn" type="button">Déconnexion</button>
+      </nav>
+
+      <div class="account-actions desktop">
+        <button class="login-link" type="button" data-account-open="login">Se connecter</button>
+        <button class="account-btn" type="button" data-account-open="signup">Créer un compte</button>
+      </div>
+    </div>
+  </header>
 <main style="max-width:850px;margin:110px auto 60px;padding:20px">
 <section style="background:#fff;border:1px solid #e3e8ef;border-radius:22px;padding:28px;box-shadow:0 10px 30px rgba(7,28,69,.08)">
 <span style="font-weight:800;color:#ff6858">NIABA VOYAGE PARTNERS</span>
@@ -46,4 +69,4 @@
       <p>© <span id="year"></span> NIABA VOYAGE</p>
     </div>
   </footer>
-</body></html>
+<script src="script.js"></script></body></html>
