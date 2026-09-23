@@ -752,3 +752,10 @@ footer{background:#04132f;color:#b8c3d5;padding:40px 0;border-top:4px solid var(
  .swap::after{content:"⇅"!important}
  .flight-grid>label.field:has(#depart):has(+ #returnField[hidden]){grid-column:1!important}
 }
+
+/* Precise vertical swap control between departure and destination */
+@media(max-width:760px){
+ .flight-grid>label.field:has(#from){position:relative!important}
+ .swap{position:absolute!important;right:14px!important;top:auto!important;bottom:-25px!important;width:36px!important;height:36px!important;z-index:30!important;display:grid!important;place-items:center!important}
+ .swap::after{content:"⇅"!important;font-size:19px!important;line-height:1!important}
+}
