@@ -806,3 +806,10 @@ body{background:#f7f9fc;color:#172033}.header{background:#fff}.service-search,.d
 
 /* Google sign-in */
 .google-auth-btn{width:100%;min-height:52px;border:1px solid #d8e0ea;border-radius:12px;background:#fff;color:#172033;font:700 15px Inter,sans-serif;display:flex;align-items:center;justify-content:center;gap:11px;cursor:pointer;margin-bottom:14px}.google-auth-btn:hover{background:#f8fafc}.google-g{font-size:20px;font-weight:800;color:#4285f4}.account-divider{display:flex;align-items:center;gap:12px;color:#98a2b3;font-size:.82rem;margin:2px 0 14px}.account-divider:before,.account-divider:after{content:"";height:1px;background:#e4e7ec;flex:1}
+
+/* Google OAuth button — mobile polish */
+.google-auth-btn{appearance:none!important;-webkit-appearance:none!important;border:1px solid #d0d5dd!important;background:#fff!important;color:#344054!important;border-radius:12px!important;min-height:54px!important;font-size:15px!important;font-weight:700!important;letter-spacing:0!important;line-height:1.2!important;box-shadow:0 1px 2px rgba(16,24,40,.05)!important}
+.google-auth-btn .google-g{display:grid!important;place-items:center!important;width:24px!important;height:24px!important;font-family:Arial,sans-serif!important;font-size:18px!important;line-height:1!important;font-weight:700!important;color:#4285f4!important;flex:0 0 24px!important}
+.account-divider{margin:4px 0 16px!important;text-align:center!important}
+.account-divider span{font-size:13px!important;color:#667085!important;background:#fff!important;padding:0 8px!important}
+@media(max-width:760px){.google-auth-btn{min-height:52px!important;font-size:14px!important}.account-dialog{overflow-y:auto!important}}
