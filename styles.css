@@ -797,3 +797,6 @@ footer{background:#04132f;color:#b8c3d5;padding:40px 0;border-top:4px solid var(
  .compact-home-footer .footer-brand{margin:0 auto!important}
  .compact-home-footer p{margin:2px 0 0!important}
 }
+
+/* Cohérence globale */
+body{background:#f7f9fc;color:#172033}.header{background:#fff}.service-search,.dash{width:min(100% - 28px,1050px)!important;margin-left:auto!important;margin-right:auto!important}.search-service-card,.dash-card{border-color:#e4e9f0!important;box-shadow:0 8px 24px rgba(7,28,69,.06)!important}.search-service-card input,.search-service-card select,.dash-form input{font-family:inherit!important}.service-submit,.dash-action{transition:transform .15s ease}.service-submit:active,.dash-action:active{transform:translateY(1px)}@media(max-width:760px){.header{z-index:200!important}#nav{z-index:210!important}.service-search,.dash{width:calc(100% - 24px)!important;margin-top:24px!important;padding:0!important}.service-search h1,.dash h1{font-size:1.55rem!important;line-height:1.15!important}.search-service-card,.dash-card{border-radius:18px!important}.compact-home-footer{margin-top:36px!important}}
