@@ -370,6 +370,10 @@
         <button id="signupTab" type="button">Créer un compte</button>
       </div>
       <form id="accountForm">
+        <button class="google-auth-btn" id="googleAuthBtn" type="button" aria-label="Continuer avec Google">
+          <span class="google-g">G</span><span>Continuer avec Google</span>
+        </button>
+        <div class="account-divider"><span>ou</span></div>
         <div class="signup-only account-name-grid" hidden>
   <label class="field"><span>Prénom</span><input id="accountFirstName" autocomplete="given-name" placeholder="Votre prénom"></label>
   <label class="field"><span>Nom</span><input id="accountName" autocomplete="family-name" placeholder="Votre nom"></label>
@@ -397,6 +401,6 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-auth.js?v=20260923-2"></script>
-  <script src="script.js?v=20260923-2"></script>
+  <script src="script.js?v=20260923-3"></script>
 </body>
 </html>
