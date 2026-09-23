@@ -20,7 +20,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css?v=20260923-12">
+  <link rel="stylesheet" href="/styles.css?v=20260923-13">
 </head>
 <body>
   <header class="header">
@@ -379,7 +379,16 @@
   <label class="field"><span>Nom</span><input id="accountName" autocomplete="family-name" placeholder="Votre nom"></label>
 </div>
         <label class="field"><span>Email</span><input id="accountEmail" type="email" autocomplete="email" required placeholder="vous@exemple.com"></label>
-        <label class="field"><span>Mot de passe</span><input id="accountPassword" type="password" autocomplete="current-password" required minlength="6" placeholder="••••••••"></label>
+        <label class="field"><span>Mot de passe</span><input id="accountPassword" type="password" autocomplete="current-password" required minlength="8" placeholder="••••••••"></label>
+        <div class="signup-only password-signup-fields" hidden>
+          <label class="field"><span>Confirmer le mot de passe</span><input id="accountPasswordConfirm" type="password" autocomplete="new-password" minlength="8" placeholder="••••••••"></label>
+          <div class="password-rules" id="passwordRules">
+            <small data-rule="length">○ 8 caractères minimum</small>
+            <small data-rule="upper">○ 1 lettre majuscule</small>
+            <small data-rule="lower">○ 1 lettre minuscule</small>
+            <small data-rule="number">○ 1 chiffre</small>
+          </div>
+        </div>
         <button class="btn primary full-button" type="submit">Se connecter</button>
         <small class="account-note">Compte sécurisé par Supabase. Vos informations de connexion sont protégées.</small>
       </form>
@@ -401,6 +410,6 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-auth.js?v=20260923-2"></script>
-  <script src="script.js?v=20260923-14"></script>
+  <script src="script.js?v=20260923-15"></script>
 </body>
 </html>
