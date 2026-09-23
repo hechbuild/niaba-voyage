@@ -759,3 +759,15 @@ footer{background:#04132f;color:#b8c3d5;padding:40px 0;border-top:4px solid var(
  .swap{position:absolute!important;right:14px!important;top:auto!important;bottom:-25px!important;width:36px!important;height:36px!important;z-index:30!important;display:grid!important;place-items:center!important}
  .swap::after{content:"⇅"!important;font-size:19px!important;line-height:1!important}
 }
+
+/* Restore visible swap button + improve search form readability */
+@media(max-width:760px){
+ .flight-panel{position:relative!important;overflow:visible!important}
+ .flight-grid{position:relative!important;overflow:visible!important}
+ .swap{position:absolute!important;display:grid!important;visibility:visible!important;opacity:1!important;right:18px!important;top:202px!important;bottom:auto!important;width:38px!important;height:38px!important;z-index:999!important;background:#fff!important;border:1px solid #d8e0ea!important;border-radius:50%!important;box-shadow:0 4px 12px rgba(7,28,69,.16)!important;color:#071c45!important;place-items:center!important}
+ .swap::after{content:"⇅"!important;font-size:20px!important;font-weight:700!important}
+ .flight-grid>.field>span{font-size:.72rem!important;font-weight:800!important}
+ .flight-grid>.field input{font-size:1rem!important}
+ .cabin-field select,.traveler-btn{font-size:1rem!important}
+ .search-btn{font-size:1rem!important;font-weight:800!important}
+}
