@@ -17,6 +17,7 @@ function niabaSetAccountMode(mode){
   if(password) password.autocomplete=signup?"new-password":"current-password";
   const confirm=$("accountPasswordConfirm");
   if(confirm){confirm.required=signup;confirm.disabled=!signup;}
+  ["accountFirstName","accountName"].forEach(id=>{const field=$(id);if(field){field.required=signup;field.disabled=!signup;}});
 }
 function niabaOpenAccount(mode="login"){
   const modal=$("accountModal");
@@ -204,7 +205,7 @@ function renderOffers(data) {
   container.querySelectorAll("[data-offer-id]").forEach(btn=>btn.addEventListener("click",()=>openBooking(offers.find(o=>String(o.id)===btn.dataset.offerId))));
 }
 
-$("flightForm").addEventListener("submit", async (e) => {
+$("flightForm")?.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const oneWay = document.querySelector('input[name="tripType"]:checked').value === "oneway";
@@ -297,7 +298,7 @@ function setAccountMode(mode){
 }
 function openAccountModal(mode){ niabaOpenAccount(mode); }
 function closeAccountModal(){
-  accountModal.hidden=true;
+  if(accountModal) accountModal.hidden=true;
   document.body.classList.remove("modal-open");
 }
 document.querySelectorAll("[data-account-open]").forEach(btn=>btn.addEventListener("click",()=>openAccountModal(btn.dataset.accountOpen)));
@@ -333,7 +334,7 @@ document.getElementById("googleAuthBtn")?.addEventListener("click",async()=>{
     const redirectTo=window.location.origin+"/espace-client.html";
     const {data,error}=await window.niabaSupabase.auth.signInWithOAuth({
       provider:"google",
-      options:{redirectTo,skipBrowserRedirect:false}
+      options:{redirectTo,skipBrowserRedirect:true}
     });
     if(error) throw error;
     if(data?.url) window.location.assign(data.url);
