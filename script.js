@@ -1,5 +1,38 @@
 const $ = (id) => document.getElementById(id);
 
+// Authentication launcher is initialized first so a later page feature cannot
+// prevent the login/signup modal from opening if another script section fails.
+function niabaSetAccountMode(mode){
+  const signup=mode==="signup";
+  const modal=$("accountModal");
+  if(!modal) return;
+  $("accountTitle").textContent=signup?"Créer votre compte":"Se connecter";
+  $("accountSubtitle").textContent=signup?"Gérez vos voyages simplement.":"Retrouvez vos demandes et préparez vos prochains voyages.";
+  $("loginTab")?.classList.toggle("active",!signup);
+  $("signupTab")?.classList.toggle("active",signup);
+  document.querySelectorAll(".signup-only").forEach(el=>el.hidden=!signup);
+  const submit=$("accountForm")?.querySelector('button[type="submit"]');
+  if(submit) submit.textContent=signup?"Créer mon compte":"Se connecter";
+  const password=$("accountPassword");
+  if(password) password.autocomplete=signup?"new-password":"current-password";
+  const confirm=$("accountPasswordConfirm");
+  if(confirm){confirm.required=signup;confirm.disabled=!signup;}
+}
+function niabaOpenAccount(mode="login"){
+  const modal=$("accountModal");
+  if(!modal) return;
+  niabaSetAccountMode(mode);
+  modal.hidden=false;
+  document.body.classList.add("modal-open");
+}
+document.addEventListener("click",(event)=>{
+  const trigger=event.target.closest("[data-account-open]");
+  if(!trigger) return;
+  event.preventDefault();
+  niabaOpenAccount(trigger.dataset.accountOpen||"login");
+});
+window.niabaOpenAccount=niabaOpenAccount;
+
 $("year").textContent = new Date().getFullYear();
 
 $("menuBtn").addEventListener("click", () => {
@@ -262,11 +295,7 @@ function setAccountMode(mode){
   const note=document.querySelector("#accountForm .account-note");
   if(note){note.textContent=signup?"Utilisez au moins 8 caractères avec majuscule, minuscule et chiffre.":"Compte sécurisé par Supabase. Vos informations de connexion sont protégées.";note.style.color="#667085";}
 }
-function openAccountModal(mode){
-  setAccountMode(mode);
-  accountModal.hidden=false;
-  document.body.classList.add("modal-open");
-}
+function openAccountModal(mode){ niabaOpenAccount(mode); }
 function closeAccountModal(){
   accountModal.hidden=true;
   document.body.classList.remove("modal-open");
