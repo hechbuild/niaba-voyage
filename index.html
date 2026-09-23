@@ -374,7 +374,7 @@
         <label class="field"><span>Email</span><input id="accountEmail" type="email" autocomplete="email" required placeholder="vous@exemple.com"></label>
         <label class="field"><span>Mot de passe</span><input id="accountPassword" type="password" autocomplete="current-password" required minlength="6" placeholder="••••••••"></label>
         <button class="btn primary full-button" type="submit">Se connecter</button>
-        <small class="account-note">L’espace client sécurisé est en cours d’activation. Aucune donnée n’est enregistrée pour le moment.</small>
+        <small class="account-note">Compte sécurisé par Supabase. Vos informations de connexion sont protégées.</small>
       </form>
     </section>
   </div>
@@ -392,6 +392,8 @@
   <script>
     (function(){var b=document.getElementById('cookieBanner'),a=document.getElementById('cookieAccept'),r=document.getElementById('cookieReject'),g=document.getElementById('cookieSettings');function show(){b.hidden=false}function save(v){localStorage.setItem('niabaCookieConsent',v);b.hidden=true}if(!localStorage.getItem('niabaCookieConsent'))show();a.addEventListener('click',function(){save('accepted')});r.addEventListener('click',function(){save('rejected')});if(g)g.addEventListener('click',function(){localStorage.removeItem('niabaCookieConsent');show()});})();
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-auth.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
