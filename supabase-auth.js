@@ -10,8 +10,22 @@ window.niabaRequireUser=async function(redirect=true){
 };
 window.niabaLogout=async function(){await niabaSupabase.auth.signOut();location.href="/";};
 
+function niabaRenderAuthState(user){
+  document.querySelectorAll(".account-actions").forEach(el=>{
+    el.hidden=!!user;
+    el.style.display=user?"none":"";
+  });
+  document.querySelectorAll(".nav-logout").forEach(el=>{
+    el.hidden=!user;
+    el.style.display=user?"":"none";
+  });
+}
+
 (async()=>{
- const {data:{user}}=await niabaSupabase.auth.getUser();
- document.querySelectorAll(".account-actions").forEach(el=>el.hidden=!!user);
- document.querySelectorAll(".nav-logout").forEach(el=>el.hidden=!user);
+  const {data:{session}}=await niabaSupabase.auth.getSession();
+  niabaRenderAuthState(session?.user||null);
 })();
+
+niabaSupabase.auth.onAuthStateChange((_event,session)=>{
+  niabaRenderAuthState(session?.user||null);
+});
