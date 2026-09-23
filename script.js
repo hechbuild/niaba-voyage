@@ -286,6 +286,12 @@ $("accountForm").addEventListener("submit",async(e)=>{
     if(signup && !result.data.session){
       note.textContent="Compte créé. Consultez votre e-mail pour confirmer votre inscription.";
       note.style.color="#067647";
+      setTimeout(()=>{
+        $("accountModal")?.classList.remove("open");
+        document.body.classList.remove("modal-open");
+        $("accountForm")?.reset();
+        setAccountMode?.("login");
+      },1200);
     }else location.href="/espace-client.html";
   }catch(err){
     note.textContent=err.message||"Impossible de poursuivre. Vérifiez vos informations.";
