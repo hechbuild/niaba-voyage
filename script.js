@@ -335,10 +335,14 @@ $("accountForm").addEventListener("submit",async(e)=>{
     }
     if(result.error) throw result.error;
     if(signup && !result.data.session){
-      note.textContent="Compte créé. Un e-mail de confirmation vient de vous être envoyé. Ouvrez-le puis cliquez sur le lien pour activer votre compte.";
-      note.style.color="#067647";
-      button.textContent="E-mail envoyé ✓";
-    }else location.href="/espace-client.html";
+      closeAccountModal();
+      e.currentTarget.reset();
+      setAccountMode("login");
+      window.alert("Compte créé. Un e-mail de confirmation vient de vous être envoyé. Ouvrez-le puis cliquez sur le lien pour activer votre compte.");
+    }else{
+      closeAccountModal();
+      location.assign("/espace-client.html");
+    }
   }catch(err){
     note.textContent=err.message||"Impossible de poursuivre. Vérifiez vos informations.";
     note.style.color="#b42318";
