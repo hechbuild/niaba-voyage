@@ -739,3 +739,16 @@ footer{background:#04132f;color:#b8c3d5;padding:40px 0;border-top:4px solid var(
 
 /* Horizontal swap icon for side-by-side departure/destination */
 @media(max-width:760px){.swap::after{content:"⇄"!important;font-size:18px!important;line-height:1!important}}
+
+/* Mobile vertical field layout: destination below departure, return below outbound */
+@media(max-width:760px){
+ .flight-grid{grid-template-columns:1fr!important}
+ .cabin-field,.traveler-field,.search-btn,
+ .flight-grid>label.field:has(#from),.flight-grid>label.field:has(#to),
+ .flight-grid>label.field:has(#depart),#returnField{grid-column:1!important}
+ .flight-grid>label.field:has(#from),.flight-grid>label.field:has(#to),
+ .flight-grid>label.field:has(#depart),#returnField{width:100%!important}
+ .swap{right:20px!important;top:166px!important}
+ .swap::after{content:"⇅"!important}
+ .flight-grid>label.field:has(#depart):has(+ #returnField[hidden]){grid-column:1!important}
+}
