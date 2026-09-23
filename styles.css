@@ -908,3 +908,10 @@ body{background:#f7f9fc;color:#172033}.header{background:#fff}.service-search,.d
 @media(max-width:760px){
  .account-dialog{transform:scale(1.05)!important;transform-origin:center center!important;max-height:95dvh!important}
 }
+
+/* Secure account signup */
+.password-signup-fields{display:grid;gap:8px}
+.password-rules{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;padding:8px 10px;border-radius:10px;background:#f8fafc;color:#667085}
+.password-rules small{font-size:.72rem;line-height:1.25}
+.password-rules small.valid{color:#067647;font-weight:700}
+@media(max-width:480px){.password-rules{grid-template-columns:1fr 1fr;padding:6px 8px;gap:3px 6px}.password-rules small{font-size:.64rem}}
