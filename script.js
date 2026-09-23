@@ -353,3 +353,7 @@ const airportCatalog = [
 ];
 const airportList=document.getElementById("airportList");
 if(airportList){airportList.innerHTML=airportCatalog.map(([code,city,country,airport])=>'<option value="'+city+' ('+code+')">'+airport+' — '+country+'</option>').join("");}
+
+// Menu logout
+const logoutBtn=document.getElementById("logoutBtn");
+logoutBtn?.addEventListener("click",()=>{try{localStorage.removeItem("niabaUser");sessionStorage.removeItem("niabaUser");}catch(e){} window.location.href="/";});
