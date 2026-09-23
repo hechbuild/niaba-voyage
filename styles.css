@@ -903,3 +903,8 @@ body{background:#f7f9fc;color:#172033}.header{background:#fff}.service-search,.d
  #accountForm .field input{min-height:23px!important;font-size:.76rem!important}
  #accountForm .full-button{min-height:38px!important;font-size:.76rem!important}
 }
+
+/* Ajustement final compte mobile: +5% */
+@media(max-width:760px){
+ .account-dialog{transform:scale(1.05)!important;transform-origin:center center!important;max-height:95dvh!important}
+}
