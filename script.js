@@ -261,6 +261,14 @@ function setAccountMode(mode){
 document.querySelectorAll("[data-account-open]").forEach(btn=>btn.addEventListener("click",()=>{setAccountMode(btn.dataset.accountOpen);accountModal.hidden=false;}));
 document.querySelectorAll("[data-account-close]").forEach(btn=>btn.addEventListener("click",()=>accountModal.hidden=true));
 $("loginTab").addEventListener("click",()=>setAccountMode("login")); $("signupTab").addEventListener("click",()=>setAccountMode("signup"));
+document.getElementById("googleAuthBtn")?.addEventListener("click",async()=>{
+  const note=document.querySelector("#accountForm .account-note");
+  try{
+    const {error}=await window.niabaSupabase.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.origin+"/espace-client.html"}});
+    if(error) throw error;
+  }catch(err){if(note){note.textContent=err.message||"Connexion Google indisponible.";note.style.color="#b42318";}}
+});
+
 $("accountForm").addEventListener("submit",async(e)=>{
   e.preventDefault();
   const signup=$("signupTab").classList.contains("active");
