@@ -243,6 +243,7 @@ function renderOffers(data) {
 }
 
 let pendingFlightQuoteContext=null;
+let lastFlightSearch={adults:1,children:0,infants:0,cabin:"ECONOMY"};
 
 $("flightForm")?.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -264,6 +265,7 @@ $("flightForm")?.addEventListener("submit", async (e) => {
   $("flightResultsSection").scrollIntoView({ behavior: "smooth", block: "start" });
 
   try {
+    lastFlightSearch={adults:Number($("adults")?.value||1),children:Number($("children")?.value||0),infants:Number($("infants")?.value||0),cabin:$("cabin")?.value||"ECONOMY"};
     const paxRaw = $("pax").value;
     const adults = paxRaw === "4+" ? "4" : paxRaw;
     const params = new URLSearchParams({
@@ -314,10 +316,9 @@ $("flightForm")?.addEventListener("submit", async (e) => {
         "Classe : "+pendingFlightQuoteContext.cabin
       ].join("\n");
       $("flightResults").innerHTML =
-        '<div class="results-error quote-fallback"><strong>Recevez un devis personnalisé.</strong><span>La tarification automatique Amadeus est en cours d’activation. Vos critères de recherche sont déjà préparés pour un conseiller Niaba Voyage.</span><div class="results-error-actions"><button id="flightQuoteFallback" class="btn primary" type="button">Continuer ma demande de devis</button><a href="https://wa.me/22891813448" target="_blank" rel="noopener">Ou continuer sur WhatsApp</a></div></div>';
+        '<div class="results-error quote-fallback"><strong>Réservez avec confirmation du tarif.</strong><span>La tarification automatique Amadeus est en cours d’activation. Enregistrez les voyageurs : un conseiller confirmera ensuite le prix avant tout paiement.</span><div class="results-error-actions"><button id="flightQuoteFallback" class="btn primary" type="button">Réserver et renseigner les voyageurs</button><a href="https://wa.me/22891813448" target="_blank" rel="noopener">Ou continuer sur WhatsApp</a></div></div>';
       $("flightQuoteFallback")?.addEventListener("click",()=>{
-        $("contact")?.scrollIntoView({behavior:"smooth",block:"start"});
-        setTimeout(()=>$("inquiryName")?.focus(),450);
+        openBooking({id:"DEVIS-"+Date.now(),origin:pendingFlightQuoteContext.origin,destination:pendingFlightQuoteContext.destination,airline:{name:"Tarif à confirmer"},price:{amount:0,currency:"XOF"},isQuote:true,itineraries:[{segments:[{from:pendingFlightQuoteContext.origin,to:pendingFlightQuoteContext.destination,departureAt:pendingFlightQuoteContext.departure_date}]}]});
       });
     }else{
       $("flightResults").innerHTML =
@@ -641,8 +642,15 @@ function openBooking(offer){
   if(!offer)return; selectedBookingOffer=offer;
   const modal=document.getElementById("bookingModal"), summary=document.getElementById("bookingSummary");
   const out=offer.itineraries?.[0], first=out?.segments?.[0], last=out?.segments?.[out.segments.length-1];
-  summary.innerHTML="<strong>"+escapeHtml((first?.from||offer.origin||"")+" → "+(last?.to||offer.destination||""))+"</strong><br>"+escapeHtml(offer.airline?.name||offer.airline?.code||"Compagnie aérienne")+" · "+escapeHtml(formatDateTime(first?.departureAt))+"<br><strong>"+escapeHtml(formatPrice(offer.price.amount,offer.price.currency))+"</strong> <small>— tarif à confirmer avant paiement</small>";
+  const priceLabel=offer.isQuote?"Prix communiqué après vérification":formatPrice(offer.price.amount,offer.price.currency);
+  summary.innerHTML="<strong>"+escapeHtml((first?.from||offer.origin||"")+" → "+(last?.to||offer.destination||""))+"</strong><br>"+escapeHtml(offer.airline?.name||offer.airline?.code||"Compagnie aérienne")+" · "+escapeHtml(formatDateTime(first?.departureAt))+"<br><strong>"+escapeHtml(priceLabel)+"</strong> <small>— confirmation obligatoire avant paiement</small>";
+  renderClientPassengerFields();
   modal.hidden=false; document.body.style.overflow="hidden";
+}
+function renderClientPassengerFields(){
+  const target=document.getElementById("bookingPassengers"); if(!target)return;
+  const types=[...Array(lastFlightSearch.adults).fill("Adulte"),...Array(lastFlightSearch.children).fill("Enfant"),...Array(lastFlightSearch.infants).fill("Bébé")];
+  target.innerHTML=types.map((type,index)=>`<fieldset class="client-passenger-card" data-client-passenger="${index}" data-type="${type}"><legend>Voyageur ${index+1} · ${type}</legend><div class="booking-grid"><label class="field"><span>Prénom(s)</span><input data-passenger-field="first_name" required autocomplete="off"></label><label class="field"><span>Nom</span><input data-passenger-field="last_name" required autocomplete="off"></label><label class="field"><span>Date de naissance</span><input data-passenger-field="birth_date" type="date" required></label><label class="field"><span>Sexe</span><select data-passenger-field="gender" required><option value="">Sélectionner</option><option value="M">Masculin</option><option value="F">Féminin</option></select></label><label class="field"><span>Nationalité</span><input data-passenger-field="nationality" required autocomplete="off"></label><label class="field"><span>N° de passeport</span><input data-passenger-field="document_number" required autocomplete="off"></label><label class="field"><span>Expiration du passeport</span><input data-passenger-field="document_expiry" type="date" required></label></div></fieldset>`).join("");
 }
 function closeBooking(){const m=document.getElementById("bookingModal");if(m)m.hidden=true;document.body.style.overflow=""}
 document.querySelectorAll("[data-booking-close]").forEach(x=>x.addEventListener("click",closeBooking));
@@ -651,9 +659,10 @@ document.getElementById("bookingForm")?.addEventListener("submit",async e=>{
   const button=e.currentTarget.querySelector('button[type="submit"]'), original=button.textContent;
   button.disabled=true; button.textContent="Enregistrement…";
   const opts=[["optBaggage","Bagage supplémentaire"],["optSeat","Choix du siège"],["optMeal","Repas spécial"],["optAssistance","Assistance spéciale"]].filter(([id])=>document.getElementById(id)?.checked).map(([,v])=>v);
+  const passengers=[...document.querySelectorAll("[data-client-passenger]")].map(card=>({type:card.dataset.type,...Object.fromEntries([...card.querySelectorAll("[data-passenger-field]")].map(field=>[field.dataset.passengerField,field.value.trim()]))}));
   const out=selectedBookingOffer.itineraries?.[0], first=out?.segments?.[0], last=out?.segments?.[out.segments.length-1];
   const fullName=(document.getElementById("bookFirstName").value+" "+document.getElementById("bookLastName").value).trim();
-  const msg=["Bonjour Niaba Voyage, je souhaite finaliser cette réservation.","","Passager : "+fullName,"Email : "+document.getElementById("bookEmail").value,"Téléphone : "+document.getElementById("bookPhone").value,"Trajet : "+(first?.from||"")+" → "+(last?.to||""),"Départ : "+formatDateTime(first?.departureAt),"Prix affiché : "+formatPrice(selectedBookingOffer.price.amount,selectedBookingOffer.price.currency),"Options : "+(opts.join(", ")||"Aucune"),"Référence offre : "+selectedBookingOffer.id,"","Merci de confirmer le tarif et la disponibilité avant paiement."].join("\n");
+  const msg=["Bonjour Niaba Voyage, je souhaite finaliser cette réservation.","","Contact principal : "+fullName,"Voyageurs : "+passengers.map(p=>p.first_name+" "+p.last_name+" ("+p.type+")").join(", "),"Email : "+document.getElementById("bookEmail").value,"Téléphone : "+document.getElementById("bookPhone").value,"Trajet : "+(first?.from||"")+" → "+(last?.to||""),"Départ : "+formatDateTime(first?.departureAt),"Prix : "+(selectedBookingOffer.isQuote?"à confirmer":formatPrice(selectedBookingOffer.price.amount,selectedBookingOffer.price.currency)),"Options : "+(opts.join(", ")||"Aucune"),"Référence offre : "+selectedBookingOffer.id,"","Merci de confirmer le tarif et la disponibilité avant paiement."].join("\n");
   try{
     await submitInquiryLead({
       lead_type:"flight",
@@ -670,7 +679,12 @@ document.getElementById("bookingForm")?.addEventListener("submit",async e=>{
         departure_at:first?.departureAt||null,
         price:selectedBookingOffer.price,
         airline:selectedBookingOffer.airline,
-        options:opts
+        options:opts,
+        passengers,
+        adults:lastFlightSearch.adults,
+        children:lastFlightSearch.children,
+        infants:lastFlightSearch.infants,
+        cabin:lastFlightSearch.cabin
       },
       source:"booking_flow",
       priority:"high"
