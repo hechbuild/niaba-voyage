@@ -355,11 +355,18 @@ $("inquiryForm")?.addEventListener("submit",async(e)=>{
   e.preventDefault();
   const form=e.currentTarget;
   const email=$("inquiryEmail").value.trim(), phone=$("inquiryPhone").value.trim();
+  const consent=$("inquiryConsent");
   const status=$("inquiryStatus"), button=form.querySelector('button[type="submit"]');
   if(!email&&!phone){
     status.textContent="Indiquez au moins un e-mail ou un numéro de téléphone.";
     status.className="form-status error";
     $("inquiryEmail").focus();
+    return;
+  }
+  if(!consent.checked){
+    status.textContent="Veuillez accepter la politique de confidentialité avant d’envoyer votre demande.";
+    status.className="form-status error";
+    consent.focus();
     return;
   }
   const type=$("inquiryType").value;
@@ -381,13 +388,13 @@ $("inquiryForm")?.addEventListener("submit",async(e)=>{
         destination:$("inquiryDestination").value.trim()||null,
         desired_date:$("inquiryDate").value||null,
         flight_search:type==="flight" ? pendingFlightQuoteContext : null,
-        consent:true,
+        consent:consent.checked,
         page:location.pathname
       },
       source:type==="visa"?"visa_form":type==="corporate"?"corporate_form":type==="flight"&&pendingFlightQuoteContext?"flight_search":"contact_form",
       priority:type==="corporate"||type==="flight"?"high":"normal"
     });
-    status.textContent="Demande enregistrée. Un conseiller Niaba Voyage pourra maintenant la suivre depuis le back-office.";
+    status.textContent="✓ Demande enregistrée avec votre consentement. Un conseiller Niaba Voyage pourra maintenant la suivre depuis le back-office.";
     status.className="form-status success";
     pendingFlightQuoteContext=null;
     form.reset();
