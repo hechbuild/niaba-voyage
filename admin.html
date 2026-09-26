@@ -62,6 +62,14 @@
   ]);
 
   const profiles=profilesRes.data||[], bookings=bookingsRes.data||[], payments=paymentsRes.data||[], affiliates=affiliatesRes.data||[], commissions=commissionsRes.data||[], leads=leadsRes.data||[];
+  // A lead is converted only when a real reservation linked to it exists.
+  // Repair legacy/manual statuses that were marked converted too early.
+  const bookedLeadIds=new Set(bookings.map(b=>b.metadata?.lead_id).filter(Boolean));
+  const prematureConversions=leads.filter(l=>l.status==="converted"&&!bookedLeadIds.has(l.id));
+  prematureConversions.forEach(l=>{l.status="new";});
+  if(prematureConversions.length){
+    await Promise.all(prematureConversions.map(l=>niabaSupabase.from("inquiry_leads").update({status:"new",updated_at:new Date().toISOString()}).eq("id",l.id)));
+  }
   statClients.textContent=profiles.filter(x=>x.role==="client").length;
   statBookings.textContent=bookings.length;
   statLeads.textContent=leads.filter(x=>x.status!=="closed"&&x.status!=="converted").length;
@@ -89,7 +97,7 @@
       <td data-label="Type">${esc(leadTypeLabels[l.lead_type]||l.lead_type)}</td>
       <td data-label="Équipe">${esc(teamLabels[l.assigned_team]||l.assigned_team||"—")}</td>
       <td data-label="Contact" class="admin-contact">${l.phone?'<a href="tel:'+esc(l.phone)+'">'+esc(l.phone)+'</a>':""}${l.email?'<br><a href="mailto:'+esc(l.email)+'">'+esc(l.email)+'</a>':""}</td>
-      <td data-label="Statut"><select class="lead-status-select" aria-label="Statut de la demande ${esc(l.reference)}" data-lead-id="${esc(l.id)}">${Object.entries(statusLabels).map(([value,label])=>'<option value="'+value+'" '+(l.status===value?"selected":"")+'>'+label+'</option>').join("")}</select></td>
+      <td data-label="Statut"><select class="lead-status-select" aria-label="Statut de la demande ${esc(l.reference)}" data-lead-id="${esc(l.id)}">${Object.entries(statusLabels).filter(([value])=>value!=="converted"||bookedLeadIds.has(l.id)).map(([value,label])=>'<option value="'+value+'" '+(l.status===value?"selected":"")+'>'+label+'</option>').join("")}</select></td>
       <td data-label="Action"><button class="lead-open-btn" type="button" data-open-lead="${esc(l.id)}">Voir et traiter</button></td>
     </tr>`).join(""):'<tr class="admin-empty"><td colspan="7">Aucune demande enregistrée.</td></tr>';
     document.querySelectorAll("[data-lead-id]").forEach(select=>select.addEventListener("change",async()=>{
@@ -166,7 +174,7 @@
     const row={user_id:lead.user_id||null,service_type:lead.lead_type,origin:details.origin||null,destination:details.destination||null,start_date:document.getElementById("bookingStart").value||null,end_date:document.getElementById("bookingEnd").value||null,amount,currency:document.getElementById("bookingCurrency").value,status:"pending",metadata:{lead_id:lead.id,lead_reference:lead.reference,customer_name:lead.full_name,email:lead.email,phone:lead.phone,source:lead.source,details:lead.details}};
     const {data,error}=await niabaSupabase.from("bookings").insert(row).select().single();
     if(error){status.textContent="Impossible de créer la réservation : "+error.message;button.disabled=false;button.textContent="Créer la réservation";return;}
-    bookings.unshift(data);lead.status="converted";
+    bookings.unshift(data);bookedLeadIds.add(lead.id);lead.status="converted";
     await niabaSupabase.from("inquiry_leads").update({status:"converted",updated_at:new Date().toISOString()}).eq("id",lead.id);
     statBookings.textContent=bookings.length;statLeads.textContent=leads.filter(x=>x.status!=="closed"&&x.status!=="converted").length;renderBookings(bookings);renderLeads(leadFilter.value==="all"?leads:leads.filter(l=>l.status===leadFilter.value));openLead(lead.id);
   }
