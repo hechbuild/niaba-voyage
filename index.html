@@ -20,7 +20,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css?v=20260926-5">
+  <link rel="stylesheet" href="/styles.css?v=20260926-8">
 </head>
 <body>
   <header class="header">
@@ -431,7 +431,7 @@
     <div class="booking-backdrop" data-booking-close></div>
     <section class="booking-dialog" role="dialog" aria-modal="true" aria-labelledby="bookingTitle">
       <button class="account-close" type="button" data-booking-close aria-label="Fermer">×</button>
-      <div class="booking-steps"><span class="active">1 Vol</span><span>2 Passagers</span><span>3 Options</span><span>4 Paiement</span></div>
+      <div class="booking-steps"><span>1 Chercher</span><span class="active">2 Réserver</span><span>3 Acheter / payer</span></div>
       <h2 id="bookingTitle">Finaliser votre réservation</h2>
       <div id="bookingSummary" class="booking-summary"></div>
       <form id="bookingForm">
@@ -441,6 +441,7 @@
           <label class="field"><span>Email</span><input id="bookEmail" type="email" required autocomplete="email"></label>
           <label class="field"><span>Téléphone</span><input id="bookPhone" required autocomplete="tel" placeholder="+228 ..."></label>
         </div></div>
+        <div class="booking-section"><h3>Informations des voyageurs</h3><p class="booking-info">Renseignez les noms exactement comme sur les passeports ou pièces de voyage.</p><div id="bookingPassengers"></div></div>
         <div class="booking-section"><h3>Options de voyage</h3><div class="booking-options">
           <label><input id="optBaggage" type="checkbox"> Bagage supplémentaire</label>
           <label><input id="optSeat" type="checkbox"> Choix du siège</label>
@@ -540,6 +541,6 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-auth.js?v=20260926-7"></script>
-  <script src="script.js?v=20260926-7"></script>
+  <script src="script.js?v=20260926-8"></script>
 </body>
 </html>
