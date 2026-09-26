@@ -116,6 +116,43 @@ function formatDuration(value = "") {
   return [hours, minutes].filter(Boolean).join(" ");
 }
 
+
+async function submitInquiryLead(payload){
+  if(!window.niabaSupabase) throw new Error("Le service de demande est momentanément indisponible.");
+  let userId=null;
+  try{
+    const {data}=await window.niabaSupabase.auth.getSession();
+    userId=data?.session?.user?.id||null;
+  }catch(_err){}
+  const row={
+    user_id:userId,
+    lead_type:payload.lead_type,
+    customer_type:payload.customer_type||"individual",
+    full_name:String(payload.full_name||"").trim(),
+    email:String(payload.email||"").trim()||null,
+    phone:String(payload.phone||"").trim()||null,
+    company_name:String(payload.company_name||"").trim()||null,
+    subject:String(payload.subject||"").trim()||null,
+    message:String(payload.message||"").trim()||null,
+    details:payload.details||{},
+    source:payload.source||"website",
+    priority:payload.priority||"normal"
+  };
+  if(!row.full_name) throw new Error("Le nom est obligatoire.");
+  if(!row.email&&!row.phone) throw new Error("Ajoutez un e-mail ou un numéro de téléphone.");
+  const {error}=await window.niabaSupabase.from("inquiry_leads").insert(row);
+  if(error) throw error;
+  return true;
+}
+
+function setInquiryType(type){
+  const select=$("inquiryType");
+  if(!select) return;
+  const allowed=["flight","hotel","car","visa","corporate","custom"];
+  if(allowed.includes(type)) select.value=type;
+  select.dispatchEvent(new Event("change"));
+}
+
 function itineraryHtml(itinerary, label) {
   const segments = itinerary?.segments || [];
   if (!segments.length) return "";
@@ -258,7 +295,76 @@ $("flightForm")?.addEventListener("submit", async (e) => {
   }
 });
 
-$("quoteForm")?.addEventListener("submit", (e) => {
+
+const inquiryType=$("inquiryType");
+function refreshInquiryForm(){
+  const type=inquiryType?.value;
+  const customer=$("inquiryCustomerType");
+  const company=$("inquiryCompany");
+  const visaNote=$("visaInlineDisclaimer");
+  if(visaNote) visaNote.hidden=type!=="visa";
+  const business=type==="corporate"||customer?.value==="company"||customer?.value==="organization";
+  if(company) company.required=business;
+}
+inquiryType?.addEventListener("change",refreshInquiryForm);
+$("inquiryCustomerType")?.addEventListener("change",refreshInquiryForm);
+document.querySelectorAll("[data-lead-type]").forEach(link=>link.addEventListener("click",()=>{
+  setInquiryType(link.dataset.leadType||"custom");
+}));
+const leadParam=new URLSearchParams(location.search).get("lead");
+if(leadParam) setInquiryType(leadParam);
+refreshInquiryForm();
+
+$("inquiryForm")?.addEventListener("submit",async(e)=>{
+  e.preventDefault();
+  const email=$("inquiryEmail").value.trim(), phone=$("inquiryPhone").value.trim();
+  const status=$("inquiryStatus"), button=e.currentTarget.querySelector('button[type="submit"]');
+  if(!email&&!phone){
+    status.textContent="Indiquez au moins un e-mail ou un numéro de téléphone.";
+    status.className="form-status error";
+    $("inquiryEmail").focus();
+    return;
+  }
+  const type=$("inquiryType").value;
+  button.disabled=true;
+  const original=button.textContent;
+  button.textContent="Envoi en cours…";
+  status.textContent="";
+  try{
+    await submitInquiryLead({
+      lead_type:type,
+      customer_type:$("inquiryCustomerType").value,
+      full_name:$("inquiryName").value,
+      email,
+      phone,
+      company_name:$("inquiryCompany").value,
+      subject:type==="corporate"?"Demande entreprise":type==="visa"?"Assistance visa":"Demande de devis",
+      message:$("inquiryMessage").value,
+      details:{
+        destination:$("inquiryDestination").value.trim()||null,
+        desired_date:$("inquiryDate").value||null,
+        consent:true,
+        page:location.pathname
+      },
+      source:type==="visa"?"visa_form":type==="corporate"?"corporate_form":"contact_form",
+      priority:type==="corporate"?"high":"normal"
+    });
+    status.textContent="Demande enregistrée. Un conseiller Niaba Voyage pourra maintenant la suivre depuis le back-office.";
+    status.className="form-status success";
+    e.currentTarget.reset();
+    refreshInquiryForm();
+  }catch(err){
+    console.error("Inquiry lead:",err);
+    status.textContent=err.message||"Impossible d’enregistrer la demande pour le moment. Vous pouvez aussi nous contacter sur WhatsApp.";
+    status.className="form-status error";
+  }finally{
+    button.disabled=false;
+    button.textContent=original;
+  }
+});
+
+
+$("quoteForm")?.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const msg = [
@@ -275,6 +381,18 @@ $("quoteForm")?.addEventListener("submit", (e) => {
     "Précisions : " + ($("qNotes").value || "Aucune")
   ].join("\n");
 
+  try{
+    await submitInquiryLead({
+      lead_type:"custom",
+      customer_type:"individual",
+      full_name:$("qName").value,
+      phone:$("qPhone").value,
+      subject:"Demande de devis",
+      message:msg,
+      details:{destination:$("qDestination").value,date:$("qDate").value||null,people:$("qPeople").value,budget:$("qBudget").value||null,payment:$("qPayment").value},
+      source:"contact_form"
+    });
+  }catch(err){console.warn("Quote lead not stored:",err);}
   window.open(
     "https://wa.me/22891813448?text=" + encodeURIComponent(msg),
     "_blank",
@@ -453,11 +571,41 @@ function openBooking(offer){
 }
 function closeBooking(){const m=document.getElementById("bookingModal");if(m)m.hidden=true;document.body.style.overflow=""}
 document.querySelectorAll("[data-booking-close]").forEach(x=>x.addEventListener("click",closeBooking));
-document.getElementById("bookingForm")?.addEventListener("submit",e=>{
+document.getElementById("bookingForm")?.addEventListener("submit",async e=>{
   e.preventDefault(); if(!selectedBookingOffer)return;
+  const button=e.currentTarget.querySelector('button[type="submit"]'), original=button.textContent;
+  button.disabled=true; button.textContent="Enregistrement…";
   const opts=[["optBaggage","Bagage supplémentaire"],["optSeat","Choix du siège"],["optMeal","Repas spécial"],["optAssistance","Assistance spéciale"]].filter(([id])=>document.getElementById(id)?.checked).map(([,v])=>v);
   const out=selectedBookingOffer.itineraries?.[0], first=out?.segments?.[0], last=out?.segments?.[out.segments.length-1];
-  const msg=["Bonjour Niaba Voyage, je souhaite finaliser cette réservation.","","Passager : "+document.getElementById("bookFirstName").value+" "+document.getElementById("bookLastName").value,"Email : "+document.getElementById("bookEmail").value,"Téléphone : "+document.getElementById("bookPhone").value,"Trajet : "+(first?.from||"")+" → "+(last?.to||""),"Départ : "+formatDateTime(first?.departureAt),"Prix affiché : "+formatPrice(selectedBookingOffer.price.amount,selectedBookingOffer.price.currency),"Options : "+(opts.join(", ")||"Aucune"),"Référence offre : "+selectedBookingOffer.id,"","Merci de confirmer le tarif et la disponibilité avant paiement."].join("\n");
+  const fullName=(document.getElementById("bookFirstName").value+" "+document.getElementById("bookLastName").value).trim();
+  const msg=["Bonjour Niaba Voyage, je souhaite finaliser cette réservation.","","Passager : "+fullName,"Email : "+document.getElementById("bookEmail").value,"Téléphone : "+document.getElementById("bookPhone").value,"Trajet : "+(first?.from||"")+" → "+(last?.to||""),"Départ : "+formatDateTime(first?.departureAt),"Prix affiché : "+formatPrice(selectedBookingOffer.price.amount,selectedBookingOffer.price.currency),"Options : "+(opts.join(", ")||"Aucune"),"Référence offre : "+selectedBookingOffer.id,"","Merci de confirmer le tarif et la disponibilité avant paiement."].join("\n");
+  try{
+    await submitInquiryLead({
+      lead_type:"flight",
+      customer_type:"individual",
+      full_name:fullName,
+      email:document.getElementById("bookEmail").value,
+      phone:document.getElementById("bookPhone").value,
+      subject:"Demande de réservation de vol",
+      message:msg,
+      details:{
+        offer_id:selectedBookingOffer.id,
+        origin:first?.from||selectedBookingOffer.origin||null,
+        destination:last?.to||selectedBookingOffer.destination||null,
+        departure_at:first?.departureAt||null,
+        price:selectedBookingOffer.price,
+        airline:selectedBookingOffer.airline,
+        options:opts
+      },
+      source:"booking_flow",
+      priority:"high"
+    });
+    button.textContent="Demande enregistrée ✓";
+    setTimeout(()=>{button.disabled=false;button.textContent=original;},1500);
+  }catch(err){
+    console.warn("Booking lead not stored:",err);
+    button.disabled=false; button.textContent=original;
+  }
   window.open("https://wa.me/22891813448?text="+encodeURIComponent(msg),"_blank","noopener");
 });
 
