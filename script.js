@@ -242,6 +242,8 @@ function renderOffers(data) {
   container.querySelectorAll("[data-offer-id]").forEach(btn=>btn.addEventListener("click",()=>openBooking(offers.find(o=>String(o.id)===btn.dataset.offerId))));
 }
 
+let pendingFlightQuoteContext=null;
+
 $("flightForm")?.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -279,16 +281,50 @@ $("flightForm")?.addEventListener("submit", async (e) => {
     const data = await response.json().catch(() => ({}));
 
     if (!response.ok) {
-      throw new Error(data.error || "Impossible de rechercher les vols actuellement.");
+      const providerError=new Error(data.error || "Impossible de rechercher les vols actuellement.");
+      providerError.status=response.status;
+      throw providerError;
     }
 
     renderOffers(data);
   } catch (error) {
     $("flightResultsNotice").textContent = "";
-    $("flightResults").innerHTML =
-      '<div class="results-error"><strong>Recherche indisponible.</strong><span>' +
-      escapeHtml(error.message) +
-      '</span><a href="https://wa.me/22891813448" target="_blank" rel="noopener">Contacter Niaba Voyage sur WhatsApp</a></div>';
+    const isProviderUnavailable=error.status===503 || /moteur de vols.*pas encore connecté/i.test(error.message||"");
+    if(isProviderUnavailable){
+      const oneWay=document.querySelector('input[name="tripType"]:checked')?.value==="oneway";
+      pendingFlightQuoteContext={
+        origin:$("from").value.trim(),
+        destination:$("to").value.trim(),
+        departure_date:$("depart").value,
+        return_date:oneWay?null:($("return").value||null),
+        adults:$("adults")?.value||$("pax").value||"1",
+        children:$("children")?.value||"0",
+        infants:$("infants")?.value||"0",
+        cabin:$("cabin")?.value||"ECONOMY"
+      };
+      setInquiryType("flight");
+      if($("inquiryDestination")) $("inquiryDestination").value=pendingFlightQuoteContext.destination;
+      if($("inquiryDate")) $("inquiryDate").value=pendingFlightQuoteContext.departure_date||"";
+      if($("inquiryMessage")) $("inquiryMessage").value=[
+        "Je souhaite recevoir un devis de vol.",
+        "Trajet : "+pendingFlightQuoteContext.origin+" → "+pendingFlightQuoteContext.destination,
+        "Aller : "+(pendingFlightQuoteContext.departure_date||"À définir"),
+        "Retour : "+(pendingFlightQuoteContext.return_date||"Aller simple / à définir"),
+        "Voyageurs : "+pendingFlightQuoteContext.adults+" adulte(s), "+pendingFlightQuoteContext.children+" enfant(s), "+pendingFlightQuoteContext.infants+" bébé(s)",
+        "Classe : "+pendingFlightQuoteContext.cabin
+      ].join("\n");
+      $("flightResults").innerHTML =
+        '<div class="results-error quote-fallback"><strong>Recevez un devis personnalisé.</strong><span>La tarification automatique Amadeus est en cours d’activation. Vos critères de recherche sont déjà préparés pour un conseiller Niaba Voyage.</span><div class="results-error-actions"><button id="flightQuoteFallback" class="btn primary" type="button">Continuer ma demande de devis</button><a href="https://wa.me/22891813448" target="_blank" rel="noopener">Ou continuer sur WhatsApp</a></div></div>';
+      $("flightQuoteFallback")?.addEventListener("click",()=>{
+        $("contact")?.scrollIntoView({behavior:"smooth",block:"start"});
+        setTimeout(()=>$("inquiryName")?.focus(),450);
+      });
+    }else{
+      $("flightResults").innerHTML =
+        '<div class="results-error"><strong>Recherche indisponible.</strong><span>' +
+        escapeHtml(error.message) +
+        '</span><a href="https://wa.me/22891813448" target="_blank" rel="noopener">Contacter Niaba Voyage sur WhatsApp</a></div>';
+    }
   } finally {
     button.disabled = false;
     button.textContent = originalText;
@@ -343,14 +379,16 @@ $("inquiryForm")?.addEventListener("submit",async(e)=>{
       details:{
         destination:$("inquiryDestination").value.trim()||null,
         desired_date:$("inquiryDate").value||null,
+        flight_search:type==="flight" ? pendingFlightQuoteContext : null,
         consent:true,
         page:location.pathname
       },
-      source:type==="visa"?"visa_form":type==="corporate"?"corporate_form":"contact_form",
-      priority:type==="corporate"?"high":"normal"
+      source:type==="visa"?"visa_form":type==="corporate"?"corporate_form":type==="flight"&&pendingFlightQuoteContext?"flight_search":"contact_form",
+      priority:type==="corporate"||type==="flight"?"high":"normal"
     });
     status.textContent="Demande enregistrée. Un conseiller Niaba Voyage pourra maintenant la suivre depuis le back-office.";
     status.className="form-status success";
+    pendingFlightQuoteContext=null;
     e.currentTarget.reset();
     refreshInquiryForm();
   }catch(err){
