@@ -28,7 +28,7 @@
 <article><span>Demandes</span><strong id="statLeads">0</strong><small>Leads à traiter</small></article>
 <article><span>Clients</span><strong id="statClients">0</strong><small>Comptes connus</small></article>
 <article><span>Affiliés</span><strong id="statAffiliates">0</strong><small>Partenaires</small></article>
-<article><span>Paiements</span><strong>0 FCFA</strong><small>Confirmés</small></article>
+<article><span>Paiements</span><strong id="statPayments">0 FCFA</strong><small>Confirmés</small></article>
 </section>
 <section class="admin-grid">
 <article class="admin-card wide"><div class="admin-card-head"><h2>Réservations récentes</h2><select id="bookingFilter"><option>Toutes</option><option>En attente</option><option>Confirmées</option><option>Annulées</option></select></div><div class="admin-table-wrap"><table><thead><tr><th>Référence</th><th>Client</th><th>Service</th><th>Destination</th><th>Montant</th><th>Statut</th></tr></thead><tbody id="adminBookings"><tr><td colspan="6">Aucune réservation réelle enregistrée pour le moment.</td></tr></tbody></table></div></article>
@@ -59,7 +59,7 @@
   statLeads.textContent=leads.filter(x=>x.status!=="closed"&&x.status!=="converted").length;
   statAffiliates.textContent=affiliates.length;
   const paymentTotal=payments.reduce((s,x)=>s+Number(x.amount||0),0);
-  document.querySelector(".admin-stats article:nth-child(4) strong").textContent=new Intl.NumberFormat("fr-FR").format(paymentTotal)+" FCFA";
+  statPayments.textContent=new Intl.NumberFormat("fr-FR").format(paymentTotal)+" FCFA";
   const due=commissions.filter(x=>x.status==="approved").reduce((s,x)=>s+Number(x.amount||0),0);
   document.querySelector(".admin-card:not(.wide) p b").textContent=new Intl.NumberFormat("fr-FR").format(due)+" FCFA";
 
