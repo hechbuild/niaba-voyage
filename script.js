@@ -353,8 +353,9 @@ refreshInquiryForm();
 
 $("inquiryForm")?.addEventListener("submit",async(e)=>{
   e.preventDefault();
+  const form=e.currentTarget;
   const email=$("inquiryEmail").value.trim(), phone=$("inquiryPhone").value.trim();
-  const status=$("inquiryStatus"), button=e.currentTarget.querySelector('button[type="submit"]');
+  const status=$("inquiryStatus"), button=form.querySelector('button[type="submit"]');
   if(!email&&!phone){
     status.textContent="Indiquez au moins un e-mail ou un numéro de téléphone.";
     status.className="form-status error";
@@ -389,7 +390,7 @@ $("inquiryForm")?.addEventListener("submit",async(e)=>{
     status.textContent="Demande enregistrée. Un conseiller Niaba Voyage pourra maintenant la suivre depuis le back-office.";
     status.className="form-status success";
     pendingFlightQuoteContext=null;
-    e.currentTarget.reset();
+    form.reset();
     refreshInquiryForm();
   }catch(err){
     console.error("Inquiry lead:",err);
