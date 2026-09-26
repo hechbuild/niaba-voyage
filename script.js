@@ -501,37 +501,14 @@ document.getElementById("googleAuthBtn")?.addEventListener("click",async()=>{
   }
 });
 
-$("forgotPasswordBtn")?.addEventListener("click",async()=>{
+$("forgotPasswordBtn")?.addEventListener("click",()=>{
   const email=$("accountEmail")?.value.trim()||"";
-  const note=document.querySelector("#accountForm .account-note");
-  const button=$("forgotPasswordBtn");
-  if(!email){
-    note.textContent="Saisissez d’abord l’adresse e-mail de votre compte.";
-    note.style.color="#b42318";
-    $("accountEmail")?.focus();
-    return;
-  }
-  if(!$("accountEmail").checkValidity()){
+  if(email && !$("accountEmail").checkValidity()){
     $("accountEmail").reportValidity();
     return;
   }
-  button.disabled=true;
-  const original=button.textContent;
-  button.textContent="Envoi en cours…";
-  try{
-    if(!window.niabaSupabase) throw new Error("Service de récupération indisponible. Rechargez la page.");
-    const redirectTo=window.location.origin+"/reinitialiser-mot-de-passe.html";
-    const {error}=await window.niabaSupabase.auth.resetPasswordForEmail(email,{redirectTo});
-    if(error) throw error;
-    note.textContent="Si cette adresse correspond à un compte, un lien sécurisé vient d’être envoyé. Vérifiez aussi vos courriers indésirables.";
-    note.style.color="#16704a";
-  }catch(err){
-    note.textContent=err.message||"Impossible d’envoyer le lien de récupération pour le moment.";
-    note.style.color="#b42318";
-  }finally{
-    button.disabled=false;
-    button.textContent=original;
-  }
+  if(email) sessionStorage.setItem("niabaRecoveryEmail",email);
+  window.location.assign("/mot-de-passe-oublie.html");
 });
 
 $("accountForm")?.addEventListener("submit",async(e)=>{
