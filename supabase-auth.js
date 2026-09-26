@@ -54,6 +54,10 @@ window.niabaAuthReady=(async()=>{
   }
 })();
 
-niabaSupabase.auth.onAuthStateChange((_event,session)=>{
+niabaSupabase.auth.onAuthStateChange((event,session)=>{
+  if(event==="PASSWORD_RECOVERY"&&!location.pathname.endsWith("/reinitialiser-mot-de-passe.html")){
+    location.replace("/reinitialiser-mot-de-passe.html");
+    return;
+  }
   niabaRenderAuthState(session?.user||null);
 });
