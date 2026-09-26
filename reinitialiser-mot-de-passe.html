@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#061d49">
+  <title>Nouveau mot de passe | Niaba Voyage</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css?v=20260926-2">
+</head>
+<body>
+  <header class="header"><div class="container nav"><a class="brand" href="/"><span class="brand-mark">➤</span><span>NIABA <b>VOYAGE</b></span></a></div></header>
+  <main class="legal-page">
+    <section class="container legal-content" style="max-width:560px">
+      <span class="kicker">COMPTE SÉCURISÉ</span>
+      <h1>Choisir un nouveau mot de passe</h1>
+      <p id="resetIntro">Ouvrez cette page depuis le lien reçu par e-mail, puis choisissez un nouveau mot de passe.</p>
+      <form id="resetPasswordForm" hidden>
+        <label class="field"><span>Nouveau mot de passe</span><input id="newPassword" type="password" autocomplete="new-password" minlength="8" required placeholder="••••••••"></label>
+        <label class="field" style="margin-top:12px"><span>Confirmer le mot de passe</span><input id="confirmNewPassword" type="password" autocomplete="new-password" minlength="8" required placeholder="••••••••"></label>
+        <p class="account-note">Utilisez au moins 8 caractères avec une majuscule, une minuscule et un chiffre.</p>
+        <button class="btn primary full-button" type="submit">Enregistrer le nouveau mot de passe</button>
+      </form>
+      <p id="resetStatus" class="form-status" role="status" aria-live="polite"></p>
+      <p><a href="/?login=1">Retour à la connexion</a></p>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/supabase-auth.js?v=20260923-5"></script>
+  <script src="/reset-password.js?v=20260926-1"></script>
+</body>
+</html>

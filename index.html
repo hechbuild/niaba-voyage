@@ -472,6 +472,7 @@
 </div>
         <label class="field"><span>Email</span><input id="accountEmail" type="email" autocomplete="email" required placeholder="vous@exemple.com"></label>
         <label class="field"><span>Mot de passe</span><input id="accountPassword" type="password" autocomplete="current-password" required minlength="8" placeholder="••••••••"></label>
+        <button id="forgotPasswordBtn" class="forgot-password login-only" type="button">Mot de passe oublié ?</button>
         <div class="signup-only password-signup-fields" hidden>
           <label class="field"><span>Confirmer le mot de passe</span><input id="accountPasswordConfirm" type="password" autocomplete="new-password" minlength="8" placeholder="••••••••"></label>
           <div class="password-rules" id="passwordRules">
@@ -509,6 +510,7 @@
         document.getElementById("accountTitle").textContent=signup?"Créer votre compte":"Se connecter";
         document.getElementById("accountSubtitle").textContent=signup?"Gérez vos voyages simplement.":"Retrouvez vos demandes et préparez vos prochains voyages.";
         document.querySelectorAll(".signup-only").forEach(function(el){el.hidden=!signup;});
+        document.querySelectorAll(".login-only").forEach(function(el){el.hidden=signup;});
         var login=document.getElementById("loginTab"), reg=document.getElementById("signupTab");
         if(login)login.classList.toggle("active",!signup);
         if(reg)reg.classList.toggle("active",signup);
@@ -525,6 +527,6 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-auth.js?v=20260923-5"></script>
-  <script src="script.js?v=20260926-2"></script>
+  <script src="script.js?v=20260926-3"></script>
 </body>
 </html>

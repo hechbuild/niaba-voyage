@@ -451,6 +451,7 @@ footer{background:#04132f;color:#b8c3d5;padding:40px 0;border-top:4px solid var(
 .account-tabs{display:grid;grid-template-columns:1fr 1fr;background:var(--soft);padding:4px;border-radius:12px;margin-bottom:18px}
 .account-tabs button{border:0;background:transparent;padding:10px;border-radius:9px;font-weight:800;cursor:pointer}.account-tabs button.active{background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.08)}
 #accountForm{display:grid;gap:14px}.account-note{color:var(--muted);line-height:1.4}
+.forgot-password{justify-self:end;border:0;background:transparent;color:#0b4fa3;font:inherit;font-size:.86rem;font-weight:800;cursor:pointer;padding:0 2px 2px}.forgot-password:hover{text-decoration:underline}.forgot-password:disabled{opacity:.6;cursor:wait}.login-only[hidden]{display:none!important}
 
 /* Mobile header fix */
 @media(max-width:800px){

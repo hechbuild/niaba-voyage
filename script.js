@@ -445,6 +445,7 @@ function setAccountMode(mode){
   $("accountSubtitle").textContent=signup?"Gérez vos voyages simplement.":"Retrouvez vos demandes et préparez vos prochains voyages.";
   $("loginTab").classList.toggle("active",!signup); $("signupTab").classList.toggle("active",signup);
   document.querySelectorAll(".signup-only").forEach(el=>el.hidden=!signup);
+  document.querySelectorAll(".login-only").forEach(el=>el.hidden=signup);
   $("accountForm").querySelector('button[type="submit"]').textContent=signup?"Créer mon compte":"Se connecter";
   $("accountPassword").autocomplete=signup?"new-password":"current-password";
   const confirm=$("accountPasswordConfirm");
@@ -497,6 +498,39 @@ document.getElementById("googleAuthBtn")?.addEventListener("click",async()=>{
   }catch(err){
     if(note){note.textContent=err.message||"Connexion Google indisponible.";note.style.color="#b42318";}
     if(button) button.disabled=false;
+  }
+});
+
+$("forgotPasswordBtn")?.addEventListener("click",async()=>{
+  const email=$("accountEmail")?.value.trim()||"";
+  const note=document.querySelector("#accountForm .account-note");
+  const button=$("forgotPasswordBtn");
+  if(!email){
+    note.textContent="Saisissez d’abord l’adresse e-mail de votre compte.";
+    note.style.color="#b42318";
+    $("accountEmail")?.focus();
+    return;
+  }
+  if(!$("accountEmail").checkValidity()){
+    $("accountEmail").reportValidity();
+    return;
+  }
+  button.disabled=true;
+  const original=button.textContent;
+  button.textContent="Envoi en cours…";
+  try{
+    if(!window.niabaSupabase) throw new Error("Service de récupération indisponible. Rechargez la page.");
+    const redirectTo=window.location.origin+"/reinitialiser-mot-de-passe.html";
+    const {error}=await window.niabaSupabase.auth.resetPasswordForEmail(email,{redirectTo});
+    if(error) throw error;
+    note.textContent="Si cette adresse correspond à un compte, un lien sécurisé vient d’être envoyé. Vérifiez aussi vos courriers indésirables.";
+    note.style.color="#16704a";
+  }catch(err){
+    note.textContent=err.message||"Impossible d’envoyer le lien de récupération pour le moment.";
+    note.style.color="#b42318";
+  }finally{
+    button.disabled=false;
+    button.textContent=original;
   }
 });
 
