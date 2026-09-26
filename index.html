@@ -525,6 +525,16 @@
       if(new URLSearchParams(location.search).get("login")==="1"){open("login");}
     })();
   </script>
+  <script>
+    (function(){
+      var hash=window.location.hash||"";
+      var query=window.location.search||"";
+      var isRecovery=hash.indexOf("type=recovery")!==-1||query.indexOf("type=recovery")!==-1;
+      if(isRecovery){
+        window.location.replace("/reinitialiser-mot-de-passe.html"+query+hash);
+      }
+    })();
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-auth.js?v=20260923-5"></script>
   <script src="script.js?v=20260926-4"></script>
