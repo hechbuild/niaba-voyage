@@ -1054,3 +1054,8 @@ body{background:#f7f9fc;color:#172033}.header{background:#fff}.service-search,.d
   .lead-modal{padding:0;align-items:end}.lead-dialog{width:100%;max-height:94dvh;border-radius:22px 22px 0 0;padding:20px 14px}.lead-dialog-head{flex-direction:column;padding-right:40px}.lead-dialog-head h2{font-size:1.45rem}.lead-detail-grid{grid-template-columns:1fr}.lead-detail-card dl>div{grid-template-columns:105px minmax(0,1fr)}.lead-contact-actions{display:grid;grid-template-columns:1fr}.lead-contact-actions a{width:100%}.lead-work-card label{display:grid}.lead-work-card .admin-note{display:block;margin:9px 0 0}.lead-booking-form{grid-template-columns:1fr 1fr}.lead-booking-card .admin-btn{width:100%}
 }
 @media(max-width:380px){.lead-detail-card dl>div,.lead-booking-form{grid-template-columns:1fr}.lead-detail-card dt{margin-bottom:-4px}}
+@media(max-width:480px){
+  .lead-detail-card dl>div{grid-template-columns:1fr;gap:3px}
+  .lead-detail-card dt{margin-bottom:0}
+  .lead-detail-card dd,.lead-detail-card dd a{min-width:0;overflow-wrap:anywhere;word-break:break-word}
+}
