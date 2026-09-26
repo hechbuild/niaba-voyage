@@ -470,12 +470,16 @@ function passwordChecks(value){
   return {length:value.length>=8,upper:/[A-Z]/.test(value),lower:/[a-z]/.test(value),number:/\d/.test(value)};
 }
 function friendlyAuthError(error){
-  const code=error?.code||"";
+  const code=String(error?.code||"").toLowerCase();
+  const status=Number(error?.status||0);
   const message=String(error?.message||"").toLowerCase();
-  if(code==="invalid_credentials"||message.includes("invalid login credentials")) return "Adresse e-mail ou mot de passe incorrect.";
-  if(code==="email_not_confirmed"||message.includes("email not confirmed")) return "Votre adresse e-mail n’est pas encore confirmée. Ouvrez l’e-mail de confirmation reçu.";
-  if(code==="over_request_rate_limit"||message.includes("rate limit")) return "Trop de tentatives. Patientez quelques minutes avant de réessayer.";
+  if(code==="invalid_credentials"||code==="invalid_grant"||message.includes("invalid login credentials")) return "Adresse e-mail ou mot de passe incorrect. Si vous n’avez pas encore créé ce compte, choisissez « Créer un compte ».";
+  if(code==="email_not_confirmed"||message.includes("email not confirmed")) return "Votre adresse e-mail n’est pas encore confirmée. Ouvrez l’e-mail de confirmation reçu, puis réessayez.";
+  if(code==="over_request_rate_limit"||status===429||message.includes("rate limit")) return "Trop de tentatives. Patientez quelques minutes avant de réessayer.";
+  if(code==="user_not_found"||message.includes("user not found")) return "Aucun compte actif ne correspond à cette adresse. Créez d’abord votre compte ou vérifiez l’adresse saisie.";
   if(message.includes("network")||message.includes("fetch")) return "Connexion au service momentanément impossible. Vérifiez votre connexion internet puis réessayez.";
+  if(message==="missing_session") return "La connexion n’a pas pu être finalisée. Vérifiez que votre adresse e-mail est confirmée, puis réessayez.";
+  if(status===400) return "Adresse e-mail ou mot de passe incorrect, ou compte non encore confirmé.";
   return "Connexion impossible pour le moment. Vérifiez vos informations puis réessayez.";
 }
 function updatePasswordRules(){
