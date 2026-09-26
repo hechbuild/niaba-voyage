@@ -374,6 +374,7 @@ $("inquiryForm")?.addEventListener("submit",async(e)=>{
   const original=button.textContent;
   button.textContent="Envoi en cours…";
   status.textContent="";
+  let submitted=false;
   try{
     await submitInquiryLead({
       lead_type:type,
@@ -394,18 +395,20 @@ $("inquiryForm")?.addEventListener("submit",async(e)=>{
       source:type==="visa"?"visa_form":type==="corporate"?"corporate_form":type==="flight"&&pendingFlightQuoteContext?"flight_search":"contact_form",
       priority:type==="corporate"||type==="flight"?"high":"normal"
     });
+    submitted=true;
     status.textContent="✓ Demande enregistrée avec votre consentement. Un conseiller Niaba Voyage pourra maintenant la suivre depuis le back-office.";
     status.className="form-status success";
+    button.textContent="Demande envoyée ✓";
     pendingFlightQuoteContext=null;
-    form.reset();
-    refreshInquiryForm();
   }catch(err){
     console.error("Inquiry lead:",err);
     status.textContent=err.message||"Impossible d’enregistrer la demande pour le moment. Vous pouvez aussi nous contacter sur WhatsApp.";
     status.className="form-status error";
   }finally{
-    button.disabled=false;
-    button.textContent=original;
+    if(!submitted){
+      button.disabled=false;
+      button.textContent=original;
+    }
   }
 });
 
