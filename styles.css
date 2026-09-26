@@ -1005,3 +1005,37 @@ body{background:#f7f9fc;color:#172033}.header{background:#fff}.service-search,.d
   .compact-home-footer p{max-width:100%!important;padding:0 8px!important;white-space:normal!important;overflow-wrap:anywhere!important}
   .wa-float{right:12px!important;box-sizing:border-box!important}
 }
+
+/* Back-office mobile: tables become readable vertical records */
+@media(max-width:760px){
+  .admin-header .nav{min-height:82px;gap:12px;flex-wrap:nowrap}
+  .admin-header .brand{min-width:0;font-size:.95rem;gap:8px}
+  .admin-header .brand-mark{width:46px;height:46px;flex:0 0 46px;font-size:1.35rem}
+  .admin-header-title{font-size:.92rem;white-space:nowrap}
+  .admin-shell{width:calc(100% - 20px);margin:20px auto 40px}
+  .admin-card{padding:15px;min-width:0;overflow:hidden}
+  .admin-card-head{align-items:stretch;flex-direction:column}
+  .admin-card-head h2{font-size:1.35rem;margin-bottom:6px}
+  .admin-card-head .admin-note{margin:0;line-height:1.45}
+  .admin-card-head select{width:100%;min-height:44px;font-size:1rem}
+  .admin-table-wrap{overflow:visible;width:100%}
+  .admin-card table,.admin-card tbody,.admin-card tr,.admin-card td{display:block;width:100%;min-width:0;box-sizing:border-box}
+  .admin-card table{min-width:0;border-collapse:separate}
+  .admin-card thead{display:none}
+  .admin-card tbody{display:grid;gap:12px;margin-top:14px}
+  .admin-card tbody tr{padding:6px 14px;background:#fff;border:1px solid #e2e8f0;border-radius:14px;box-shadow:0 3px 12px rgba(7,28,69,.05)}
+  .admin-card tbody td{display:grid;grid-template-columns:minmax(92px,34%) minmax(0,1fr);gap:10px;align-items:start;padding:10px 0;border-bottom:1px solid #edf0f4;font-size:.93rem;line-height:1.4;overflow-wrap:anywhere}
+  .admin-card tbody td:last-child{border-bottom:0}
+  .admin-card tbody td::before{content:attr(data-label);color:#667085;font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.03em}
+  .admin-card tbody .admin-contact a{word-break:break-word}
+  .lead-status-select{width:100%;min-width:0;min-height:42px;font-size:.92rem}
+  .admin-card tbody tr.admin-empty{padding:0}
+  .admin-card tbody tr.admin-empty td{display:block;padding:18px;text-align:center;border:0;color:#667085}
+  .admin-card tbody tr.admin-empty td::before{content:none}
+}
+
+@media(max-width:380px){
+  .admin-header .brand span:last-child{font-size:.82rem}
+  .admin-header-title{font-size:.8rem}
+  .admin-card tbody td{grid-template-columns:1fr;gap:4px}
+}
