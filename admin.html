@@ -34,9 +34,17 @@
 <article class="admin-card wide"><div class="admin-card-head"><h2>Réservations récentes</h2><select id="bookingFilter"><option>Toutes</option><option>En attente</option><option>Confirmées</option><option>Annulées</option></select></div><div class="admin-table-wrap"><table><thead><tr><th>Référence</th><th>Client</th><th>Service</th><th>Destination</th><th>Montant</th><th>Statut</th></tr></thead><tbody id="adminBookings"><tr><td colspan="6">Aucune réservation réelle enregistrée pour le moment.</td></tr></tbody></table></div></article>
 <article class="admin-card"><h2>Services</h2><div class="admin-links"><a href="/#flightForm">✈️ Vols</a><a href="/hotels.html">🏨 Hôtels</a><a href="/location-voiture.html">🚗 Location de voiture</a></div></article>
 <article class="admin-card"><h2>Affiliation</h2><p><b>0 FCFA</b> de commissions à payer</p><a class="admin-link" href="/espace-affilie.html">Voir l’espace affilié →</a></article>
-<article class="admin-card wide"><div class="admin-card-head"><div><h2>Demandes & leads</h2><p class="admin-note">Demandes provenant du site, classées automatiquement par service.</p></div><select id="leadFilter"><option value="all">Toutes</option><option value="new">Nouvelles</option><option value="contacted">Contactées</option><option value="qualified">Qualifiées</option><option value="quoted">Devis envoyé</option><option value="converted">Converties</option><option value="closed">Clôturées</option></select></div><div class="admin-table-wrap"><table><thead><tr><th>Référence</th><th>Client</th><th>Type</th><th>Équipe</th><th>Contact</th><th>Statut</th></tr></thead><tbody id="adminLeads"><tr><td colspan="6">Aucune demande enregistrée.</td></tr></tbody></table></div></article>
+<article class="admin-card wide"><div class="admin-card-head"><div><h2>Demandes & leads</h2><p class="admin-note">Demandes provenant du site, classées automatiquement par service.</p></div><select id="leadFilter"><option value="all">Toutes</option><option value="new">Nouvelles</option><option value="contacted">Contactées</option><option value="qualified">Qualifiées</option><option value="quoted">Devis envoyé</option><option value="converted">Converties</option><option value="closed">Clôturées</option></select></div><div class="admin-table-wrap"><table><thead><tr><th>Référence</th><th>Client</th><th>Type</th><th>Équipe</th><th>Contact</th><th>Statut</th><th>Action</th></tr></thead><tbody id="adminLeads"><tr><td colspan="7">Aucune demande enregistrée.</td></tr></tbody></table></div></article>
 <article class="admin-card wide"><h2>Gestion</h2><div class="admin-actions"><button data-admin="clients">Clients</button><button data-admin="bookings">Réservations</button><button data-admin="payments">Paiements</button><button data-admin="affiliates">Affiliés</button><button data-admin="requests">Demandes</button><button data-admin="reports">Statistiques</button></div><p class="admin-note">Les données affichées ici proviennent désormais de la base Supabase. Les paiements et réservations apparaîtront automatiquement dès leur enregistrement.</p></article>
 </section></main>
+<div class="lead-modal" id="leadModal" hidden>
+  <div class="lead-modal-backdrop" data-lead-close></div>
+  <section class="lead-dialog" role="dialog" aria-modal="true" aria-labelledby="leadDialogTitle">
+    <button class="lead-dialog-close" type="button" data-lead-close aria-label="Fermer">×</button>
+    <div class="lead-dialog-head"><div><span class="eyebrow">DOSSIER CLIENT</span><h2 id="leadDialogTitle">Traiter la demande</h2><p id="leadDialogRef" class="admin-note"></p></div><span id="leadDialogStatus" class="lead-status-badge"></span></div>
+    <div id="leadDialogBody"></div>
+  </section>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase-auth.js"></script>
 <script>
 (async()=>{
@@ -82,7 +90,8 @@
       <td data-label="Équipe">${esc(teamLabels[l.assigned_team]||l.assigned_team||"—")}</td>
       <td data-label="Contact" class="admin-contact">${l.phone?'<a href="tel:'+esc(l.phone)+'">'+esc(l.phone)+'</a>':""}${l.email?'<br><a href="mailto:'+esc(l.email)+'">'+esc(l.email)+'</a>':""}</td>
       <td data-label="Statut"><select class="lead-status-select" aria-label="Statut de la demande ${esc(l.reference)}" data-lead-id="${esc(l.id)}">${Object.entries(statusLabels).map(([value,label])=>'<option value="'+value+'" '+(l.status===value?"selected":"")+'>'+label+'</option>').join("")}</select></td>
-    </tr>`).join(""):'<tr class="admin-empty"><td colspan="6">Aucune demande enregistrée.</td></tr>';
+      <td data-label="Action"><button class="lead-open-btn" type="button" data-open-lead="${esc(l.id)}">Voir et traiter</button></td>
+    </tr>`).join(""):'<tr class="admin-empty"><td colspan="7">Aucune demande enregistrée.</td></tr>';
     document.querySelectorAll("[data-lead-id]").forEach(select=>select.addEventListener("change",async()=>{
       const next=select.value;
       select.disabled=true;
@@ -91,9 +100,76 @@
       else{const lead=leads.find(x=>x.id===select.dataset.leadId);if(lead)lead.status=next;statLeads.textContent=leads.filter(x=>x.status!=="closed"&&x.status!=="converted").length;}
       select.disabled=false;
     }));
+    document.querySelectorAll("[data-open-lead]").forEach(button=>button.addEventListener("click",()=>openLead(button.dataset.openLead)));
   }
   renderLeads(leads);
   leadFilter.onchange=()=>renderLeads(leadFilter.value==="all"?leads:leads.filter(l=>l.status===leadFilter.value));
+
+  const detailLabels={origin:"Départ",destination:"Destination",departure_date:"Date aller",return_date:"Date retour",desired_date:"Date souhaitée",adults:"Adultes",children:"Enfants",infants:"Bébés",cabin:"Classe",airline:"Compagnie",offer_id:"Référence de l’offre",people:"Voyageurs",budget:"Budget",payment:"Paiement",options:"Options"};
+  function normalizedDetails(lead){
+    const root=lead.details||{}, flight=root.flight_search||{};
+    return {...root,...flight,origin:flight.origin||root.origin,destination:flight.destination||root.destination,departure_date:flight.departure_date||root.departure_at||root.desired_date,return_date:flight.return_date||root.return_date};
+  }
+  function displayValue(value){
+    if(value===null||value===undefined||value==="")return "";
+    if(Array.isArray(value))return value.join(", ");
+    if(typeof value==="object"){
+      if(value.amount!==undefined)return new Intl.NumberFormat("fr-FR").format(Number(value.amount||0))+" "+(value.currency||"");
+      return "";
+    }
+    if(/^\d{4}-\d{2}-\d{2}/.test(String(value))){const d=new Date(String(value).length===10?value+"T00:00:00":value);if(!Number.isNaN(d.getTime()))return d.toLocaleDateString("fr-FR");}
+    return String(value);
+  }
+  function phoneHref(phone){return String(phone||"").replace(/[^\d+]/g,"");}
+  function whatsappHref(lead){
+    const phone=phoneHref(lead.phone).replace(/^\+/,"");
+    const message=`Bonjour ${lead.full_name}, nous avons bien reçu votre demande ${lead.reference}. Nous vous contactons pour poursuivre son traitement.\n\nNiaba Voyage`;
+    return phone?`https://wa.me/${encodeURIComponent(phone)}?text=${encodeURIComponent(message)}`:"#";
+  }
+  function bookingForLead(id){return bookings.find(b=>b.metadata?.lead_id===id);}
+  function openLead(id){
+    const lead=leads.find(x=>x.id===id); if(!lead)return;
+    const details=normalizedDetails(lead), existing=bookingForLead(id);
+    const rows=Object.entries(detailLabels).map(([key,label])=>{const value=displayValue(details[key]);return value?`<div><dt>${label}</dt><dd>${esc(value)}</dd></div>`:"";}).join("");
+    const price=details.price?.amount||details.price||"", currency=details.price?.currency||"XOF";
+    const canBook=["flight","hotel","car"].includes(lead.lead_type);
+    leadDialogRef.textContent=lead.reference+" · "+new Date(lead.created_at).toLocaleString("fr-FR");
+    leadDialogStatus.textContent=statusLabels[lead.status]||lead.status;
+    leadDialogBody.innerHTML=`
+      <div class="lead-detail-grid">
+        <section class="lead-detail-card"><h3>Client</h3><dl><div><dt>Nom</dt><dd>${esc(lead.full_name)}</dd></div>${lead.company_name?`<div><dt>Organisation</dt><dd>${esc(lead.company_name)}</dd></div>`:""}<div><dt>Téléphone</dt><dd>${lead.phone?`<a href="tel:${esc(phoneHref(lead.phone))}">${esc(lead.phone)}</a>`:"—"}</dd></div><div><dt>E-mail</dt><dd>${lead.email?`<a href="mailto:${esc(lead.email)}">${esc(lead.email)}</a>`:"—"}</dd></div></dl></section>
+        <section class="lead-detail-card"><h3>Détails du voyage</h3><dl>${rows||'<div><dt>Information</dt><dd>Aucun détail structuré.</dd></div>'}</dl></section>
+      </div>
+      <section class="lead-message-card"><h3>${esc(lead.subject||"Message du client")}</h3><p>${esc(lead.message||"Aucun message.").replace(/\n/g,"<br>")}</p></section>
+      <div class="lead-contact-actions">${lead.phone?`<a href="tel:${esc(phoneHref(lead.phone))}">Appeler</a><a class="whatsapp" href="${esc(whatsappHref(lead))}" target="_blank" rel="noopener">Répondre sur WhatsApp</a>`:""}${lead.email?`<a href="mailto:${esc(lead.email)}?subject=${encodeURIComponent("Votre demande "+lead.reference+" — Niaba Voyage")}">Répondre par e-mail</a>`:""}</div>
+      <section class="lead-work-card"><label for="leadNotes"><b>Notes internes</b><span>Ces notes restent privées et ne sont pas envoyées au client.</span></label><textarea id="leadNotes" rows="4" placeholder="Ex. Client appelé, préfère un départ le matin…">${esc((lead.details||{}).admin_notes||"")}</textarea><button class="admin-btn secondary" id="saveLeadNotes" type="button">Enregistrer les notes</button><p id="leadActionStatus" class="admin-note" role="status"></p></section>
+      ${canBook?`<section class="lead-booking-card"><h3>Créer la réservation</h3>${existing?`<p class="booking-created">✓ Réservation ${esc(existing.reference)} déjà créée.</p>`:`<div class="lead-booking-form"><label>Montant du devis<input id="bookingAmount" type="number" min="0" step="1" value="${esc(price)}" placeholder="Ex. 450000"></label><label>Devise<select id="bookingCurrency"><option ${currency==="XOF"?"selected":""}>XOF</option><option ${currency==="EUR"?"selected":""}>EUR</option><option ${currency==="USD"?"selected":""}>USD</option></select></label><label>Date de départ<input id="bookingStart" type="date" value="${esc(String(details.departure_date||details.desired_date||"").slice(0,10))}"></label><label>Date de retour<input id="bookingEnd" type="date" value="${esc(String(details.return_date||"").slice(0,10))}"></label></div><button class="admin-btn create-booking-btn" id="createLeadBooking" type="button">Créer la réservation</button><p class="admin-note">À utiliser après validation du devis par le client.</p>`}</section>`:""}`;
+    leadModal.hidden=false; document.body.style.overflow="hidden";
+    document.getElementById("saveLeadNotes").onclick=()=>saveNotes(lead);
+    const createButton=document.getElementById("createLeadBooking"); if(createButton)createButton.onclick=()=>createBooking(lead,details);
+  }
+  function closeLead(){leadModal.hidden=true;document.body.style.overflow="";}
+  document.querySelectorAll("[data-lead-close]").forEach(x=>x.addEventListener("click",closeLead));
+  document.addEventListener("keydown",event=>{if(event.key==="Escape"&&!leadModal.hidden)closeLead();});
+  async function saveNotes(lead){
+    const button=document.getElementById("saveLeadNotes"), status=document.getElementById("leadActionStatus"), notes=document.getElementById("leadNotes").value.trim();
+    button.disabled=true; status.textContent="Enregistrement…";
+    const details={...(lead.details||{}),admin_notes:notes};
+    const {error}=await niabaSupabase.from("inquiry_leads").update({details,updated_at:new Date().toISOString()}).eq("id",lead.id);
+    if(error){status.textContent="Impossible d’enregistrer : "+error.message;}else{lead.details=details;status.textContent="✓ Notes enregistrées.";}
+    button.disabled=false;
+  }
+  async function createBooking(lead,details){
+    const button=document.getElementById("createLeadBooking"), status=document.getElementById("leadActionStatus"), amount=Number(document.getElementById("bookingAmount").value||0);
+    if(amount<=0){status.textContent="Indiquez d’abord le montant accepté par le client.";return;}
+    button.disabled=true;button.textContent="Création…";
+    const row={user_id:lead.user_id||null,service_type:lead.lead_type,origin:details.origin||null,destination:details.destination||null,start_date:document.getElementById("bookingStart").value||null,end_date:document.getElementById("bookingEnd").value||null,amount,currency:document.getElementById("bookingCurrency").value,status:"pending",metadata:{lead_id:lead.id,lead_reference:lead.reference,customer_name:lead.full_name,email:lead.email,phone:lead.phone,source:lead.source,details:lead.details}};
+    const {data,error}=await niabaSupabase.from("bookings").insert(row).select().single();
+    if(error){status.textContent="Impossible de créer la réservation : "+error.message;button.disabled=false;button.textContent="Créer la réservation";return;}
+    bookings.unshift(data);lead.status="converted";
+    await niabaSupabase.from("inquiry_leads").update({status:"converted",updated_at:new Date().toISOString()}).eq("id",lead.id);
+    statBookings.textContent=bookings.length;statLeads.textContent=leads.filter(x=>x.status!=="closed"&&x.status!=="converted").length;renderBookings(bookings);renderLeads(leadFilter.value==="all"?leads:leads.filter(l=>l.status===leadFilter.value));openLead(lead.id);
+  }
 
 
   document.querySelectorAll("[data-admin]").forEach(b=>b.onclick=()=>{
