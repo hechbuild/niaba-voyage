@@ -973,9 +973,10 @@ body{background:#f7f9fc;color:#172033}.header{background:#fff}.service-search,.d
 .inquiry-form textarea{width:100%;resize:vertical;min-height:120px}
 .inquiry-message{grid-column:1/-1}
 .inline-disclaimer{margin:16px 0;background:#fff7e8;border:1px solid #f3d39b;border-radius:14px;padding:14px;color:#6b4a12;line-height:1.5}
-.privacy-consent{display:flex;align-items:flex-start;gap:10px;margin:16px 0;color:#475467;font-size:.9rem;line-height:1.5}
-.privacy-consent input{margin-top:3px}
-.privacy-consent a{color:#0b4fa3}
+.privacy-consent{display:grid;grid-template-columns:22px minmax(0,1fr);align-items:start;gap:10px;margin:16px 0;color:#475467;font-size:.9rem;line-height:1.5}
+.privacy-consent input{width:18px;height:18px;margin:3px 0 0;accent-color:#0b4fa3}
+.privacy-consent span{min-width:0}
+.privacy-consent a{display:inline;color:#0b4fa3;overflow-wrap:anywhere}
 .form-status{min-height:24px;margin:12px 0 0;font-size:.92rem}
 .form-status.success{color:#16704a}
 .form-status.error{color:#b42318}
@@ -992,4 +993,5 @@ body{background:#f7f9fc;color:#172033}.header{background:#fff}.service-search,.d
   .inquiry-form-grid{grid-template-columns:1fr}
   .inquiry-message{grid-column:auto}
   .inquiry-form-head{align-items:flex-start;flex-direction:column}
+  .privacy-consent{font-size:1rem;line-height:1.55;gap:12px}
 }
