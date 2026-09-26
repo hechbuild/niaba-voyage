@@ -18,9 +18,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260926-4">
+  <link rel="stylesheet" href="styles.css?v=20260926-5">
 </head><body>
-<header class="header"><div class="container nav"><a class="brand" href="/"><span class="brand-mark">➤</span><span>NIABA <b>VOYAGE</b></span></a><span style="font-weight:800;color:#071c45">Administration</span></div></header>
+<header class="header admin-header"><div class="container nav"><a class="brand" href="/"><span class="brand-mark">➤</span><span>NIABA <b>VOYAGE</b></span></a><span class="admin-header-title">Administration</span></div></header>
 <main class="admin-shell">
 <section class="admin-top"><div><span class="eyebrow">BACK-OFFICE PRIVÉ</span><h1>Tableau de bord</h1><p>Vue centrale de l’activité Niaba Voyage.</p></div><a class="admin-btn secondary" href="/">Voir le site</a></section>
 <section class="admin-stats">
@@ -62,9 +62,10 @@
   statPayments.textContent=new Intl.NumberFormat("fr-FR").format(paymentTotal)+" FCFA";
   const due=commissions.filter(x=>x.status==="approved").reduce((s,x)=>s+Number(x.amount||0),0);
   document.querySelector(".admin-card:not(.wide) p b").textContent=new Intl.NumberFormat("fr-FR").format(due)+" FCFA";
+  function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
 
   function renderBookings(list){
-    adminBookings.innerHTML=list.length?list.map(b=>`<tr><td>${b.reference}</td><td>${b.user_id?b.user_id.slice(0,8)+"…":"—"}</td><td>${b.service_type}</td><td>${b.destination||"—"}</td><td>${new Intl.NumberFormat("fr-FR").format(Number(b.amount||0))} ${b.currency||""}</td><td>${b.status}</td></tr>`).join(""):'<tr><td colspan="6">Aucune réservation enregistrée.</td></tr>';
+    adminBookings.innerHTML=list.length?list.map(b=>`<tr><td data-label="Référence">${esc(b.reference)}</td><td data-label="Client">${b.user_id?esc(b.user_id.slice(0,8))+"…":"—"}</td><td data-label="Service">${esc(b.service_type)}</td><td data-label="Destination">${esc(b.destination||"—")}</td><td data-label="Montant">${new Intl.NumberFormat("fr-FR").format(Number(b.amount||0))} ${esc(b.currency||"")}</td><td data-label="Statut">${esc(b.status)}</td></tr>`).join(""):'<tr class="admin-empty"><td colspan="6">Aucune réservation enregistrée.</td></tr>';
   }
   renderBookings(bookings);
   bookingFilter.onchange=()=>{const v=bookingFilter.value.toLowerCase();const map={"en attente":"pending","confirmées":"confirmed","annulées":"cancelled"};renderBookings(v==="toutes"?bookings:bookings.filter(b=>b.status===map[v]));};
@@ -73,16 +74,15 @@
   const leadTypeLabels={flight:"Vol",hotel:"Hôtel",car:"Voiture",visa:"Visa",corporate:"Corporate",custom:"Sur mesure"};
   const teamLabels={ticketing:"Billetterie",visa:"Visa",corporate:"Corporate",travel:"Voyage",sales:"Commercial"};
   const statusLabels={new:"Nouveau",contacted:"Contacté",qualified:"Qualifié",quoted:"Devis envoyé",converted:"Converti",closed:"Clôturé"};
-  function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
   function renderLeads(list){
     adminLeads.innerHTML=list.length?list.map(l=>`<tr>
-      <td><strong>${esc(l.reference)}</strong><br><small>${new Date(l.created_at).toLocaleDateString("fr-FR")}</small></td>
-      <td>${esc(l.full_name)}${l.company_name?'<br><small>'+esc(l.company_name)+'</small>':""}</td>
-      <td>${esc(leadTypeLabels[l.lead_type]||l.lead_type)}</td>
-      <td>${esc(teamLabels[l.assigned_team]||l.assigned_team||"—")}</td>
-      <td>${l.phone?'<a href="tel:'+esc(l.phone)+'">'+esc(l.phone)+'</a>':""}${l.email?'<br><a href="mailto:'+esc(l.email)+'">'+esc(l.email)+'</a>':""}</td>
-      <td><select class="lead-status-select" data-lead-id="${esc(l.id)}">${Object.entries(statusLabels).map(([value,label])=>'<option value="'+value+'" '+(l.status===value?"selected":"")+'>'+label+'</option>').join("")}</select></td>
-    </tr>`).join(""):'<tr><td colspan="6">Aucune demande enregistrée.</td></tr>';
+      <td data-label="Référence"><strong>${esc(l.reference)}</strong><br><small>${new Date(l.created_at).toLocaleDateString("fr-FR")}</small></td>
+      <td data-label="Client">${esc(l.full_name)}${l.company_name?'<br><small>'+esc(l.company_name)+'</small>':""}</td>
+      <td data-label="Type">${esc(leadTypeLabels[l.lead_type]||l.lead_type)}</td>
+      <td data-label="Équipe">${esc(teamLabels[l.assigned_team]||l.assigned_team||"—")}</td>
+      <td data-label="Contact" class="admin-contact">${l.phone?'<a href="tel:'+esc(l.phone)+'">'+esc(l.phone)+'</a>':""}${l.email?'<br><a href="mailto:'+esc(l.email)+'">'+esc(l.email)+'</a>':""}</td>
+      <td data-label="Statut"><select class="lead-status-select" aria-label="Statut de la demande ${esc(l.reference)}" data-lead-id="${esc(l.id)}">${Object.entries(statusLabels).map(([value,label])=>'<option value="'+value+'" '+(l.status===value?"selected":"")+'>'+label+'</option>').join("")}</select></td>
+    </tr>`).join(""):'<tr class="admin-empty"><td colspan="6">Aucune demande enregistrée.</td></tr>';
     document.querySelectorAll("[data-lead-id]").forEach(select=>select.addEventListener("change",async()=>{
       const next=select.value;
       select.disabled=true;
