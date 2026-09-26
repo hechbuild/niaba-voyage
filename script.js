@@ -469,6 +469,15 @@ $("loginTab")?.addEventListener("click",()=>setAccountMode("login")); $("signupT
 function passwordChecks(value){
   return {length:value.length>=8,upper:/[A-Z]/.test(value),lower:/[a-z]/.test(value),number:/\d/.test(value)};
 }
+function friendlyAuthError(error){
+  const code=error?.code||"";
+  const message=String(error?.message||"").toLowerCase();
+  if(code==="invalid_credentials"||message.includes("invalid login credentials")) return "Adresse e-mail ou mot de passe incorrect.";
+  if(code==="email_not_confirmed"||message.includes("email not confirmed")) return "Votre adresse e-mail n’est pas encore confirmée. Ouvrez l’e-mail de confirmation reçu.";
+  if(code==="over_request_rate_limit"||message.includes("rate limit")) return "Trop de tentatives. Patientez quelques minutes avant de réessayer.";
+  if(message.includes("network")||message.includes("fetch")) return "Connexion au service momentanément impossible. Vérifiez votre connexion internet puis réessayez.";
+  return "Connexion impossible pour le moment. Vérifiez vos informations puis réessayez.";
+}
 function updatePasswordRules(){
   const checks=passwordChecks($("accountPassword")?.value||"");
   document.querySelectorAll("#passwordRules [data-rule]").forEach(el=>{
@@ -514,8 +523,9 @@ $("forgotPasswordBtn")?.addEventListener("click",()=>{
 $("accountForm")?.addEventListener("submit",async(e)=>{
   e.preventDefault();
   const signup=$("signupTab").classList.contains("active");
-  const email=$("accountEmail").value.trim(), password=$("accountPassword").value;
+  const email=$("accountEmail").value.trim().toLowerCase(), password=$("accountPassword").value;
   const button=e.currentTarget.querySelector('button[type="submit"]'), note=e.currentTarget.querySelector(".account-note");
+  if(!window.niabaSupabase){note.textContent="Service de connexion indisponible. Rechargez la page.";note.style.color="#b42318";return;}
   if(signup){
     const confirm=$("accountPasswordConfirm")?.value||"";
     const checks=passwordChecks(password);
@@ -537,11 +547,12 @@ $("accountForm")?.addEventListener("submit",async(e)=>{
       setAccountMode("login");
       window.alert("Compte créé. Un e-mail de confirmation vient de vous être envoyé. Ouvrez-le puis cliquez sur le lien pour activer votre compte.");
     }else{
+      if(!result.data?.session) throw new Error("missing_session");
       closeAccountModal();
       location.assign("/espace-client.html");
     }
   }catch(err){
-    note.textContent=err.message||"Impossible de poursuivre. Vérifiez vos informations.";
+    note.textContent=friendlyAuthError(err);
     note.style.color="#b42318";
   }finally{button.disabled=false;button.textContent=signup?"Créer mon compte":"Se connecter";}
 });

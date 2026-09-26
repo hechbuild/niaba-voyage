@@ -776,6 +776,7 @@ footer{background:#04132f;color:#b8c3d5;padding:40px 0;border-top:4px solid var(
 @media(max-width:760px){.swap-row{grid-column:1!important;height:0!important;position:relative!important;z-index:80!important;display:flex!important;justify-content:flex-end!important;padding-right:14px!important}.swap-row .swap{position:absolute!important;right:14px!important;top:0!important;transform:translateY(-50%)!important;width:38px!important;height:38px!important;display:grid!important;place-items:center!important;visibility:visible!important;opacity:1!important;z-index:90!important;background:#fff!important;border:1px solid #d8e0ea!important;border-radius:50%!important;box-shadow:0 4px 12px rgba(7,28,69,.16)!important}.swap-row .swap::after{content:"⇅"!important;font-size:20px!important}}
 
 .nav-logout{border:0;background:transparent;color:inherit;font:inherit;font-weight:700;cursor:pointer;padding:0}
+html:not([data-auth-ready]) .account-actions,html:not([data-auth-ready]) .nav-logout{visibility:hidden}
 @media(max-width:760px){#nav .nav-logout{display:block;width:100%;text-align:left;padding:12px 14px;color:#071c45;border-top:1px solid #edf0f4}}
 
 /* Footer légèrement plus généreux */

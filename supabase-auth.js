@@ -6,6 +6,7 @@ const niabaSupabase=window.supabase.createClient(NIABA_SUPABASE_URL,NIABA_SUPABA
 window.niabaSupabase=niabaSupabase;
 
 window.niabaRequireUser=async function(redirect=true){
+  if(window.niabaAuthReady) await window.niabaAuthReady;
   const {data:{user},error}=await niabaSupabase.auth.getUser();
   if(error) console.error("Niaba auth user:",error.message);
   const verifiedUser=user||null;
@@ -13,7 +14,14 @@ window.niabaRequireUser=async function(redirect=true){
   return verifiedUser;
 };
 window.niabaLogout=async function(){
-  try{await niabaSupabase.auth.signOut();}finally{location.replace("/");}
+  try{
+    const {error}=await niabaSupabase.auth.signOut({scope:"local"});
+    if(error) throw error;
+  }catch(error){
+    console.error("Niaba logout:",error?.message||error);
+  }finally{
+    location.replace("/");
+  }
 };
 
 function niabaRenderAuthState(user){
@@ -33,9 +41,17 @@ document.addEventListener("click",(event)=>{
   if(logout){event.preventDefault();window.niabaLogout();}
 });
 
-(async()=>{
-  const {data:{session}}=await niabaSupabase.auth.getSession();
-  niabaRenderAuthState(session?.user||null);
+window.niabaAuthReady=(async()=>{
+  try{
+    const {data:{session},error}=await niabaSupabase.auth.getSession();
+    if(error) throw error;
+    niabaRenderAuthState(session?.user||null);
+    return session||null;
+  }catch(error){
+    console.error("Niaba auth session:",error?.message||error);
+    niabaRenderAuthState(null);
+    return null;
+  }
 })();
 
 niabaSupabase.auth.onAuthStateChange((_event,session)=>{
