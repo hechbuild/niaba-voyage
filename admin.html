@@ -18,7 +18,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260926-6">
+  <link rel="stylesheet" href="styles.css?v=20260926-7">
 </head><body>
 <header class="header admin-header"><div class="container nav"><a class="brand" href="/"><span class="brand-mark">➤</span><span>NIABA <b>VOYAGE</b></span></a><span class="admin-header-title">Administration</span></div></header>
 <main class="admin-shell">
@@ -135,6 +135,17 @@
     return phone?`https://wa.me/${encodeURIComponent(phone)}?text=${encodeURIComponent(message)}`:"#";
   }
   function bookingForLead(id){return bookings.find(b=>b.metadata?.lead_id===id);}
+  function passengerCounts(details){
+    return {adults:Math.max(1,Number(details.adults||1)),children:Math.max(0,Number(details.children||0)),infants:Math.max(0,Number(details.infants||0))};
+  }
+  function passengerFields(details){
+    const counts=passengerCounts(details), types=[...Array(counts.adults).fill("Adulte"),...Array(counts.children).fill("Enfant"),...Array(counts.infants).fill("Bébé")];
+    return `<div class="passenger-section"><div class="passenger-section-head"><h4>Informations des voyageurs</h4><span>${types.length} voyageur${types.length>1?"s":""}</span></div><p class="admin-note">Saisissez les informations exactement comme sur le passeport ou la pièce de voyage.</p>${types.map((type,index)=>`<fieldset class="passenger-card" data-passenger="${index}" data-type="${type}"><legend>Voyageur ${index+1} · ${type}</legend><div class="passenger-form-grid"><label>Prénom(s)<input data-field="first_name" required autocomplete="off"></label><label>Nom<input data-field="last_name" required autocomplete="off"></label><label>Date de naissance<input data-field="birth_date" type="date" required></label><label>Sexe<select data-field="gender" required><option value="">Sélectionner</option><option value="M">Masculin</option><option value="F">Féminin</option></select></label><label>Nationalité<input data-field="nationality" required autocomplete="off"></label><label>N° de passeport<input data-field="document_number" required autocomplete="off"></label><label>Expiration du passeport<input data-field="document_expiry" type="date" required></label></div></fieldset>`).join("")}</div>`;
+  }
+  function passengerSummary(passengers){
+    if(!passengers?.length)return "";
+    return `<section class="lead-passengers-card"><h3>Voyageurs enregistrés</h3>${passengers.map((p,index)=>`<article><strong>${index+1}. ${esc(p.first_name)} ${esc(p.last_name)}</strong><span>${esc(p.type)} · Né(e) le ${esc(displayValue(p.birth_date))} · ${esc(p.gender)}</span><span>${esc(p.nationality)} · Passeport ${esc(p.document_number)} · expire le ${esc(displayValue(p.document_expiry))}</span></article>`).join("")}</section>`;
+  }
   function openLead(id){
     const lead=leads.find(x=>x.id===id); if(!lead)return;
     const details=normalizedDetails(lead), existing=bookingForLead(id);
@@ -151,7 +162,7 @@
       <section class="lead-message-card"><h3>${esc(lead.subject||"Message du client")}</h3><p>${esc(lead.message||"Aucun message.").replace(/\n/g,"<br>")}</p></section>
       <div class="lead-contact-actions">${lead.phone?`<a href="tel:${esc(phoneHref(lead.phone))}">Appeler</a><a class="whatsapp" href="${esc(whatsappHref(lead))}" target="_blank" rel="noopener">Répondre sur WhatsApp</a>`:""}${lead.email?`<a href="mailto:${esc(lead.email)}?subject=${encodeURIComponent("Votre demande "+lead.reference+" — Niaba Voyage")}">Répondre par e-mail</a>`:""}</div>
       <section class="lead-work-card"><label for="leadNotes"><b>Notes internes</b><span>Ces notes restent privées et ne sont pas envoyées au client.</span></label><textarea id="leadNotes" rows="4" placeholder="Ex. Client appelé, préfère un départ le matin…">${esc((lead.details||{}).admin_notes||"")}</textarea><button class="admin-btn secondary" id="saveLeadNotes" type="button">Enregistrer les notes</button><p id="leadActionStatus" class="admin-note" role="status"></p></section>
-      ${canBook?`<section class="lead-booking-card"><h3>Créer la réservation</h3>${existing?`<p class="booking-created">✓ Réservation ${esc(existing.reference)} déjà créée.</p>`:`<div class="lead-booking-form"><label>Montant du devis<input id="bookingAmount" type="number" min="0" step="1" value="${esc(price)}" placeholder="Ex. 450000"></label><label>Devise<select id="bookingCurrency"><option ${currency==="XOF"?"selected":""}>XOF</option><option ${currency==="EUR"?"selected":""}>EUR</option><option ${currency==="USD"?"selected":""}>USD</option></select></label><label>Date de départ<input id="bookingStart" type="date" value="${esc(String(details.departure_date||details.desired_date||"").slice(0,10))}"></label><label>Date de retour<input id="bookingEnd" type="date" value="${esc(String(details.return_date||"").slice(0,10))}"></label></div><button class="admin-btn create-booking-btn" id="createLeadBooking" type="button">Créer la réservation</button><p class="admin-note">À utiliser après validation du devis par le client.</p>`}</section>`:""}`;
+      ${canBook?`<section class="lead-booking-card"><h3>Créer la réservation</h3>${existing?`<p class="booking-created">✓ Réservation ${esc(existing.reference)} déjà créée.</p>${passengerSummary(existing.metadata?.passengers)}`:`<div class="lead-booking-form"><label>Montant du devis<input id="bookingAmount" type="number" min="0" step="1" value="${esc(price)}" placeholder="Ex. 450000"></label><label>Devise<select id="bookingCurrency"><option ${currency==="XOF"?"selected":""}>XOF</option><option ${currency==="EUR"?"selected":""}>EUR</option><option ${currency==="USD"?"selected":""}>USD</option></select></label><label>Date de départ<input id="bookingStart" type="date" value="${esc(String(details.departure_date||details.desired_date||"").slice(0,10))}"></label><label>Date de retour<input id="bookingEnd" type="date" value="${esc(String(details.return_date||"").slice(0,10))}"></label></div>${passengerFields(details)}<button class="admin-btn create-booking-btn" id="createLeadBooking" type="button">Créer la réservation</button><p class="admin-note">À utiliser après validation du devis et vérification des informations des voyageurs.</p>`}</section>`:""}`;
     leadModal.hidden=false; document.body.style.overflow="hidden";
     document.getElementById("saveLeadNotes").onclick=()=>saveNotes(lead);
     const createButton=document.getElementById("createLeadBooking"); if(createButton)createButton.onclick=()=>createBooking(lead,details);
@@ -170,8 +181,12 @@
   async function createBooking(lead,details){
     const button=document.getElementById("createLeadBooking"), status=document.getElementById("leadActionStatus"), amount=Number(document.getElementById("bookingAmount").value||0);
     if(amount<=0){status.textContent="Indiquez d’abord le montant accepté par le client.";return;}
+    const passengerCards=[...document.querySelectorAll("[data-passenger]")];
+    const missing=passengerCards.some(card=>[...card.querySelectorAll("[data-field]")].some(field=>!field.value.trim()));
+    if(missing){status.textContent="Complétez les informations de tous les voyageurs avant de créer la réservation.";passengerCards.flatMap(card=>[...card.querySelectorAll("[data-field]")]).find(field=>!field.value.trim())?.focus();return;}
+    const passengers=passengerCards.map(card=>({type:card.dataset.type,...Object.fromEntries([...card.querySelectorAll("[data-field]")].map(field=>[field.dataset.field,field.value.trim()]))}));
     button.disabled=true;button.textContent="Création…";
-    const row={user_id:lead.user_id||null,service_type:lead.lead_type,origin:details.origin||null,destination:details.destination||null,start_date:document.getElementById("bookingStart").value||null,end_date:document.getElementById("bookingEnd").value||null,amount,currency:document.getElementById("bookingCurrency").value,status:"pending",metadata:{lead_id:lead.id,lead_reference:lead.reference,customer_name:lead.full_name,email:lead.email,phone:lead.phone,source:lead.source,details:lead.details}};
+    const row={user_id:lead.user_id||null,service_type:lead.lead_type,origin:details.origin||null,destination:details.destination||null,start_date:document.getElementById("bookingStart").value||null,end_date:document.getElementById("bookingEnd").value||null,amount,currency:document.getElementById("bookingCurrency").value,status:"pending",metadata:{lead_id:lead.id,lead_reference:lead.reference,customer_name:lead.full_name,email:lead.email,phone:lead.phone,source:lead.source,details:lead.details,passengers}};
     const {data,error}=await niabaSupabase.from("bookings").insert(row).select().single();
     if(error){status.textContent="Impossible de créer la réservation : "+error.message;button.disabled=false;button.textContent="Créer la réservation";return;}
     bookings.unshift(data);bookedLeadIds.add(lead.id);lead.status="converted";
