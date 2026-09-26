@@ -25,6 +25,7 @@
 <section class="admin-top"><div><span class="eyebrow">BACK-OFFICE PRIVÉ</span><h1>Tableau de bord</h1><p>Vue centrale de l’activité Niaba Voyage.</p></div><a class="admin-btn secondary" href="/">Voir le site</a></section>
 <section class="admin-stats">
 <article><span>Réservations</span><strong id="statBookings">0</strong><small>Enregistrées</small></article>
+<article><span>Demandes</span><strong id="statLeads">0</strong><small>Leads à traiter</small></article>
 <article><span>Clients</span><strong id="statClients">0</strong><small>Comptes connus</small></article>
 <article><span>Affiliés</span><strong id="statAffiliates">0</strong><small>Partenaires</small></article>
 <article><span>Paiements</span><strong>0 FCFA</strong><small>Confirmés</small></article>
@@ -33,6 +34,7 @@
 <article class="admin-card wide"><div class="admin-card-head"><h2>Réservations récentes</h2><select id="bookingFilter"><option>Toutes</option><option>En attente</option><option>Confirmées</option><option>Annulées</option></select></div><div class="admin-table-wrap"><table><thead><tr><th>Référence</th><th>Client</th><th>Service</th><th>Destination</th><th>Montant</th><th>Statut</th></tr></thead><tbody id="adminBookings"><tr><td colspan="6">Aucune réservation réelle enregistrée pour le moment.</td></tr></tbody></table></div></article>
 <article class="admin-card"><h2>Services</h2><div class="admin-links"><a href="/#flightForm">✈️ Vols</a><a href="/hotels.html">🏨 Hôtels</a><a href="/location-voiture.html">🚗 Location de voiture</a></div></article>
 <article class="admin-card"><h2>Affiliation</h2><p><b>0 FCFA</b> de commissions à payer</p><a class="admin-link" href="/espace-affilie.html">Voir l’espace affilié →</a></article>
+<article class="admin-card wide"><div class="admin-card-head"><div><h2>Demandes & leads</h2><p class="admin-note">Demandes provenant du site, classées automatiquement par service.</p></div><select id="leadFilter"><option value="all">Toutes</option><option value="new">Nouvelles</option><option value="contacted">Contactées</option><option value="qualified">Qualifiées</option><option value="quoted">Devis envoyé</option><option value="converted">Converties</option><option value="closed">Clôturées</option></select></div><div class="admin-table-wrap"><table><thead><tr><th>Référence</th><th>Client</th><th>Type</th><th>Équipe</th><th>Contact</th><th>Statut</th></tr></thead><tbody id="adminLeads"><tr><td colspan="6">Aucune demande enregistrée.</td></tr></tbody></table></div></article>
 <article class="admin-card wide"><h2>Gestion</h2><div class="admin-actions"><button data-admin="clients">Clients</button><button data-admin="bookings">Réservations</button><button data-admin="payments">Paiements</button><button data-admin="affiliates">Affiliés</button><button data-admin="requests">Demandes</button><button data-admin="reports">Statistiques</button></div><p class="admin-note">Les données affichées ici proviennent désormais de la base Supabase. Les paiements et réservations apparaîtront automatiquement dès leur enregistrement.</p></article>
 </section></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase-auth.js"></script>
@@ -42,17 +44,19 @@
   const {data:profile,error:profileError}=await niabaSupabase.from("profiles").select("role").eq("id",user.id).single();
   if(profileError||profile?.role!=="admin"){document.body.innerHTML='<main style="font-family:Inter,sans-serif;padding:40px"><h1>Accès refusé</h1><p>Cet espace est réservé à l’administration Niaba Voyage.</p><a href="/">Retour au site</a></main>';return;}
 
-  const [profilesRes,bookingsRes,paymentsRes,affiliatesRes,commissionsRes]=await Promise.all([
+  const [profilesRes,bookingsRes,paymentsRes,affiliatesRes,commissionsRes,leadsRes]=await Promise.all([
     niabaSupabase.from("profiles").select("id,full_name,role"),
     niabaSupabase.from("bookings").select("*").order("created_at",{ascending:false}),
     niabaSupabase.from("payments").select("*").eq("status","paid"),
     niabaSupabase.from("affiliates").select("*"),
-    niabaSupabase.from("commissions").select("*")
+    niabaSupabase.from("commissions").select("*"),
+    niabaSupabase.from("inquiry_leads").select("*").order("created_at",{ascending:false}).limit(100)
   ]);
 
-  const profiles=profilesRes.data||[], bookings=bookingsRes.data||[], payments=paymentsRes.data||[], affiliates=affiliatesRes.data||[], commissions=commissionsRes.data||[];
+  const profiles=profilesRes.data||[], bookings=bookingsRes.data||[], payments=paymentsRes.data||[], affiliates=affiliatesRes.data||[], commissions=commissionsRes.data||[], leads=leadsRes.data||[];
   statClients.textContent=profiles.filter(x=>x.role==="client").length;
   statBookings.textContent=bookings.length;
+  statLeads.textContent=leads.filter(x=>x.status!=="closed"&&x.status!=="converted").length;
   statAffiliates.textContent=affiliates.length;
   const paymentTotal=payments.reduce((s,x)=>s+Number(x.amount||0),0);
   document.querySelector(".admin-stats article:nth-child(4) strong").textContent=new Intl.NumberFormat("fr-FR").format(paymentTotal)+" FCFA";
@@ -65,6 +69,33 @@
   renderBookings(bookings);
   bookingFilter.onchange=()=>{const v=bookingFilter.value.toLowerCase();const map={"en attente":"pending","confirmées":"confirmed","annulées":"cancelled"};renderBookings(v==="toutes"?bookings:bookings.filter(b=>b.status===map[v]));};
 
+
+  const leadTypeLabels={flight:"Vol",hotel:"Hôtel",car:"Voiture",visa:"Visa",corporate:"Corporate",custom:"Sur mesure"};
+  const teamLabels={ticketing:"Billetterie",visa:"Visa",corporate:"Corporate",travel:"Voyage",sales:"Commercial"};
+  const statusLabels={new:"Nouveau",contacted:"Contacté",qualified:"Qualifié",quoted:"Devis envoyé",converted:"Converti",closed:"Clôturé"};
+  function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
+  function renderLeads(list){
+    adminLeads.innerHTML=list.length?list.map(l=>`<tr>
+      <td><strong>${esc(l.reference)}</strong><br><small>${new Date(l.created_at).toLocaleDateString("fr-FR")}</small></td>
+      <td>${esc(l.full_name)}${l.company_name?'<br><small>'+esc(l.company_name)+'</small>':""}</td>
+      <td>${esc(leadTypeLabels[l.lead_type]||l.lead_type)}</td>
+      <td>${esc(teamLabels[l.assigned_team]||l.assigned_team||"—")}</td>
+      <td>${l.phone?'<a href="tel:'+esc(l.phone)+'">'+esc(l.phone)+'</a>':""}${l.email?'<br><a href="mailto:'+esc(l.email)+'">'+esc(l.email)+'</a>':""}</td>
+      <td><select class="lead-status-select" data-lead-id="${esc(l.id)}">${Object.entries(statusLabels).map(([value,label])=>'<option value="'+value+'" '+(l.status===value?"selected":"")+'>'+label+'</option>').join("")}</select></td>
+    </tr>`).join(""):'<tr><td colspan="6">Aucune demande enregistrée.</td></tr>';
+    document.querySelectorAll("[data-lead-id]").forEach(select=>select.addEventListener("change",async()=>{
+      const next=select.value;
+      select.disabled=true;
+      const {error}=await niabaSupabase.from("inquiry_leads").update({status:next,updated_at:new Date().toISOString()}).eq("id",select.dataset.leadId);
+      if(error){alert("Impossible de mettre à jour le statut : "+error.message);select.value=leads.find(x=>x.id===select.dataset.leadId)?.status||"new";}
+      else{const lead=leads.find(x=>x.id===select.dataset.leadId);if(lead)lead.status=next;statLeads.textContent=leads.filter(x=>x.status!=="closed"&&x.status!=="converted").length;}
+      select.disabled=false;
+    }));
+  }
+  renderLeads(leads);
+  leadFilter.onchange=()=>renderLeads(leadFilter.value==="all"?leads:leads.filter(l=>l.status===leadFilter.value));
+
+
   document.querySelectorAll("[data-admin]").forEach(b=>b.onclick=()=>{
     const key=b.dataset.admin;
     if(key==="clients") alert(profiles.length+" profils enregistrés.");
@@ -72,7 +103,8 @@
     else if(key==="payments") alert(payments.length+" paiements confirmés.");
     else if(key==="affiliates") alert(affiliates.length+" affiliés enregistrés.");
     else if(key==="reports") alert("Statistiques chargées depuis Supabase.");
-    else alert("Aucune demande distincte enregistrée pour le moment.");
+    else if(key==="requests") alert(leads.length+" demande(s) enregistrée(s) dans le CRM.");
+    else alert("Aucune donnée supplémentaire pour le moment.");
   });
 })();
 </script></body></html>
