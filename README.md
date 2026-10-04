@@ -1,6 +1,6 @@
 # Niaba Voyage
 
-Site Niaba Voyage déployé sur Cloudflare Pages, avec Supabase pour l’authentification/CRM et une fonction Cloudflare Pages pour la recherche de vols Amadeus.
+Site Niaba Voyage déployé sur Cloudflare Pages, avec Supabase pour l’authentification/CRM et une fonction Cloudflare Pages pour la recherche de vols multi-source.
 
 ## Cloudflare Pages
 - Framework preset : None
@@ -12,13 +12,15 @@ Site Niaba Voyage déployé sur Cloudflare Pages, avec Supabase pour l’authent
 ## Variables d’environnement Cloudflare
 Configurer dans Cloudflare Pages > Settings > Environment variables :
 
-- `AMADEUS_CLIENT_ID`
-- `AMADEUS_CLIENT_SECRET`
+- `DUFFEL_ACCESS_TOKEN` : recommandé pour la source principale de vols
+- `FLIGHT_PROVIDER` : `auto` (recommandé), `duffel` ou `amadeus`
+- `AMADEUS_CLIENT_ID` : source de secours optionnelle
+- `AMADEUS_CLIENT_SECRET` : source de secours optionnelle
 - `AMADEUS_ENV` : `test` ou `production`
 - `AMADEUS_BASE_URL` : optionnel
 - `FLIGHT_MARKUP_RATE` : marge décimale, par exemple `0.40` pour 40 %
 
-Les secrets Amadeus ne doivent jamais être placés dans le JavaScript public.
+Les secrets fournisseurs ne doivent jamais être placés dans le JavaScript public. En mode `auto`, Niaba Voyage tente Duffel puis Amadeus et bascule vers un parcours de devis si aucune source live n’est disponible.
 
 ## Supabase
 Le schéma Supabase est versionné dans `supabase/migrations/`.
