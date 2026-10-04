@@ -52,14 +52,8 @@
   ]);
 
   const profiles=profilesRes.data||[], bookings=bookingsRes.data||[], payments=paymentsRes.data||[], affiliates=affiliatesRes.data||[], commissions=commissionsRes.data||[], leads=leadsRes.data||[];
-  // A lead is converted only when a real reservation linked to it exists.
-  // Repair legacy/manual statuses that were marked converted too early.
+  // Loading the dashboard must never mutate CRM statuses.
   const bookedLeadIds=new Set(bookings.map(b=>b.metadata?.lead_id).filter(Boolean));
-  const prematureConversions=leads.filter(l=>l.status==="converted"&&!bookedLeadIds.has(l.id));
-  prematureConversions.forEach(l=>{l.status="new";});
-  if(prematureConversions.length){
-    await Promise.all(prematureConversions.map(l=>niabaSupabase.from("inquiry_leads").update({status:"new",updated_at:new Date().toISOString()}).eq("id",l.id)));
-  }
   statClients.textContent=profiles.filter(x=>x.role==="client").length;
   statBookings.textContent=bookings.length;
   statLeads.textContent=leads.filter(x=>x.status!=="closed"&&x.status!=="converted").length;
@@ -70,8 +64,9 @@
   document.querySelector(".admin-card:not(.wide) p b").textContent=new Intl.NumberFormat("fr-FR").format(due)+" FCFA";
   function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
 
+  const profileById=new Map(profiles.map(p=>[p.id,p]));
   function renderBookings(list){
-    adminBookings.innerHTML=list.length?list.map(b=>`<tr><td data-label="Référence">${esc(b.reference)}</td><td data-label="Client">${b.user_id?esc(b.user_id.slice(0,8))+"…":"—"}</td><td data-label="Service">${esc(b.service_type)}</td><td data-label="Destination">${esc(b.destination||"—")}</td><td data-label="Montant">${new Intl.NumberFormat("fr-FR").format(Number(b.amount||0))} ${esc(b.currency||"")}</td><td data-label="Statut">${esc(b.status)}</td></tr>`).join(""):'<tr class="admin-empty"><td colspan="6">Aucune réservation enregistrée.</td></tr>';
+    adminBookings.innerHTML=list.length?list.map(b=>{const clientName=b.metadata?.customer_name||profileById.get(b.user_id)?.full_name||"—";return `<tr><td data-label="Référence">${esc(b.reference)}</td><td data-label="Client">${esc(clientName)}</td><td data-label="Service">${esc(b.service_type)}</td><td data-label="Destination">${esc(b.destination||"—")}</td><td data-label="Montant">${new Intl.NumberFormat("fr-FR").format(Number(b.amount||0))} ${esc(b.currency||"")}</td><td data-label="Statut">${esc(b.status)}</td></tr>`}).join(""):'<tr class="admin-empty"><td colspan="6">Aucune réservation enregistrée.</td></tr>';
   }
   renderBookings(bookings);
   bookingFilter.onchange=()=>{const v=bookingFilter.value.toLowerCase();const map={"en attente":"pending","confirmées":"confirmed","annulées":"cancelled"};renderBookings(v==="toutes"?bookings:bookings.filter(b=>b.status===map[v]));};
@@ -132,11 +127,11 @@
     const counts=passengerCounts(details), types=[...Array(counts.adults).fill("Adulte"),...Array(counts.children).fill("Enfant"),...Array(counts.infants).fill("Bébé")];
     const saved=Array.isArray(details.passengers)?details.passengers:[];
     const input=(name,index)=>esc(saved[index]?.[name]||"");
-    return `<div class="passenger-section"><div class="passenger-section-head"><h4>Informations des voyageurs</h4><span>${types.length} voyageur${types.length>1?"s":""}</span></div><p class="admin-note">Informations transmises par le client à l’étape Réserver. Vérifiez-les avant la création définitive.</p>${types.map((type,index)=>`<fieldset class="passenger-card" data-passenger="${index}" data-type="${saved[index]?.type||type}"><legend>Voyageur ${index+1} · ${esc(saved[index]?.type||type)}</legend><div class="passenger-form-grid"><label>Prénom(s)<input data-field="first_name" value="${input("first_name",index)}" required autocomplete="off"></label><label>Nom<input data-field="last_name" value="${input("last_name",index)}" required autocomplete="off"></label><label>Date de naissance<input data-field="birth_date" value="${input("birth_date",index)}" type="date" required></label><label>Sexe<select data-field="gender" required><option value="">Sélectionner</option><option value="M" ${saved[index]?.gender==="M"?"selected":""}>Masculin</option><option value="F" ${saved[index]?.gender==="F"?"selected":""}>Féminin</option></select></label><label>Nationalité<input data-field="nationality" value="${input("nationality",index)}" required autocomplete="off"></label><label>N° de passeport<input data-field="document_number" value="${input("document_number",index)}" required autocomplete="off"></label><label>Expiration du passeport<input data-field="document_expiry" value="${input("document_expiry",index)}" type="date" required></label></div></fieldset>`).join("")}</div>`;
+    return `<div class="passenger-section"><div class="passenger-section-head"><h4>Voyageurs</h4><span>${types.length} voyageur${types.length>1?"s":""}</span></div><p class="admin-note">Le CRM conserve ici uniquement l’identité minimale. Les documents de voyage doivent être demandés séparément lorsqu’ils deviennent nécessaires.</p>${types.map((type,index)=>`<fieldset class="passenger-card" data-passenger="${index}" data-type="${saved[index]?.type||type}"><legend>Voyageur ${index+1} · ${esc(saved[index]?.type||type)}</legend><div class="passenger-form-grid"><label>Prénom(s)<input data-field="first_name" value="${input("first_name",index)}" maxlength="80" required autocomplete="off"></label><label>Nom<input data-field="last_name" value="${input("last_name",index)}" maxlength="80" required autocomplete="off"></label></div></fieldset>`).join("")}</div>`;
   }
   function passengerSummary(passengers){
     if(!passengers?.length)return "";
-    return `<section class="lead-passengers-card"><h3>Voyageurs enregistrés</h3>${passengers.map((p,index)=>`<article><strong>${index+1}. ${esc(p.first_name)} ${esc(p.last_name)}</strong><span>${esc(p.type)} · Né(e) le ${esc(displayValue(p.birth_date))} · ${esc(p.gender)}</span><span>${esc(p.nationality)} · Passeport ${esc(p.document_number)} · expire le ${esc(displayValue(p.document_expiry))}</span></article>`).join("")}</section>`;
+    return `<section class="lead-passengers-card"><h3>Voyageurs enregistrés</h3>${passengers.map((p,index)=>`<article><strong>${index+1}. ${esc(p.first_name)} ${esc(p.last_name)}</strong><span>${esc(p.type||"Voyageur")}</span></article>`).join("")}</section>`;
   }
   function openLead(id){
     const lead=leads.find(x=>x.id===id); if(!lead)return;
@@ -179,7 +174,7 @@
     if(missing){status.textContent="Complétez les informations de tous les voyageurs avant de créer la réservation.";passengerCards.flatMap(card=>[...card.querySelectorAll("[data-field]")]).find(field=>!field.value.trim())?.focus();return;}
     const passengers=passengerCards.map(card=>({type:card.dataset.type,...Object.fromEntries([...card.querySelectorAll("[data-field]")].map(field=>[field.dataset.field,field.value.trim()]))}));
     button.disabled=true;button.textContent="Création…";
-    const row={user_id:lead.user_id||null,service_type:lead.lead_type,origin:details.origin||null,destination:details.destination||null,start_date:document.getElementById("bookingStart").value||null,end_date:document.getElementById("bookingEnd").value||null,amount,currency:document.getElementById("bookingCurrency").value,status:"pending",metadata:{lead_id:lead.id,lead_reference:lead.reference,customer_name:lead.full_name,email:lead.email,phone:lead.phone,source:lead.source,details:lead.details,passengers}};
+    const row={user_id:lead.user_id||null,service_type:lead.lead_type,origin:details.origin||null,destination:details.destination||null,start_date:document.getElementById("bookingStart").value||null,end_date:document.getElementById("bookingEnd").value||null,amount,currency:document.getElementById("bookingCurrency").value,status:"pending",metadata:{lead_id:lead.id,lead_reference:lead.reference,customer_name:lead.full_name,email:lead.email,phone:lead.phone,source:lead.source,affiliate_ref:lead.details?.affiliate_ref||null,passengers}};
     const {data,error}=await niabaSupabase.from("bookings").insert(row).select().single();
     if(error){status.textContent="Impossible de créer la réservation : "+error.message;button.disabled=false;button.textContent="Créer la réservation";return;}
     bookings.unshift(data);bookedLeadIds.add(lead.id);lead.status="converted";
