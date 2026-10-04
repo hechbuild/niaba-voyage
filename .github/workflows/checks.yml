@@ -1,0 +1,33 @@
+name: Niaba Voyage checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  static-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check JavaScript syntax
+        run: |
+          node --check script.js
+          node --check supabase-auth.js
+          node --check forgot-password.js
+          node --check reset-password.js
+          node --check functions/api/flights.js
+      - name: Check required production files
+        run: |
+          test -f index.html
+          test -f _headers
+          test -f robots.txt
+          test -f sitemap.xml
+          test -f 404.html
+          test -f supabase/migrations/20261004150000_security_hardening_and_affiliate_tracking.sql
