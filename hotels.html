@@ -42,7 +42,7 @@
         <button class="account-btn" type="button" data-account-open="signup">Créer un compte</button>
       </div>
     </div>
-  </header><main class="service-search"><h1>Rechercher un hôtel</h1><p>Trouvez un hébergement selon votre destination, vos dates et le nombre de voyageurs.</p><form class="search-service-card service-grid" onsubmit="event.preventDefault();alert('La recherche hôtelière sera connectée au fournisseur de réservation. Votre demande est bien préparée.');"><label>🏨 Destination<input required placeholder="Ville, pays ou hôtel"></label><label>👥 Voyageurs<select><option>1 voyageur</option><option selected>2 voyageurs</option><option>3 voyageurs</option><option>4 voyageurs</option><option>5+ voyageurs</option></select></label><label>📅 Arrivée<input type="date" required></label><label>📅 Départ<input type="date" required></label><label>🛏️ Chambres<select><option>1 chambre</option><option>2 chambres</option><option>3 chambres</option><option>4+ chambres</option></select></label><label>⭐ Catégorie<select><option>Toutes catégories</option><option>3 étoiles</option><option>4 étoiles</option><option>5 étoiles</option></select></label><button class="service-submit">Rechercher les hôtels</button></form><p class="service-note">Les disponibilités et tarifs en temps réel seront affichés ici dès la connexion de l’API de réservation.</p></main><footer class="site-footer compact-home-footer">
+  </header><main class="service-search"><h1>Rechercher un hôtel</h1><p>Trouvez un hébergement selon votre destination, vos dates et le nombre de voyageurs.</p><form id="hotelLeadForm" class="search-service-card service-grid"><label>Nom complet<input id="hotelName" maxlength="120" required autocomplete="name" placeholder="Votre nom"></label><label>Téléphone<input id="hotelPhone" maxlength="40" autocomplete="tel" placeholder="+228 ..."></label><label>E-mail<input id="hotelEmail" type="email" maxlength="254" autocomplete="email" placeholder="vous@exemple.com"></label><label>🏨 Destination<input id="hotelDestination" required maxlength="160" placeholder="Ville, pays ou hôtel"></label><label>👥 Voyageurs<select id="hotelTravelers"><option>1 voyageur</option><option selected>2 voyageurs</option><option>3 voyageurs</option><option>4 voyageurs</option><option>5+ voyageurs</option></select></label><label>📅 Arrivée<input id="hotelCheckin" type="date" required></label><label>📅 Départ<input id="hotelCheckout" type="date" required></label><label>🛏️ Chambres<select id="hotelRooms"><option>1 chambre</option><option>2 chambres</option><option>3 chambres</option><option>4+ chambres</option></select></label><label>⭐ Catégorie<select id="hotelCategory"><option>Toutes catégories</option><option>3 étoiles</option><option>4 étoiles</option><option>5 étoiles</option></select></label><button class="service-submit" type="submit">Envoyer ma demande d’hôtel</button></form><p id="hotelStatus" class="service-note" role="status" aria-live="polite">Votre demande sera enregistrée et un conseiller Niaba Voyage confirmera les disponibilités et tarifs.</p></main><footer class="site-footer compact-home-footer">
     <div class="container compact-footer-row">
       <div class="brand footer-brand"><span class="brand-mark">➤</span><span>NIABA <b>VOYAGE</b></span></div>
       <nav class="compact-footer-links" aria-label="Liens de pied de page">
@@ -55,4 +55,23 @@
       </nav>
       <p>© <span id="year"></span> NIABA VOYAGE</p>
     </div>
-  </footer><script src="script.js"></script></body></html>
+  </footer><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase-auth.js"></script><script src="script.js"></script><script>
+document.getElementById("hotelLeadForm")?.addEventListener("submit",async(event)=>{
+  event.preventDefault();
+  const form=event.currentTarget,button=form.querySelector('button[type="submit"]'),status=document.getElementById("hotelStatus");
+  if(!document.getElementById("hotelEmail").value.trim()&&!document.getElementById("hotelPhone").value.trim()){status.textContent="Ajoutez un e-mail ou un numéro de téléphone.";return;}
+  button.disabled=true;button.textContent="Envoi en cours…";
+  try{
+    await window.submitInquiryLead({
+      lead_type:"hotel",full_name:document.getElementById("hotelName").value,
+      email:document.getElementById("hotelEmail").value,phone:document.getElementById("hotelPhone").value,
+      subject:"Demande d’hôtel",message:"Recherche d’hébergement",
+      details:{destination:document.getElementById("hotelDestination").value,travelers:document.getElementById("hotelTravelers").value,checkin:document.getElementById("hotelCheckin").value,checkout:document.getElementById("hotelCheckout").value,rooms:document.getElementById("hotelRooms").value,category:document.getElementById("hotelCategory").value},
+      source:"website"
+    });
+    status.textContent="Demande enregistrée. Un conseiller Niaba Voyage vous contactera pour confirmer les disponibilités et tarifs.";
+    form.reset();
+  }catch(err){status.textContent=err?.message||"Impossible d’enregistrer la demande pour le moment.";}
+  finally{button.disabled=false;button.textContent="Envoyer ma demande d’hôtel";}
+});
+</script></body></html>
