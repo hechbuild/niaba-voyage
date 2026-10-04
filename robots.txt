@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /espace-client.html
+Disallow: /espace-affilie.html
+Disallow: /mot-de-passe-oublie.html
+Disallow: /reinitialiser-mot-de-passe.html
+
+Sitemap: https://www.niabavoyage.com/sitemap.xml
