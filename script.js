@@ -1,5 +1,27 @@
 const $ = (id) => document.getElementById(id);
 
+const NIABA_AFFILIATE_REF_KEY="niabaAffiliateRef";
+function currentAffiliateRef(){
+  const direct=new URLSearchParams(location.search).get("ref");
+  if(direct && /^[A-Za-z0-9_-]{3,64}$/.test(direct)){
+    localStorage.setItem(NIABA_AFFILIATE_REF_KEY,direct);
+    return direct;
+  }
+  return localStorage.getItem(NIABA_AFFILIATE_REF_KEY)||"";
+}
+const niabaAffiliateRef=currentAffiliateRef();
+
+async function trackAffiliateReferral(){
+  if(!niabaAffiliateRef||!window.niabaSupabase)return;
+  const dedupeKey="niabaAffiliateTracked:"+niabaAffiliateRef;
+  if(sessionStorage.getItem(dedupeKey))return;
+  try{
+    const {error}=await window.niabaSupabase.rpc("track_affiliate_referral",{p_code:niabaAffiliateRef});
+    if(error)throw error;
+    sessionStorage.setItem(dedupeKey,"1");
+  }catch(err){console.warn("Affiliate tracking unavailable:",err?.message||err);}
+}
+
 // Authentication launcher is initialized first so a later page feature cannot
 // prevent the login/signup modal from opening if another script section fails.
 function niabaSetAccountMode(mode){
@@ -134,7 +156,7 @@ async function submitInquiryLead(payload){
     company_name:String(payload.company_name||"").trim()||null,
     subject:String(payload.subject||"").trim()||null,
     message:String(payload.message||"").trim()||null,
-    details:payload.details||{},
+    details:{...(payload.details||{}),...(niabaAffiliateRef?{affiliate_ref:niabaAffiliateRef}:{})},
     source:payload.source||"website",
     priority:payload.priority||"normal"
   };
@@ -144,6 +166,7 @@ async function submitInquiryLead(payload){
   if(error) throw error;
   return true;
 }
+window.submitInquiryLead=submitInquiryLead;
 
 function setInquiryType(type){
   const select=$("inquiryType");
@@ -710,3 +733,4 @@ if(airportList){airportList.innerHTML=airportCatalog.map(([code,city,country,air
 // Menu logout
 const logoutBtn=document.getElementById("logoutBtn");
 logoutBtn?.addEventListener("click",()=>window.niabaLogout ? window.niabaLogout() : (window.location.href="/"));
+trackAffiliateReferral();
