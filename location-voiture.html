@@ -42,7 +42,7 @@
         <button class="account-btn" type="button" data-account-open="signup">Créer un compte</button>
       </div>
     </div>
-  </header><main class="service-search"><h1>Location de voiture</h1><p>Recherchez un véhicule selon votre lieu de prise en charge et vos dates.</p><form class="search-service-card service-grid" onsubmit="event.preventDefault();alert('La recherche de voitures sera connectée au fournisseur de réservation. Votre demande est bien préparée.');"><label>🚗 Lieu de prise en charge<input required placeholder="Ville ou aéroport"></label><label>📍 Lieu de restitution<input required placeholder="Même lieu ou autre ville"></label><label>📅 Date de prise en charge<input type="date" required></label><label>🕐 Heure de prise en charge<input type="time" required></label><label>📅 Date de restitution<input type="date" required></label><label>🕐 Heure de restitution<input type="time" required></label><label>🚙 Type de véhicule<select><option>Tous les véhicules</option><option>Économique</option><option>Compact</option><option>SUV</option><option>Berline</option><option>Minibus</option></select></label><label>👤 Âge du conducteur<select><option>25–69 ans</option><option>21–24 ans</option><option>70 ans et plus</option></select></label><button class="service-submit">Rechercher une voiture</button></form><p class="service-note">Les véhicules, disponibilités et tarifs en temps réel seront affichés ici dès la connexion de l’API de réservation.</p></main><footer class="site-footer compact-home-footer">
+  </header><main class="service-search"><h1>Location de voiture</h1><p>Recherchez un véhicule selon votre lieu de prise en charge et vos dates.</p><form id="carLeadForm" class="search-service-card service-grid"><label>Nom complet<input id="carName" maxlength="120" required autocomplete="name" placeholder="Votre nom"></label><label>Téléphone<input id="carPhone" maxlength="40" autocomplete="tel" placeholder="+228 ..."></label><label>E-mail<input id="carEmail" type="email" maxlength="254" autocomplete="email" placeholder="vous@exemple.com"></label><label>🚗 Lieu de prise en charge<input id="carPickup" required maxlength="160" placeholder="Ville ou aéroport"></label><label>📍 Lieu de restitution<input id="carDropoff" required maxlength="160" placeholder="Même lieu ou autre ville"></label><label>📅 Date de prise en charge<input id="carPickupDate" type="date" required></label><label>🕐 Heure de prise en charge<input id="carPickupTime" type="time" required></label><label>📅 Date de restitution<input id="carDropoffDate" type="date" required></label><label>🕐 Heure de restitution<input id="carDropoffTime" type="time" required></label><label>🚙 Type de véhicule<select id="carType"><option>Tous les véhicules</option><option>Économique</option><option>Compact</option><option>SUV</option><option>Berline</option><option>Minibus</option></select></label><label>👤 Âge du conducteur<select id="carAge"><option>25–69 ans</option><option>21–24 ans</option><option>70 ans et plus</option></select></label><button class="service-submit" type="submit">Envoyer ma demande de voiture</button></form><p id="carStatus" class="service-note" role="status" aria-live="polite">Votre demande sera enregistrée et un conseiller Niaba Voyage confirmera les disponibilités et tarifs.</p></main><footer class="site-footer compact-home-footer">
     <div class="container compact-footer-row">
       <div class="brand footer-brand"><span class="brand-mark">➤</span><span>NIABA <b>VOYAGE</b></span></div>
       <nav class="compact-footer-links" aria-label="Liens de pied de page">
@@ -55,4 +55,23 @@
       </nav>
       <p>© <span id="year"></span> NIABA VOYAGE</p>
     </div>
-  </footer><script src="script.js"></script></body></html>
+  </footer><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase-auth.js"></script><script src="script.js"></script><script>
+document.getElementById("carLeadForm")?.addEventListener("submit",async(event)=>{
+  event.preventDefault();
+  const form=event.currentTarget,button=form.querySelector('button[type="submit"]'),status=document.getElementById("carStatus");
+  if(!document.getElementById("carEmail").value.trim()&&!document.getElementById("carPhone").value.trim()){status.textContent="Ajoutez un e-mail ou un numéro de téléphone.";return;}
+  button.disabled=true;button.textContent="Envoi en cours…";
+  try{
+    await window.submitInquiryLead({
+      lead_type:"car",full_name:document.getElementById("carName").value,
+      email:document.getElementById("carEmail").value,phone:document.getElementById("carPhone").value,
+      subject:"Demande de location de voiture",message:"Recherche de véhicule",
+      details:{pickup:document.getElementById("carPickup").value,dropoff:document.getElementById("carDropoff").value,pickup_date:document.getElementById("carPickupDate").value,pickup_time:document.getElementById("carPickupTime").value,dropoff_date:document.getElementById("carDropoffDate").value,dropoff_time:document.getElementById("carDropoffTime").value,vehicle_type:document.getElementById("carType").value,driver_age:document.getElementById("carAge").value},
+      source:"website"
+    });
+    status.textContent="Demande enregistrée. Un conseiller Niaba Voyage vous contactera pour confirmer les disponibilités et tarifs.";
+    form.reset();
+  }catch(err){status.textContent=err?.message||"Impossible d’enregistrer la demande pour le moment.";}
+  finally{button.disabled=false;button.textContent="Envoyer ma demande de voiture";}
+});
+</script></body></html>
