@@ -225,10 +225,10 @@ function renderOffers(data) {
   const offers = Array.isArray(data.offers) ? data.offers : [];
 
   if (data.testMode) {
-    notice.textContent = "Mode test : les tarifs affichés proviennent de l'environnement de test du fournisseur et ne sont pas encore des tarifs de vente réels.";
+    notice.textContent = "Tarifs de démonstration Niaba Voyage : confirmation obligatoire avant toute réservation ou paiement.";
     notice.className = "results-notice warning";
   } else {
-    notice.textContent = "Tarifs Niaba Voyage, sous réserve de disponibilité et de confirmation au moment de la réservation.";
+    notice.textContent = "Tarifs Niaba Voyage issus de disponibilités aériennes en temps réel ou récentes, sous réserve de reconfirmation avant paiement.";
     notice.className = "results-notice";
   }
 
@@ -295,7 +295,10 @@ $("flightForm")?.addEventListener("submit", async (e) => {
       origin: $("from").value,
       destination: $("to").value,
       departureDate: $("depart").value,
-      adults
+      adults,
+      children: String(lastFlightSearch.children || 0),
+      infants: String(lastFlightSearch.infants || 0),
+      cabin: String(lastFlightSearch.cabin || "ECONOMY").toLowerCase()
     });
 
     if (!oneWay && $("return").value) {
